@@ -32,7 +32,7 @@ class UnitSekolahRequest extends FormRequest
             'kode_pos' => 'required|string',
             'status' => 'required|in:aktif,non-aktif',
             'tanggal_berdiri' => 'nullable|date',
-            'kepala_sekolah' => 'nullable|string',
+            'kepala_sekolah_id' => 'nullable|string',
             'whatsapp' => 'required|string',
             'telepon' => 'required|string',
             'email' => 'nullable|email',

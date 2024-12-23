@@ -26,8 +26,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'avatar',
-        'role',
+        'type',
     ];
 
     /**
@@ -51,6 +50,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function pegawai(){
+        return $this->hasOne(Pegawai::class, 'user_id');
     }
 
     public static function boot()

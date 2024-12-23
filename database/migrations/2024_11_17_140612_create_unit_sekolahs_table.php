@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('kode_pos')->nullable();
             $table->enum('status', ['aktif', 'non-aktif']);
             $table->date('tanggal_berdiri')->nullable();
-            $table->string('kepala_sekolah')->nullable();
+            $table->char('kepala_sekolah_id',26)->nullable();
             $table->string('whatsapp')->nullable();
             $table->string('telepon')->nullable();
             $table->string('email')->nullable();

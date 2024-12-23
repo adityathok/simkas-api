@@ -2,32 +2,46 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use App\Models\User;
 
-class UnitSekolah extends Model
+class Pegawai extends Model
 {
+    use HasFactory;
+
     // Non-incrementing ID karena ULID
     public $incrementing = false;
 
     protected $fillable = [
-        'id',
+        'nip',
         'nama',
-        'jenjang',
-        'alamat',
-        'desa',
-        'kecamatan',
-        'kota',
-        'provinsi',
-        'kode_pos',
         'status',
-        'tanggal_berdiri',
-        'kepala_sekolah_id',
-        'whatsapp',
-        'telepon',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'tanggal_masuk',
+        'jenis_kelamin',
+        'foto',
+        'nik',
         'email',
-        'logo'
+        'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function alamat()
+    {
+        return $this->hasOne(PegawaiAlamat::class, 'pegawai_id');
+    }
+
+    public function meta()
+    {
+        return $this->hasMany(PegawaiMeta::class, 'pegawai_id');
+    }
 
     /**
      * Boot the model and assign a ULID to the model's ID attribute 

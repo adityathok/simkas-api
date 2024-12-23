@@ -34,7 +34,7 @@ class UnitSekolahController extends Controller
             'kode_pos' => 'nullable|string',
             'status' => 'required|in:aktif,non-aktif',
             'tanggal_dibentuk' => 'nullable|date',
-            'kepala_sekolah' => 'nullable|string',
+            'kepala_sekolah_id' => 'nullable|string',
             'jumlah_siswa' => 'nullable|integer',
         ]);
 
@@ -48,7 +48,7 @@ class UnitSekolahController extends Controller
             'kode_pos' => $request->kode_pos,
             'status' => $request->status,
             'tanggal_dibentuk' => $request->tanggal_dibentuk,
-            'kepala_sekolah' => $request->kepala_sekolah,
+            'kepala_sekolah_id' => $request->kepala_sekolah_id,
             'jumlah_siswa' => $request->jumlah_siswa,
         ]);
 

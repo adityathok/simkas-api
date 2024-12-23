@@ -29,14 +29,14 @@ class UsersController extends Controller
         $request->validate([
             'name'      => 'required|min:3',
             'email'     => 'required|email|unique:users,email',
-            'role'      => 'required|min:3',
+            'type'      => 'required|min:3',
             'password'  => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->role = $request->role;
+        $user->type = $request->type;
         $user->password = $request->password;
         $user->save();
 
@@ -61,28 +61,14 @@ class UsersController extends Controller
         $request->validate([
             'name'      => 'required|min:3',
             'email'     => 'required|min:10',
-            'avatar'    => 'image|mimes:jpeg,webp,png,jpg,gif,svg|max:2048',
         ]);
 
         $user = User::find($id);
-        $avatar_path = $user->avatar;
-
-        //upload gambar
-        if ($request['avatar'] && $request->file('avatar')) {
-            // hapus gambar sebelumnya
-            $oldimg = $user->avatar;
-            if ($oldimg && Storage::disk('public')->exists($oldimg)) {
-                Storage::disk('public')->delete($oldimg);
-            }
-            //upload di folder avatar
-            $avatar_path = $request->file('avatar')->store('avatar/' . date('Y/m'), 'public');
-        }
-
+        
         //update
         $user->update([
             'name'      => $request->name,
             'email'     => $request->email,
-            'avatar'    => $avatar_path
         ]);
     }
 
