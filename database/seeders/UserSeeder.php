@@ -21,7 +21,8 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('12345678'),
-            'type' => 'admin',
+            'avatar' => '',
+            'role' => 'superadmin',
             'remember_token' => Str::random(10),
         ]);
         // Generate 50 users

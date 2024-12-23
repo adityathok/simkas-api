@@ -13,24 +13,27 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+
     // Non-incrementing ID karena UUID
     public $incrementing = false;
-    
+
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'avatar',
+        'role',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -55,11 +58,7 @@ class User extends Authenticatable
         parent::boot();
 
         static::creating(function ($model) {
-            // Menetapkan ID menggunakan ULID jika ID kosong
-            if (empty($model->id)) {
-                $model->id = Str::ulid();
-            }
+            $model->id = Str::ulid();
         });
     }
-
 }
