@@ -15,7 +15,7 @@ class PegawaiController extends Controller
      */
     public function index()
     {
-        $Pegawai = Pegawai::paginate(50);
+        $Pegawai = Pegawai::paginate(20);
         $Pegawai->withPath('/pegawai');
         return response()->json($Pegawai);
     }
@@ -33,7 +33,13 @@ class PegawaiController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $pegawai = Pegawai::with([
+            'meta' => function ($query) {
+                $query->select('key', 'value');
+            },
+            'alamat'
+        ])->findOrFail($id);
+        return response()->json($pegawai);
     }
 
     /**
