@@ -28,7 +28,7 @@ class PegawaiSeeder extends Seeder
                 'tanggal_lahir' => fake()->date('Y-m-d', '2000-01-01'),
                 'tanggal_masuk' => fake()->date('Y-m-d', '2023-01-01'),
                 'jenis_kelamin' => fake()->randomElement(['Laki-laki', 'Perempuan']),
-                'nik' => fake()->nik(),
+                'nik' => fake()->numerify('33##############'),
                 'email' => fake()->unique()->safeEmail(),
                 'user_id' => null,
             ]);
@@ -65,7 +65,6 @@ class PegawaiSeeder extends Seeder
                     },
                 ]);
             }
-
         }
     }
 }
