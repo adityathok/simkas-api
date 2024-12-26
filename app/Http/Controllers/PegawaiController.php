@@ -47,7 +47,32 @@ class PegawaiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        $pegawai = Pegawai::find($id);
+        $pegawai->update($request->except(['foto']));
+
+        //upload gambar
+        if ($request['foto'] && $request->file('foto')) {
+            // hapus gambar sebelumnya
+            $oldimg = $pegawai->foto;
+            if ($oldimg && Storage::disk('public')->exists($oldimg)) {
+                Storage::disk('public')->delete($oldimg);
+            }
+            //upload di folder pegawai
+            $foto_path = $request->file('foto')->store('pegawai/' . date('Y/m'), 'public');
+
+            //update
+            $pegawai->update([
+                'foto' => $foto_path
+            ]);
+        }
+
+        $response = [
+            'success' => true,
+            'foto'    => $pegawai->foto
+        ];
+
+        return response()->json($response);
     }
 
     /**
