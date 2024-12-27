@@ -80,6 +80,19 @@ class PegawaiController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $pegawai    = Pegawai::find($id);
+        $nama       = $pegawai->nama;
+
+        //hapus foto sebelumnya
+        $oldimg = $pegawai->foto;
+        if ($oldimg && Storage::disk('public')->exists($oldimg)) {
+            Storage::disk('public')->delete($oldimg);
+        }
+        //hapus data pegawai
+        $pegawai->delete();
+
+        return response()->json([
+            'message' => 'Pegawai ' . $nama . ' berhasil dihapus'
+        ]);
     }
 }
