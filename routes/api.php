@@ -21,4 +21,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'pegawai' => PegawaiController::class,
         // 'posts' => PostController::class,
     ]);
+
+    Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');
 });

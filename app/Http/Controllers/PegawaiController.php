@@ -95,4 +95,10 @@ class PegawaiController extends Controller
             'message' => 'Pegawai ' . $nama . ' berhasil dihapus'
         ]);
     }
+
+    public function akun(string $id)
+    {
+        $pegawai = Pegawai::find($id);
+        return response()->json($pegawai);
+    }
 }
