@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('pegawais', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->char('user_id', 26)->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->string('nip')->nullable()->unique();
             $table->string('nama');
             $table->string('status')->nullable();
@@ -20,11 +22,7 @@ return new class extends Migration
             $table->date('tanggal_lahir')->nullable();
             $table->date('tanggal_masuk')->nullable();
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan'])->nullable();
-            $table->string('foto')->nullable();
-            $table->string('nik')->nullable()->unique();
             $table->string('email')->nullable()->unique();
-            $table->char('user_id', 26)->nullable(); // ULID has 26 characters
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });
     }

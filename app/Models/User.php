@@ -6,12 +6,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
 
     // Non-incrementing ID karena UUID
@@ -27,6 +29,7 @@ class User extends Authenticatable
         'email',
         'password',
         'type',
+        'avatar',
     ];
 
     /**
@@ -52,7 +55,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function pegawai(){
+    public function pegawai()
+    {
         return $this->hasOne(Pegawai::class, 'user_id');
     }
 
@@ -62,6 +66,17 @@ class User extends Authenticatable
 
         static::creating(function ($model) {
             $model->id = Str::ulid();
+        });
+
+        // Menambahkan event "deleting" untuk menghapus avatar ketika User dihapus
+        static::deleting(function ($model) {
+            //jika ada avatar
+            if ($model->avatar) {
+                //hapus avatar
+                if ($model->avatar && Storage::disk('public')->exists($model->avatar)) {
+                    Storage::disk('public')->delete($model->avatar);
+                }
+            }
         });
     }
 }

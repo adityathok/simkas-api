@@ -28,15 +28,14 @@ class PegawaiController extends Controller
     {
         //validate
         $request->validate([
-            'nip'           => 'required|min:3',
-            'nama'          => 'required|min:4',
-            'status'        => 'required|min:4',
-            'tempat_lahir'  => 'required|min:4',
-            'tanggal_lahir'  => 'required|min:4',
-            'tanggal_masuk'  => 'required|min:4',
-            'jenis_kelamin'  => 'required|min:4',
-            'nik'           => 'min:10',
-            'email'          => 'min:10',
+            'nip'               => 'required|min:3',
+            'nama'              => 'required|min:4',
+            'status'            => 'required|min:4',
+            'tempat_lahir'      => 'required|min:4',
+            'tanggal_lahir'     => 'required|min:4',
+            'tanggal_masuk'     => 'required|min:4',
+            'jenis_kelamin'     => 'required|min:4',
+            'email'             => 'min:10',
         ]);
 
         $pegawai = new Pegawai();
@@ -82,7 +81,6 @@ class PegawaiController extends Controller
             'tanggal_lahir'  => 'required|min:4',
             'tanggal_masuk'  => 'required|min:4',
             'jenis_kelamin'  => 'required|min:4',
-            'nik'  => 'min:10',
             'email'  => 'min:10',
         ]);
 
@@ -97,7 +95,6 @@ class PegawaiController extends Controller
             'tanggal_lahir' => $request->tanggal_lahir,
             'tanggal_masuk' => $request->tanggal_masuk,
             'jenis_kelamin' => $request->jenis_kelamin,
-            'nik' => $request->nik,
             'email' => $request->email,
         ]);
 

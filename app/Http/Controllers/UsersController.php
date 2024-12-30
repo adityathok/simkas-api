@@ -64,7 +64,7 @@ class UsersController extends Controller
         ]);
 
         $user = User::find($id);
-        
+
         //update
         $user->update([
             'name'      => $request->name,
@@ -103,6 +103,39 @@ class UsersController extends Controller
         $user->delete();
         return response()->json([
             'message' => 'User ' . $name . ' berhasil dihapus'
+        ]);
+    }
+
+    /*************  ✨ Codeium Command ⭐  *************/
+    /**
+     * Update avatar users.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $id
+     * @return \Illuminate\Http\Response
+     */
+    /******  73d7fd5c-63f9-48c3-b089-786e80956a9f  *******/
+    public function update_avatar(Request $request, string $id)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $user = User::find($id);
+
+        //hapus avatar sebelumnya
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        //upload di folder avatar
+        $avatarPath = $request->file('avatar')->store('avatar/' . date('Y/m'), 'public');
+
+        $user->avatar = $avatarPath;
+        $user->save();
+
+        return response()->json([
+            'avatar' => $avatarPath
         ]);
     }
 }

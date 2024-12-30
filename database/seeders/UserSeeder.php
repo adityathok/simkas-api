@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\Pegawai;
 
 class UserSeeder extends Seeder
 {
@@ -16,14 +17,27 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         //default admin users
-        User::create([
-            'name' => 'admin',
-            'email' => 'admin@example.com',
+        $user = User::create([
+            'name'              => 'admin',
+            'email'             => 'admin@example.com',
             'email_verified_at' => now(),
-            'password' => Hash::make('12345678'),
-            'type' => 'admin',
-            'remember_token' => Str::random(10),
+            'password'          => Hash::make('12345678'),
+            'type'              => 'pegawai',
+            'remember_token'    => Str::random(10),
         ]);
+        $user->assignRole(['admin', 'pegawai']);
+        Pegawai::create([
+            'nip'           => fake()->unique()->numerify('111###########'),
+            'nama'          => 'admin',
+            'status'        => 'aktif',
+            'tempat_lahir'  => 'Sukoharjo',
+            'tanggal_lahir' => fake()->date('Y-m-d', '1990-01-01'),
+            'tanggal_masuk' => fake()->date('Y-m-d', '1990-01-01'),
+            'jenis_kelamin' => 'Laki-laki',
+            'email'         => $user->email,
+            'user_id'       => $user->id
+        ]);
+
         // Generate 50 users
         // User::factory()->count(50)->create();
     }

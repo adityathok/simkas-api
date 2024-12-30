@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
 
@@ -22,8 +23,6 @@ class Pegawai extends Model
         'tanggal_lahir',
         'tanggal_masuk',
         'jenis_kelamin',
-        'foto',
-        'nik',
         'email',
         'user_id',
     ];
@@ -51,10 +50,32 @@ class Pegawai extends Model
     {
         parent::boot();
 
-        static::creating(function ($model) {
+        static::creating(function ($pegawai) {
             // Menetapkan ID menggunakan ULID jika ID kosong
-            if (empty($model->id)) {
-                $model->id = Str::ulid();
+            if (empty($pegawai->id)) {
+                $pegawai->id = Str::ulid();
+            }
+
+            // Membuat User baru dan menyimpan user_id di Pegawai
+            if (empty($pegawai->user_id)) {
+                $user = User::create([
+                    'name'      => $pegawai->nama,
+                    'email'     => $pegawai->email,
+                    'type'      => 'pegawai',
+                    'password'  => Hash::make($pegawai->email),
+                ]);
+                $user->assignRole('pegawai');
+
+                // Menyimpan user_id di Pegawai
+                $pegawai->user_id = $user->id;
+            }
+        });
+
+        // Menambahkan event "deleting" untuk menghapus User ketika Pegawai dihapus
+        static::deleting(function ($pegawai) {
+            // Menghapus User yang terkait dengan Pegawai
+            if ($pegawai->user) {
+                $pegawai->user->delete();
             }
         });
     }
