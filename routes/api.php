@@ -7,9 +7,10 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UnitSekolahController;
 use App\Http\Controllers\PegawaiController;
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+Route::middleware('auth:sanctum')->get('/user', [UsersController::class, 'show_user']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
 

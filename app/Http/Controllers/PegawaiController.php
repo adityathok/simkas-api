@@ -35,7 +35,7 @@ class PegawaiController extends Controller
             'tanggal_lahir'     => 'required|min:4',
             'tanggal_masuk'     => 'required|min:4',
             'jenis_kelamin'     => 'required|min:4',
-            'email'             => 'min:10',
+            'email'             => 'required|min:10|email',
         ]);
 
         $pegawai = new Pegawai();
@@ -46,7 +46,6 @@ class PegawaiController extends Controller
         $pegawai->tanggal_lahir = $request->tanggal_lahir;
         $pegawai->tanggal_masuk = $request->tanggal_masuk;
         $pegawai->jenis_kelamin = $request->jenis_kelamin;
-        $pegawai->nik = $request->nik;
         $pegawai->email = $request->email;
         $pegawai->save();
 
@@ -98,28 +97,7 @@ class PegawaiController extends Controller
             'email' => $request->email,
         ]);
 
-        //upload gambar
-        if ($request['foto'] && $request->file('foto')) {
-            // hapus gambar sebelumnya
-            $oldimg = $pegawai->foto;
-            if ($oldimg && Storage::disk('public')->exists($oldimg)) {
-                Storage::disk('public')->delete($oldimg);
-            }
-            //upload di folder pegawai
-            $foto_path = $request->file('foto')->store('pegawai/' . date('Y/m'), 'public');
-
-            //update
-            $pegawai->update([
-                'foto' => $foto_path
-            ]);
-        }
-
-        $response = [
-            'success' => true,
-            'foto'    => $pegawai->foto
-        ];
-
-        return response()->json($response);
+        return response()->json($pegawai);
     }
 
     /**

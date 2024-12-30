@@ -106,6 +106,17 @@ class UsersController extends Controller
         ]);
     }
 
+    public function show_user(Request $request)
+    {
+        $user = $request->user();
+        return response()->json([
+            'id'    => $user->id,
+            'name'  => $user->name,
+            'email' => $user->email,
+            'roles' => $user->getRoleNames(), // Mendapatkan daftar role
+        ]);
+    }
+
     /*************  ✨ Codeium Command ⭐  *************/
     /**
      * Update avatar users.
