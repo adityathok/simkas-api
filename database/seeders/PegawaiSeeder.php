@@ -24,7 +24,7 @@ class PegawaiSeeder extends Seeder
             $pegawai = Pegawai::create([
                 'nip'           => fake()->unique()->numerify('197###########'), // Example NIP format
                 'nama'          => fake()->name(),
-                'status'        => fake()->randomElement(['aktif', 'non-aktif']),
+                'status'        => fake()->randomElement(['Aktif', 'Keluar']),
                 'tempat_lahir'  => fake()->city(),
                 'tanggal_lahir' => fake()->date('Y-m-d', '2000-01-01'),
                 'tanggal_masuk' => fake()->date('Y-m-d', '2023-01-01'),

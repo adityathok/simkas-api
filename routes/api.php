@@ -15,13 +15,13 @@ Route::middleware('auth:sanctum')->get('/user', [UsersController::class, 'show_u
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('users/password/{id}', [UsersController::class, 'update_password']);
-    Route::post('users/updateavatar/{id}', [UsersController::class, 'update_avatar']);
+    Route::get('user/avatar/{id}', [UsersController::class, 'get_avatar']);
+    Route::post('user/avatar/{id}', [UsersController::class, 'update_avatar']);
 
     Route::apiResources([
         'users' => UsersController::class,
         'unitsekolah' => UnitSekolahController::class,
         'pegawai' => PegawaiController::class,
-        // 'posts' => PostController::class,
     ]);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');

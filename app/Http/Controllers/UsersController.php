@@ -117,7 +117,19 @@ class UsersController extends Controller
         ]);
     }
 
-    /*************  ✨ Codeium Command ⭐  *************/
+    /**
+     * Ambil avatar user berdasarkan ID.
+     *
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function get_avatar(string $id)
+    {
+        // Ambil hanya kolom avatar berdasarkan ID
+        $user = User::select('avatar')->find($id);
+        return response()->json($user);
+    }
+
     /**
      * Update avatar users.
      *
@@ -125,7 +137,6 @@ class UsersController extends Controller
      * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    /******  73d7fd5c-63f9-48c3-b089-786e80956a9f  *******/
     public function update_avatar(Request $request, string $id)
     {
         $request->validate([

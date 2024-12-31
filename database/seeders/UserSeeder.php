@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
         Pegawai::create([
             'nip'           => fake()->unique()->numerify('111###########'),
             'nama'          => 'admin',
-            'status'        => 'aktif',
+            'status'        => 'Aktif',
             'tempat_lahir'  => 'Sukoharjo',
             'tanggal_lahir' => fake()->date('Y-m-d', '1990-01-01'),
             'tanggal_masuk' => fake()->date('Y-m-d', '1990-01-01'),
