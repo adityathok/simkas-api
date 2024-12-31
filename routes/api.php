@@ -17,6 +17,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('users/password/{id}', [UsersController::class, 'update_password']);
     Route::get('user/avatar/{id}', [UsersController::class, 'get_avatar']);
     Route::post('user/avatar/{id}', [UsersController::class, 'update_avatar']);
+    Route::delete('user/avatar/{id}', [UsersController::class, 'delete_avatar']);
 
     Route::apiResources([
         'users' => UsersController::class,

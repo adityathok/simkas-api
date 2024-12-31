@@ -126,7 +126,7 @@ class UsersController extends Controller
     public function get_avatar(string $id)
     {
         // Ambil hanya kolom avatar berdasarkan ID
-        $user = User::select('avatar')->find($id);
+        $user = User::select('name', 'avatar')->find($id);
         return response()->json($user);
     }
 
@@ -156,8 +156,21 @@ class UsersController extends Controller
         $user->avatar = $avatarPath;
         $user->save();
 
-        return response()->json([
-            'avatar' => $avatarPath
-        ]);
+        return response()->json($user);
+    }
+
+    public function delete_avatar(string $id)
+    {
+        $user = User::find($id);
+
+        //hapus avatar sebelumnya
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $user->avatar = null;
+        $user->save();
+
+        return response()->json($user);
     }
 }
