@@ -110,10 +110,11 @@ class UsersController extends Controller
     {
         $user = $request->user();
         return response()->json([
-            'id'    => $user->id,
-            'name'  => $user->name,
-            'email' => $user->email,
-            'roles' => $user->getRoleNames(), // Mendapatkan daftar role
+            'id'        => $user->id,
+            'name'      => $user->name,
+            'email'     => $user->email,
+            'avatar'    => $user->avatar,
+            'roles'     => $user->getRoleNames(), // Mendapatkan daftar role
         ]);
     }
 

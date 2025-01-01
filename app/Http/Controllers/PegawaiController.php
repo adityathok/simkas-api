@@ -16,7 +16,7 @@ class PegawaiController extends Controller
      */
     public function index()
     {
-        $Pegawai = Pegawai::paginate(20);
+        $Pegawai = Pegawai::with(['user:id,name,avatar'])->paginate(20);
         $Pegawai->withPath('/pegawai');
         return response()->json($Pegawai);
     }
