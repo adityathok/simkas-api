@@ -32,16 +32,6 @@ class Pegawai extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function alamat()
-    {
-        return $this->hasOne(PegawaiAlamat::class, 'pegawai_id');
-    }
-
-    public function meta()
-    {
-        return $this->hasMany(PegawaiMeta::class, 'pegawai_id');
-    }
-
     /**
      * Boot the model and assign a ULID to the model's ID attribute 
      * when a new instance is being created.
@@ -62,6 +52,7 @@ class Pegawai extends Model
                     'name'      => $pegawai->nama,
                     'email'     => $pegawai->email,
                     'type'      => 'pegawai',
+                    'can_login' => false,
                     'password'  => Hash::make($pegawai->email),
                 ]);
                 $user->assignRole('pegawai');

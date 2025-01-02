@@ -17,5 +17,7 @@ class RoleAndPermissionsSeeder extends Seeder
         Role::create(['name' => 'kasir']);
         Role::create(['name' => 'pegawai']);
         Role::create(['name' => 'siswa']);
+        Role::create(['name' => 'guru']);
+        Role::create(['name' => 'walisiswa']);
     }
 }

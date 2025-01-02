@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +14,7 @@ use Illuminate\Support\Str;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, SoftDeletes, Notifiable, HasRoles;
 
 
     // Non-incrementing ID karena UUID
@@ -29,6 +30,7 @@ class User extends Authenticatable
         'email',
         'password',
         'type',
+        'can_login',
         'avatar',
     ];
 
@@ -53,6 +55,17 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relasi ke tabel user_meta 
+    public function meta()
+    {
+        return $this->hasMany(UserMeta::class, 'user_id');
+    }
+
+    public function alamat()
+    {
+        return $this->hasOne(UserAlamat::class, 'user_id');
     }
 
     public function pegawai()

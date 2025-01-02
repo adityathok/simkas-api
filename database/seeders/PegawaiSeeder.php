@@ -4,10 +4,10 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Pegawai;
-use App\Models\PegawaiAlamat;
-use App\Models\PegawaiMeta;
 use Illuminate\Support\Str;
+use App\Models\Pegawai;
+use App\Models\UserAlamat;
+use App\Models\UserMeta;
 
 class PegawaiSeeder extends Seeder
 {
@@ -32,30 +32,32 @@ class PegawaiSeeder extends Seeder
                 'email'         => fake()->unique()->safeEmail(),
             ]);
 
-            // Create Alamat
-            PegawaiAlamat::create([
-                'pegawai_id'    => $pegawai->id,
+            $user_id = $pegawai->user_id;
+
+            //Alamat User
+            UserAlamat::create([
+                'user_id'       => $user_id,
                 'alamat'        => fake()->address(),
-                'rt'            => fake()->numerify('00#'),
-                'rw'            => fake()->numerify('00#'),
+                'rt'            => fake()->randomNumber(2),
+                'rw'            => fake()->randomNumber(2),
                 'dusun'         => fake()->streetName(),
-                'kelurahan'     => fake()->citySuffix(),
+                'kelurahan'     => fake()->city(),
                 'kecamatan'     => fake()->city(),
                 'kota'          => fake()->city(),
                 'provinsi'      => fake()->state(),
                 'kode_pos'      => fake()->postcode(),
-                'jenis_tinggal' => fake()->randomElement(['Rumah', 'Kos', 'Kontrakan']),
-                'transportasi'  => fake()->randomElement(['Motor', 'Mobil', 'Sepeda', 'Jalan Kaki']),
-                'jarak'         => fake()->numberBetween(1, 30), // Jarak dalam km
+                'jenis_tinggal' => fake()->randomElement(['Rumah', 'Kontrakan', 'Kost']),
+                'transportasi'  => fake()->randomElement(['Kendaraan Pribadi', 'Kendaraan Umum', 'Jalan Kaki']),
+                'jarak'         => fake()->randomNumber(3),
             ]);
 
-            // Create Meta
+            //Meta user
             $metaKeys = ['golongan', 'nik', 'pendidikan_terakhir', 'no_rekening'];
             foreach ($metaKeys as $key) {
-                PegawaiMeta::create([
-                    'pegawai_id'    => $pegawai->id,
-                    'key'           => $key,
-                    'value'         => match ($key) {
+                UserMeta::create([
+                    'user_id'    => $user_id,
+                    'meta_key'           => $key,
+                    'meta_value'         => match ($key) {
                         'golongan'              => fake()->randomElement(['III/a', 'III/b', 'IV/a']),
                         'nik'                   => fake()->unique()->numerify('330###########'),
                         'pendidikan_terakhir'   => fake()->randomElement(['SMA', 'D3', 'S1', 'S2']),

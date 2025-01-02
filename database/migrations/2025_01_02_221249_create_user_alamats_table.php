@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pegawai_alamats', function (Blueprint $table) {
+        Schema::create('user_alamats', function (Blueprint $table) {
             $table->id();
-            $table->char('pegawai_id', 26)->nullable(); // ULID has 26 characters
-            $table->foreign('pegawai_id')->references('id')->on('pegawais')->onDelete('cascade');
+            $table->char('user_id', 26)->nullable(); // ULID has 26 characters
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->text('alamat')->nullable();
             $table->string('rt', 5)->nullable();
             $table->string('rw', 5)->nullable();
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pegawai_alamats');
+        Schema::dropIfExists('user_alamats');
     }
 };

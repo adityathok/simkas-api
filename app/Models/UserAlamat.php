@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class PegawaiAlamat extends Model
+class UserAlamat extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'pegawai_id',
+        'user_id',
         'alamat',
         'rt',
         'rw',
@@ -25,8 +25,8 @@ class PegawaiAlamat extends Model
         'jarak',
     ];
 
-    public function pegawai()
+    public function user()
     {
-        return $this->belongsTo(Pegawai::class, 'pegawai_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
