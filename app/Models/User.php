@@ -101,11 +101,11 @@ class User extends Authenticatable
         static::deleting(function ($model) {
             //jika ada avatar
             if ($model->avatar) {
-                //hapus avatar
-                if ($model->avatar && Storage::disk('public')->exists($model->avatar)) {
-                    Storage::disk('public')->delete($model->avatar);
-                }
+                $file = FileUploadMan::where('id', $model->avatar)->first();
+                $file->delete();
             }
+            //hapus data avatar dari user
+            $model->avatar = null;
         });
     }
 }

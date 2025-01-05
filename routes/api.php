@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\UserMetaController;
 use App\Http\Controllers\UnitSekolahController;
 use App\Http\Controllers\PegawaiController;
 
@@ -11,6 +12,9 @@ use App\Http\Controllers\PegawaiController;
 //     return $request->user();
 // });
 Route::middleware('auth:sanctum')->get('/user', [UsersController::class, 'show_user']);
+
+
+Route::get('usermeta/{user_id}', [UserMetaController::class, 'gets']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
@@ -22,7 +26,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResources([
         'users' => UsersController::class,
         'unitsekolah' => UnitSekolahController::class,
-        'pegawai' => PegawaiController::class,
+        'pegawai' => PegawaiController::class
     ]);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');
