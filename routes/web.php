@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FileUploadManController;
 
 Route::get('/', function () {
     return [
@@ -12,3 +13,6 @@ Route::get('/', function () {
 });
 
 require __DIR__ . '/auth.php';
+
+
+Route::middleware('auth:sanctum')->get('filestream/{guide}', [FileUploadManController::class, 'stream']);

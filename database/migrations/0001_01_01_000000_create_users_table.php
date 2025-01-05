@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('type');
             $table->boolean('can_login')->default(true);
-            $table->string('avatar')->nullable();
+            $table->bigInteger('avatar')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

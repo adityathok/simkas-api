@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
+use App\Models\FileUploadMan;
 use App\Models\User;
 
 class UsersController extends Controller
@@ -113,7 +114,7 @@ class UsersController extends Controller
             'id'        => $user->id,
             'name'      => $user->name,
             'email'     => $user->email,
-            'avatar'    => $user->avatar,
+            'avatar'    => $user->avatarFile->url ?? null,
             'roles'     => $user->getRoleNames(), // Mendapatkan daftar role
         ]);
     }
@@ -127,7 +128,8 @@ class UsersController extends Controller
     public function get_avatar(string $id)
     {
         // Ambil hanya kolom avatar berdasarkan ID
-        $user = User::select('name', 'avatar')->find($id);
+        $user = User::with('avatarFile:id,path,guide')->select('name', 'avatar')->find($id);
+        $user->avatar_url = $user->getAvatarUrlAttribute();
         return response()->json($user);
     }
 
@@ -146,15 +148,15 @@ class UsersController extends Controller
 
         $user = User::find($id);
 
-        //hapus avatar sebelumnya
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
+        //hapus avatar sebelumnya, ambil id file upload
+        if ($user->avatar) {
+            FileUploadMan::findOrFail($user->avatar)->delete();
         }
 
-        //upload di folder avatar
-        $avatarPath = $request->file('avatar')->store('avatar/' . date('Y/m'), 'public');
+        //upload file
+        $file = FileUploadMan::saveFile($request->file('avatar'), 'avatar', $user->id);
 
-        $user->avatar = $avatarPath;
+        $user->avatar = $file->id;
         $user->save();
 
         return response()->json($user);
@@ -164,9 +166,9 @@ class UsersController extends Controller
     {
         $user = User::find($id);
 
-        //hapus avatar sebelumnya
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
+        //hapus avatar sebelumnya, ambil id file upload
+        if ($user->avatar) {
+            FileUploadMan::findOrFail($user->avatar)->delete();
         }
 
         $user->avatar = null;

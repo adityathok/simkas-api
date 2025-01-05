@@ -16,7 +16,7 @@ class PegawaiController extends Controller
      */
     public function index()
     {
-        $Pegawai = Pegawai::with(['user:id,name,avatar'])->paginate(20);
+        $Pegawai = Pegawai::with(['user:id,name,avatar', 'user.avatarFile:id,guide'])->paginate(20);
         $Pegawai->withPath('/pegawai');
         return response()->json($Pegawai);
     }
@@ -58,11 +58,10 @@ class PegawaiController extends Controller
     public function show(string $id)
     {
         $pegawai = Pegawai::with([
-            'meta' => function ($query) {
-                $query->select('key', 'value');
-            },
-            'alamat'
+            'user:id,avatar',
+            'user.avatarFile:id,guide',
         ])->findOrFail($id);
+        $pegawai->avatar_url = $pegawai->user->getAvatarUrlAttribute();
         return response()->json($pegawai);
     }
 

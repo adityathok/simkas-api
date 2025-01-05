@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Faker\Core\File;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -71,6 +73,20 @@ class User extends Authenticatable
     public function pegawai()
     {
         return $this->hasOne(Pegawai::class, 'user_id');
+    }
+
+    public function avatarFile()
+    {
+        return $this->belongsTo(FileUploadMan::class, 'avatar', 'id');
+    }
+
+    // Accessor untuk avatar URL
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatarFile && $this->avatarFile->url) {
+            return $this->avatarFile->url;
+        }
+        return null; // Jika tidak ada avatar
     }
 
     public static function boot()
