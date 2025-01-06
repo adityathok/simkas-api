@@ -13,9 +13,6 @@ use App\Http\Controllers\PegawaiController;
 // });
 Route::middleware('auth:sanctum')->get('/user', [UsersController::class, 'show_user']);
 
-
-Route::get('usermeta/{user_id}', [UserMetaController::class, 'gets']);
-
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('users/password/{id}', [UsersController::class, 'update_password']);
@@ -30,4 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     ]);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');
+
+    Route::get('usermeta/{user_id}', [UserMetaController::class, 'gets']);
+    Route::post('usermeta/{user_id}', [UserMetaController::class, 'saves']);
 });
