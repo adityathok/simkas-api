@@ -39,7 +39,7 @@ class UserMeta extends Model
         return $userMeta ? $userMeta->meta_value : null;
     }
 
-    public static function getMetaValues($userId, array $keys)
+    public static function getMetaValues($userId, array $keys = null)
     {
         $userMeta = self::where('user_id', $userId)->whereIn('meta_key', $keys)->get();
         $metaValues = array_fill_keys($keys, null);

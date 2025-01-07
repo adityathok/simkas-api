@@ -62,7 +62,7 @@ class User extends Authenticatable
     // Relasi ke tabel user_meta 
     public function meta()
     {
-        return $this->hasMany(UserMeta::class, 'user_id');
+        return $this->hasMany(UserMeta::class, 'user_id')->select('meta_key', 'meta_value', 'user_id');
     }
 
     public function alamat()
@@ -87,6 +87,18 @@ class User extends Authenticatable
             return $this->avatarFile->url;
         }
         return null; // Jika tidak ada avatar
+    }
+
+    // Accessor untuk usermeta
+    public function getMetaAttribute()
+    {
+        $userMeta = UserMeta::where('user_id', $this->id)->get();
+        $metaValues = [];
+
+        foreach ($userMeta as $meta) {
+            $metaValues[$meta->meta_key] = $meta->meta_value;
+        }
+        return $metaValues;
     }
 
     public static function boot()

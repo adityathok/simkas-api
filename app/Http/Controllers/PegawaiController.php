@@ -16,9 +16,16 @@ class PegawaiController extends Controller
      */
     public function index()
     {
-        $Pegawai = Pegawai::with(['user:id,name,avatar', 'user.avatarFile:id,guide'])->paginate(20);
-        $Pegawai->withPath('/pegawai');
-        return response()->json($Pegawai);
+        $pegawai = Pegawai::with(['user:id,name,avatar', 'user.avatarFile:id,guide'])
+            ->paginate(20);
+        $pegawai->withPath('/pegawai');
+
+        foreach ($pegawai as $item) {
+            $item->avatar_url = $item->user->getAvatarUrlAttribute();
+            $item->metas = $item->user->getMetaAttribute();
+        }
+
+        return response()->json($pegawai);
     }
 
     /**
@@ -62,6 +69,8 @@ class PegawaiController extends Controller
             'user.avatarFile:id,guide',
         ])->findOrFail($id);
         $pegawai->avatar_url = $pegawai->user->getAvatarUrlAttribute();
+        $pegawai->metas = $pegawai->user->getMetaAttribute();
+
         return response()->json($pegawai);
     }
 
