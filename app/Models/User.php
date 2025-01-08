@@ -86,7 +86,7 @@ class User extends Authenticatable
         if ($this->avatarFile && $this->avatarFile->url) {
             return $this->avatarFile->url;
         }
-        return null; // Jika tidak ada avatar
+        return asset('assets/images/default-avatar.jpg');
     }
 
     // Accessor untuk usermeta

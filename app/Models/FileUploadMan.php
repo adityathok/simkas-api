@@ -39,10 +39,10 @@ class FileUploadMan extends Model
 
         $path = $file->store($collection, 'public');
         return self::create([
-            'path' => $path,
+            'path'      => $path,
             'extension' => $file->getClientOriginalExtension(),
-            'size' => $file->getSize(),
-            'user_id' => $user_id,
+            'size'      => $file->getSize(),
+            'user_id'   => $user_id,
         ]);
     }
 
@@ -58,7 +58,7 @@ class FileUploadMan extends Model
         static::creating(function ($model) {
             // Menetapkan guide menggunakan ulid
             if (empty($model->guide)) {
-                $model->guide = Str::ulid();
+                $model->guide = date('Ymd') . Str::random(6);
             }
         });
 
