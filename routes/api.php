@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UserMetaController;
+use App\Http\Controllers\UserAlamatController;
 use App\Http\Controllers\UnitSekolahController;
 use App\Http\Controllers\PegawaiController;
 
@@ -30,4 +31,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('usermeta/{user_id}', [UserMetaController::class, 'gets']);
     Route::post('usermeta/{user_id}', [UserMetaController::class, 'saves']);
+    Route::get('useralamat/{user_id}', [UserAlamatController::class, 'get']);
+    Route::post('useralamat/{user_id}', [UserAlamatController::class, 'update']);
 });
