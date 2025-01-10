@@ -32,6 +32,13 @@ class Pegawai extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    //relasi jabatan di unit sekolah
+    public function jabatan()
+    {
+        return $this->belongsToMany(UnitSekolah::class, 'unit_sekolah_pegawai', 'pegawai_id', 'unit_sekolah_id')
+            ->withTimestamps()->withPivot('jabatan');
+    }
+
     /**
      * Boot the model and assign a ULID to the model's ID attribute 
      * when a new instance is being created.

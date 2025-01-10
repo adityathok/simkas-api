@@ -39,8 +39,8 @@ class UserSeeder extends Seeder
             'user_id'       => $user->id
         ]);
 
-        // Generate 3 kasir        
-        for ($i = 1; $i <= 3; $i++) {
+        // Generate 2 kasir        
+        for ($i = 1; $i <= 2; $i++) {
             $user = User::create([
                 'name'              => 'kasir' . $i,
                 'email'             => 'kasir' . $i . '@example.com',

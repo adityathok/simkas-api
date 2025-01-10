@@ -29,6 +29,13 @@ class UnitSekolah extends Model
         'logo'
     ];
 
+    //relasi jabatan pegawai di unit sekolah
+    public function pegawai()
+    {
+        return $this->belongsToMany(Pegawai::class, 'unit_sekolah_pegawai', 'unit_sekolah_id', 'user_id')
+            ->withTimestamps()->withPivot('jabatan');
+    }
+
     /**
      * Boot the model and assign a ULID to the model's ID attribute 
      * when a new instance is being created.

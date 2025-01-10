@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('unit_sekolahs', function (Blueprint $table) {
-            $table->foreign('kepala_sekolah_id')->references('id')->on('pegawais')->onDelete('set null');
+        Schema::create('settings', function (Blueprint $table) {
+            $table->id();
+            $table->string('key')->unique();
+            $table->text('value');
+            $table->boolean('is_array')->default(false);
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('unit_sekolahs', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('settings');
     }
 };

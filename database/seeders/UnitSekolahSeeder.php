@@ -37,7 +37,6 @@ class UnitSekolahSeeder extends Seeder
                 'kode_pos' => '12345',
                 'status' => 'aktif',
                 'tanggal_berdiri' => '2008-01-01',
-                'kepala_sekolah_id' => fake()->randomElement($pegawaiIds),
                 'whatsapp' => '08123456789',
                 'telepon' => '0271234567',
                 'email' => 'kbmataharipagi@example.com',
@@ -54,7 +53,6 @@ class UnitSekolahSeeder extends Seeder
                 'kode_pos' => '12345',
                 'status' => 'aktif',
                 'tanggal_berdiri' => '2010-01-01',
-                'kepala_sekolah_id' => fake()->randomElement($pegawaiIds),
                 'whatsapp' => '08123456789',
                 'telepon' => '0271234567',
                 'email' => 'tkmataharipagi@example.com',
@@ -71,7 +69,6 @@ class UnitSekolahSeeder extends Seeder
                 'kode_pos' => '12345',
                 'status' => 'aktif',
                 'tanggal_berdiri' => '2012-01-01',
-                'kepala_sekolah_id' => fake()->randomElement($pegawaiIds),
                 'whatsapp' => '08123456789',
                 'telepon' => '0271234567',
                 'email' => 'sdmataharipagi@example.com',
@@ -88,7 +85,6 @@ class UnitSekolahSeeder extends Seeder
                 'kode_pos' => '12345',
                 'status' => 'aktif',
                 'tanggal_berdiri' => '2016-01-01',
-                'kepala_sekolah_id' => fake()->randomElement($pegawaiIds),
                 'whatsapp' => '08123456789',
                 'telepon' => '0271234567',
                 'email' => 'smpmataharipagi@example.com',
@@ -105,7 +101,6 @@ class UnitSekolahSeeder extends Seeder
                 'kode_pos' => '12345',
                 'status' => 'aktif',
                 'tanggal_berdiri' => '2021-01-01',
-                'kepala_sekolah_id' => fake()->randomElement($pegawaiIds),
                 'whatsapp' => '08123456789',
                 'telepon' => '0271234567',
                 'email' => 'smamataharipagi@example.com',
@@ -113,7 +108,10 @@ class UnitSekolahSeeder extends Seeder
         ];
 
         foreach ($data as $unit) {
-            UnitSekolah::create($unit);
+            $pegawai_id = fake()->randomElement($pegawaiIds);
+            $pegawai = Pegawai::find($pegawai_id);
+            $unitSekolah = UnitSekolah::create($unit);
+            $unitSekolah->pegawai()->attach($pegawai->user_id, ['jabatan' => 'Kepala Sekolah']);
         }
     }
 }
