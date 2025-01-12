@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\FileUploadMan;
 use App\Models\Setting;
 
 class SettingController extends Controller
@@ -52,5 +53,20 @@ class SettingController extends Controller
         //delete
         $setting = Setting::del($key);
         return response()->json($setting);
+    }
+
+    //setting logo lembaga
+    public function logo_lembaga(Request $request)
+    {
+        //jika post
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            $file = FileUploadMan::saveFile($request->file('logo'), 'setting', auth()->user()->id);
+            $file_set = Setting::set('logo_lembaga', 'fileuploadman:' . $file->id);
+            return response()->json($file_set);
+        }
     }
 }

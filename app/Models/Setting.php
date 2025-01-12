@@ -9,7 +9,8 @@ class Setting extends Model
     protected $fillable = [
         'key',
         'value',
-        'is_array'
+        'is_array',
+        'file_id',
     ];
 
     //ambil setting
@@ -52,8 +53,24 @@ class Setting extends Model
             $is_array = false;
         }
 
+        //jika value mengandung string 'fileuploadman:'
+        $file_id = null;
+        if (strpos($value, 'fileuploadman:') === 0) {
+
+            //ambil value sebelumnya,dapatkan file_id
+            $setting = self::where('key', $key)->first();
+            if ($setting) {
+                $file_id = $setting->file_id;
+                //hapus file sebelumnya
+                FileUploadMan::findOrFail($file_id)->delete();
+            }
+
+            $file_id = substr($value, strlen('fileuploadman:'));
+            $file_id = (int) $file_id;
+        }
+
         //createorupdate by key
-        $setting = self::updateOrCreate(['key' => $key], ['value' => $value, 'is_array' => $is_array]);
+        $setting = self::updateOrCreate(['key' => $key], ['value' => $value, 'is_array' => $is_array, 'file_id' => $file_id]);
         return $setting;
     }
 
@@ -75,6 +92,11 @@ class Setting extends Model
         if ($this->is_array) {
             return json_decode($value, true);
         }
+        //jika file_id ada, ambil file
+        if ($this->file_id) {
+            $file = FileUploadMan::findOrFail($this->file_id);
+            return $file->getUrlAttribute();
+        }
         return $value;
     }
 
@@ -83,5 +105,11 @@ class Setting extends Model
     {
         $setting = self::where('key', $key)->delete();
         return $setting;
+    }
+
+    //join file
+    public function file()
+    {
+        return $this->belongsTo(FileUploadMan::class, 'file_id');
     }
 }

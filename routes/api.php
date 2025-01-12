@@ -35,4 +35,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('usermeta/{user_id}', [UserMetaController::class, 'saves']);
     Route::get('useralamat/{user_id}', [UserAlamatController::class, 'get']);
     Route::post('useralamat/{user_id}', [UserAlamatController::class, 'update']);
+
+    Route::match(['get', 'post'], 'setting_logo_lembaga', [SettingController::class, 'logo_lembaga'])->name('setting.logo_lembaga');
 });
