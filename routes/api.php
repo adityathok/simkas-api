@@ -8,6 +8,7 @@ use App\Http\Controllers\UserMetaController;
 use App\Http\Controllers\UserAlamatController;
 use App\Http\Controllers\UnitSekolahController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\SettingController;
 
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 //     return $request->user();
@@ -24,7 +25,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResources([
         'users' => UsersController::class,
         'unitsekolah' => UnitSekolahController::class,
-        'pegawai' => PegawaiController::class
+        'pegawai' => PegawaiController::class,
+        'setting' => SettingController::class
     ]);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');
