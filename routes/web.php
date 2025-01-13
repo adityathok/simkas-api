@@ -2,13 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileUploadManController;
+use App\Models\Setting;
 
 Route::get('/', function () {
+    //tampilkan copyright
+    return 'Your IP Address: ' . $_SERVER['REMOTE_ADDR'] . '<br><br><small>Copyright © ' . date('Y') . ' ' . Setting::get('nama_lembaga', 'SIMKAS') . '</small>';
+});
+Route::get('/infoapp', function () {
     return [
-        'app_name'  => "Aplikasi Sekolah",
+        'app_name'  => Setting::get('app_name', 'Sistem Informasi Akademik Keuangan Sekolah'),
         "version"   => "1.0.0",
-        "status"    => "200",
-        'laravel'   => app()->version(),
+        "status"    => "200"
     ];
 });
 
