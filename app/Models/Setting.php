@@ -95,7 +95,7 @@ class Setting extends Model
         //jika file_id ada, ambil file
         if ($this->file_id) {
             $file = FileUploadMan::findOrFail($this->file_id);
-            return $file->getUrlAttribute();
+            return $file->getUrlAttribute(false);
         }
         return $value;
     }

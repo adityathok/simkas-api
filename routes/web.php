@@ -11,6 +11,8 @@ Route::get('/', function () {
 Route::get('/infoapp', function () {
     return [
         'app_name'  => Setting::get('app_name', 'Sistem Informasi Akademik Keuangan Sekolah'),
+        'lembaga'   => Setting::get('nama_lembaga', 'SIMKAS'),
+        'logo'      => Setting::get('logo_lembaga', ''),
         "version"   => "1.0.0",
         "status"    => "200"
     ];

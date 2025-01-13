@@ -80,6 +80,12 @@ class User extends Authenticatable
         return $this->belongsTo(FileUploadMan::class, 'avatar', 'id');
     }
 
+    public function unitSekolahs()
+    {
+        return $this->belongsToMany(UnitSekolah::class, 'unit_sekolah_pegawai', 'user_id', 'unit_sekolah_id')
+            ->withPivot('jabatan')->withTimestamps();
+    }
+
     // Accessor untuk avatar URL
     public function getAvatarUrlAttribute()
     {

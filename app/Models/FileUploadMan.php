@@ -23,10 +23,13 @@ class FileUploadMan extends Model
     protected $appends = ['url'];
 
     // Mutator untuk mendapatkan file_url 
-    public function getUrlAttribute()
+    public function getUrlAttribute($filestream = true)
     {
-        // return asset('storage/' . $this->path);
-        return asset('filestream/' . $this->guide);
+        if ($filestream) {
+            return asset('filestream/' . $this->guide);
+        } else {
+            return asset('storage/' . $this->path);
+        }
     }
 
     // Fungsi untuk menyimpan file 

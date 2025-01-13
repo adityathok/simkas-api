@@ -30,10 +30,11 @@ class UnitSekolah extends Model
     ];
 
     //relasi jabatan pegawai di unit sekolah
-    public function pegawai()
+    public function jabatans()
     {
-        return $this->belongsToMany(Pegawai::class, 'unit_sekolah_pegawai', 'unit_sekolah_id', 'user_id')
-            ->withTimestamps()->withPivot('jabatan');
+        return $this->belongsToMany(User::class, 'unit_sekolah_pegawai', 'unit_sekolah_id', 'user_id')
+            ->withPivot('jabatan')
+            ->withTimestamps();
     }
 
     /**
