@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use App\Models\Setting;
 use App\Models\UnitSekolah;
 use App\Models\Pegawai;
 
@@ -15,103 +16,34 @@ class UnitSekolahSeeder extends Seeder
      */
     public function run(): void
     {
-        // Ambil semua Pegawai yang ada
-        $pegawaiIds = Pegawai::pluck('id')->toArray();
+        //get setting jenjang
+        $jenjangs = Setting::get('jenjang');
 
         // Jika tidak ada pegawai, hentikan proses
-        if (empty($pegawaiIds)) {
-            $this->command->warn('Tidak ada data pegawai. Seeder UnitSekolah dihentikan.');
+        if (empty($jenjangs)) {
+            $this->command->warn('Tidak ada data jenjang. Seeder UnitSekolah dihentikan.');
             return;
         }
 
-        $data = [
-            [
-                'id' => 'KB123456789',
-                'nama' => 'KB Matahari Pagi',
-                'jenjang' => 'KB',
-                'alamat' => 'Jl. Pendidikan No.1, Sukoharjo',
-                'desa' => 'Sukoharjo',
-                'kecamatan' => 'Sukoharjo',
-                'kota' => 'Sukoharjo',
-                'provinsi' => 'Jawa Tengah',
-                'kode_pos' => '12345',
-                'status' => 'aktif',
-                'tanggal_berdiri' => '2008-01-01',
-                'whatsapp' => '08123456789',
-                'telepon' => '0271234567',
-                'email' => 'kbmataharipagi@example.com',
-            ],
-            [
-                'id' => 'TK123456789',
-                'nama' => 'TK Matahari Pagi',
-                'jenjang' => 'TK',
-                'alamat' => 'Jl. Pendidikan No.2, Sukoharjo',
-                'desa' => 'Sukoharjo',
-                'kecamatan' => 'Sukoharjo',
-                'kota' => 'Sukoharjo',
-                'provinsi' => 'Jawa Tengah',
-                'kode_pos' => '12345',
-                'status' => 'aktif',
-                'tanggal_berdiri' => '2010-01-01',
-                'whatsapp' => '08123456789',
-                'telepon' => '0271234567',
-                'email' => 'tkmataharipagi@example.com',
-            ],
-            [
-                'id' => 'SD123456789',
-                'nama' => 'SD Matahari Pagi',
-                'jenjang' => 'SD',
-                'alamat' => 'Jl. Pendidikan No.3, Sukoharjo',
-                'desa' => 'Sukoharjo',
-                'kecamatan' => 'Sukoharjo',
-                'kota' => 'Sukoharjo',
-                'provinsi' => 'Jawa Tengah',
-                'kode_pos' => '12345',
-                'status' => 'aktif',
-                'tanggal_berdiri' => '2012-01-01',
-                'whatsapp' => '08123456789',
-                'telepon' => '0271234567',
-                'email' => 'sdmataharipagi@example.com',
-            ],
-            [
-                'id' => 'SMP123456789',
-                'nama' => 'SMP Matahari Pagi',
-                'jenjang' => 'SMP',
-                'alamat' => 'Jl. Pendidikan No.15, Sukoharjo',
-                'desa' => 'Sukoharjo',
-                'kecamatan' => 'Sukoharjo',
-                'kota' => 'Sukoharjo',
-                'provinsi' => 'Jawa Tengah',
-                'kode_pos' => '12345',
-                'status' => 'aktif',
-                'tanggal_berdiri' => '2016-01-01',
-                'whatsapp' => '08123456789',
-                'telepon' => '0271234567',
-                'email' => 'smpmataharipagi@example.com',
-            ],
-            [
-                'id' => 'SMA123456789',
-                'nama' => 'SMA Matahari Pagi',
-                'jenjang' => 'SMA',
-                'alamat' => 'Jl. Pendidikan No.30, Sukoharjo',
-                'desa' => 'Sukoharjo',
-                'kecamatan' => 'Sukoharjo',
-                'kota' => 'Sukoharjo',
-                'provinsi' => 'Jawa Tengah',
-                'kode_pos' => '12345',
-                'status' => 'aktif',
-                'tanggal_berdiri' => '2021-01-01',
-                'whatsapp' => '08123456789',
-                'telepon' => '0271234567',
-                'email' => 'smamataharipagi@example.com',
-            ],
-        ];
-
-        foreach ($data as $unit) {
-            $pegawai_id = fake()->randomElement($pegawaiIds);
-            $pegawai = Pegawai::find($pegawai_id);
-            $unitSekolah = UnitSekolah::create($unit);
-            $unitSekolah->pegawai()->attach($pegawai->user_id, ['jabatan' => 'Kepala Sekolah']);
+        foreach ($jenjangs as $jenjang) {
+            //buat unit
+            $city = fake()->city();
+            $unitsekolah = UnitSekolah::create([
+                'id'        => fake()->regexify('[A-Z]{3}[0-4]{5}'),
+                'nama'      => $jenjang . ' ' . $city . ' ' . fake()->numberBetween(1, 99),
+                'jenjang'   => $jenjang,
+                'alamat'    => fake()->address(),
+                'desa'      => fake()->streetName(),
+                'kecamatan' => $city,
+                'kota'      => $city,
+                'provinsi'  => fake()->state(),
+                'kode_pos'  => fake()->postcode(),
+                'status'    => 'aktif',
+                'whatsapp'  => fake()->phoneNumber(),
+                'telepon'   => fake()->phoneNumber(),
+                'email'     => fake()->unique()->safeEmail(),
+                'tanggal_berdiri' => fake()->date('Y-m-d', '2000-01-01'),
+            ]);
         }
     }
 }
