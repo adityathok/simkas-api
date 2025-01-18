@@ -35,7 +35,7 @@ class Pegawai extends Model
     //relasi jabatan di unit sekolah
     public function jabatan()
     {
-        return $this->belongsToMany(UnitSekolah::class, 'unit_sekolah_pegawai', 'pegawai_id', 'unit_sekolah_id')
+        return $this->belongsToMany(UnitSekolah::class, 'unit_sekolah_pegawais', 'pegawai_id', 'unit_sekolah_id')
             ->withTimestamps()->withPivot('jabatan');
     }
 

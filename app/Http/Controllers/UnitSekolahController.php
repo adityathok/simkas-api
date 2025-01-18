@@ -15,9 +15,7 @@ class UnitSekolahController extends Controller
      */
     public function index()
     {
-        // $unitSekolah = unitSekolah::paginate(50);
-        $unitSekolah = UnitSekolah::with(['jabatans'])
-            ->paginate(20);
+        $unitSekolah = UnitSekolah::paginate(20);
         $unitSekolah->withPath('/unitsekolah');
         return response()->json($unitSekolah);
     }
