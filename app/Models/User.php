@@ -86,6 +86,16 @@ class User extends Authenticatable
             ->using(UnitSekolahPegawai::class);
     }
 
+    public function getRolesy()
+    {
+        $roles = $this->roles()->get();
+        $result = [];
+        foreach ($roles as $role) {
+            $result[] = $role->name;
+        }
+        return $result;
+    }
+
     // Accessor untuk avatar URL
     public function getAvatarUrlAttribute()
     {

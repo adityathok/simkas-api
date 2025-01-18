@@ -16,8 +16,17 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(50);
+        $users = User::select('id', 'name', 'email', 'type', 'created_at')
+            ->where('can_login', 1)
+            ->paginate(20);
         $users->withPath('/users');
+
+        // Tambahkan nama roles ke setiap pengguna 
+        $users->getCollection()->transform(function ($user) {
+            $user->roles = $user->getRolesy(); // Mendapatkan nama roles 
+            return $user;
+        });
+
         return response()->json($users);
     }
 
@@ -30,16 +39,18 @@ class UsersController extends Controller
         $request->validate([
             'name'      => 'required|min:3',
             'email'     => 'required|email|unique:users,email',
-            'type'      => 'required|min:3',
+            'role'      => 'required|min:3',
             'password'  => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->type = $request->type;
+        $user->type = $request->role;
         $user->password = $request->password;
         $user->save();
+
+        $user->assignRole($request->role);
 
         return response()->json($user);
     }
