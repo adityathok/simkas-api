@@ -18,8 +18,9 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionsSeeder::class,
             SettingSeeder::class,
             UserSeeder::class,
-            // UnitSekolahSeeder::class,
-            // PegawaiSeeder::class,
+            UnitSekolahSeeder::class,
+            PegawaiSeeder::class,
+            UnitSekolahPegawaiSeeder::class
         ]);
     }
 }

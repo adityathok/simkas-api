@@ -29,7 +29,7 @@ class UnitSekolahSeeder extends Seeder
             //buat unit
             $city = fake()->city();
             $unitsekolah = UnitSekolah::create([
-                'id'        => fake()->regexify('[A-Z]{3}[0-4]{5}'),
+                'id'        => fake()->regexify('[A-Z]{3}[1-9]{5}'),
                 'nama'      => $jenjang . ' ' . $city . ' ' . fake()->numberBetween(1, 99),
                 'jenjang'   => $jenjang,
                 'alamat'    => fake()->address(),

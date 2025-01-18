@@ -66,6 +66,11 @@ class Pegawai extends Model
 
                 // Menyimpan user_id di Pegawai
                 $pegawai->user_id = $user->id;
+
+                //buat alamat user
+                UserAlamat::create([
+                    'user_id' => $user->id,
+                ]);
             }
         });
 

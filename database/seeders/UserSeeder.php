@@ -32,36 +32,34 @@ class UserSeeder extends Seeder
             'nama'          => 'admin',
             'status'        => 'Aktif',
             'tempat_lahir'  => 'Sukoharjo',
-            'tanggal_lahir' => fake()->date('Y-m-d', '1990-01-01'),
-            'tanggal_masuk' => fake()->date('Y-m-d', '1990-01-01'),
+            'tanggal_lahir' => '1990-01-01',
+            'tanggal_masuk' => '1990-01-01',
             'jenis_kelamin' => 'Laki-laki',
             'email'         => $user->email,
             'user_id'       => $user->id
         ]);
 
-        // Generate 2 kasir        
-        for ($i = 1; $i <= 2; $i++) {
-            $user = User::create([
-                'name'              => 'kasir' . $i,
-                'email'             => 'kasir' . $i . '@example.com',
-                'email_verified_at' => now(),
-                'password'          => Hash::make('12345678'),
-                'type'              => 'pegawai',
-                'can_login'         => true,
-                'remember_token'    => Str::random(10),
-            ]);
-            $user->assignRole(['kasir', 'pegawai']);
-            Pegawai::create([
-                'nip'           => '111111110' . $i,
-                'nama'          => 'kasir' . $i,
-                'status'        => 'Aktif',
-                'tempat_lahir'  => fake()->city(),
-                'tanggal_lahir' => fake()->date('Y-m-d', '1990-01-01'),
-                'tanggal_masuk' => fake()->date('Y-m-d', '1990-01-01'),
-                'jenis_kelamin' => fake()->randomElement(['Laki-laki', 'Perempuan']),
-                'email'         => $user->email,
-                'user_id'       => $user->id
-            ]);
-        }
+        //kasir
+        $user = User::create([
+            'name'              => 'kasir1',
+            'email'             => 'kasir1@example.com',
+            'email_verified_at' => now(),
+            'password'          => Hash::make('12345678'),
+            'type'              => 'pegawai',
+            'can_login'         => true,
+            'remember_token'    => Str::random(10),
+        ]);
+        $user->assignRole(['kasir', 'pegawai']);
+        Pegawai::create([
+            'nip'           => '111111110',
+            'nama'          => 'Kasir',
+            'status'        => 'Aktif',
+            'tempat_lahir'  => 'Sukoharjo',
+            'tanggal_lahir' => '1990-01-01',
+            'tanggal_masuk' => '1990-01-01',
+            'jenis_kelamin' => 'Perempuan',
+            'email'         => $user->email,
+            'user_id'       => $user->id
+        ]);
     }
 }

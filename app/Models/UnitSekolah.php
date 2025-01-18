@@ -36,8 +36,7 @@ class UnitSekolah extends Model
     public function jabatans()
     {
         return $this->belongsToMany(User::class, 'unit_sekolah_pegawai', 'unit_sekolah_id', 'user_id')
-            ->withPivot('jabatan')
-            ->withTimestamps();
+            ->using(UnitSekolahPegawai::class);
     }
 
     /**

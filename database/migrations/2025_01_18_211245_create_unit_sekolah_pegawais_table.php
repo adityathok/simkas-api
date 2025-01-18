@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('unit_sekolah_pegawai', function (Blueprint $table) {
+        Schema::create('unit_sekolah_pegawais', function (Blueprint $table) {
             $table->id();
             $table->char('unit_sekolah_id', 26)->nullable();
             $table->foreign('unit_sekolah_id')->references('id')->on('unit_sekolahs')->onDelete('cascade');
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('unit_sekolah_pegawai');
+        Schema::dropIfExists('unit_sekolah_pegawais');
     }
 };
