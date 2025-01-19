@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('whatsapp')->nullable();
             $table->string('telepon')->nullable();
             $table->string('email')->nullable();
-            $table->string('logo')->nullable();
+            $table->foreignId('logo')->nullable()->index();
             $table->timestamps();
             $table->softDeletes();
         });

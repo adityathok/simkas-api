@@ -83,7 +83,7 @@ class User extends Authenticatable
     public function unit()
     {
         return $this->belongsToMany(UnitSekolah::class, 'unit_sekolah_pegawais', 'user_id', 'unit_sekolah_id')
-            ->using(UnitSekolahPegawai::class);
+            ->withPivot('jabatan');
     }
 
     public function getRolesy()

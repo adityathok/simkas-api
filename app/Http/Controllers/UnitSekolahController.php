@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\UnitSekolah;
 use App\Http\Requests\UnitSekolahRequest;
 use Illuminate\Support\Facades\Storage;
+use App\Models\FileUploadMan;
 use Illuminate\Support\Str;
 
 class UnitSekolahController extends Controller
@@ -16,6 +17,13 @@ class UnitSekolahController extends Controller
     public function index()
     {
         $unitSekolah = UnitSekolah::paginate(20);
+
+        // Tambahkan data kepala sekolah ke setiap instance UnitSekolah 
+        $unitSekolah->getCollection()->transform(function ($sekolah) {
+            $sekolah->kepala_sekolah = $sekolah->kepalaSekolah();
+            return $sekolah;
+        });
+
         $unitSekolah->withPath('/unitsekolah');
         return response()->json($unitSekolah);
     }
@@ -25,18 +33,8 @@ class UnitSekolahController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'jenjang' => 'required|in:TK,KB,SD,SMP',
-            'alamat' => 'required|string',
-            'telepon' => 'required|string',
-            'email' => 'nullable|email',
-            'kode_pos' => 'nullable|string',
-            'status' => 'required|in:aktif,non-aktif',
-            'tanggal_dibentuk' => 'nullable|date',
-            'kepala_sekolah_id' => 'nullable|string',
-            'jumlah_siswa' => 'nullable|integer',
-        ]);
+
+        $validated = $request->validated();
 
         $unitSekolah = UnitSekolah::create([
             'id' => \Illuminate\Support\Str::ulid(), // Menggunakan ULID
@@ -60,13 +58,18 @@ class UnitSekolahController extends Controller
      */
     public function show(string $id)
     {
-        $unitSekolah = UnitSekolah::find($id);
+        // Ambil data sekolah berdasarkan ID 
+        $sekolah = UnitSekolah::findOrFail($id);
 
-        if (!$unitSekolah) {
-            return response()->json(['message' => 'Unit sekolah tidak ditemukan'], 404);
-        }
+        // Ambil informasi pegawai dengan jabatan KepalaSekolah
+        $kepalaSekolah = $sekolah->kepalaSekolah();
+        $sekolah->kepala_sekolah = $kepalaSekolah;
 
-        return response()->json($unitSekolah);
+        // Ambil semua pegawai yang terkait dengan sekolah tersebut 
+        $semuaPegawai = $sekolah->semuaPegawai();
+        $sekolah->pegawais = $semuaPegawai;
+
+        return response()->json($sekolah);
     }
 
     /**
@@ -84,17 +87,15 @@ class UnitSekolahController extends Controller
         }
 
         // Cek jika ada file gambar yang diunggah
-        if ($request->hasFile('logo')) {
+        if ($request->hasFile('file_logo')) {
 
-            // hapus gambar sebelumnya
-            $oldimg = $unitSekolah->logo;
-            if ($oldimg && Storage::disk('public')->exists($oldimg)) {
-                Storage::disk('public')->delete($oldimg);
+            //hapus gambar sebelumnya
+            if ($unitSekolah->logo) {
+                FileUploadMan::findOrFail($unitSekolah->logo)->delete();
             }
 
-            // Simpan file baru
-            $path = $request->file('logo')->store('unitsekolah', 'public');
-            $validated['logo'] = $path; // Tambahkan path ke data yang akan diupdate
+            $file = FileUploadMan::saveFile($request->file('file_logo'), 'unitsekolah', auth()->user()->id);
+            $validated['logo'] = $file->id;
         }
 
         $unitSekolah->update($validated);

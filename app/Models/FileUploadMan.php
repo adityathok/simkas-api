@@ -20,17 +20,19 @@ class FileUploadMan extends Model
     ];
 
     // Menambahkan akses ke atribut url 
-    protected $appends = ['url'];
+    protected $appends = ['url', 'stream'];
 
     // Mutator untuk mendapatkan file_url 
-    public function getUrlAttribute($filestream = true)
+    public function getUrlAttribute()
     {
-        if ($filestream) {
-            return asset('filestream/' . $this->guide);
-        } else {
-            return asset('storage/' . $this->path);
-        }
+        return asset('storage/' . $this->path);
     }
+    // Mutator untuk mendapatkan stream 
+    public function getStreamAttribute()
+    {
+        return asset('filestream/' . $this->guide);
+    }
+
 
     // Fungsi untuk menyimpan file 
     public static function saveFile($file, $collection = null, $user_id = null)

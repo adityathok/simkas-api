@@ -23,7 +23,7 @@ class UnitSekolahRequest extends FormRequest
     {
         return [
             'nama' => 'required|string|max:255',
-            'jenjang' => 'required|in:TK,KB,SD,SMP,SMA',
+            'jenjang' => 'required|in:TK,KB,SD,SMP,SMA,Pondok',
             'alamat' => 'required|string',
             'desa' => 'required|string',
             'kecamatan' => 'required|string',
