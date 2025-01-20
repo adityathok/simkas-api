@@ -117,4 +117,11 @@ class UnitSekolahController extends Controller
         $unitSekolah->delete();
         return response()->json(['message' => 'Unit sekolah berhasil dihapus']);
     }
+
+    //daftar pegawai di unit sekolah
+    public function pegawais(string $id)
+    {
+        $unitSekolah = UnitSekolah::findOrFail($id);
+        return response()->json($unitSekolah->semuaPegawai());
+    }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\UserAlamatController;
 use App\Http\Controllers\UnitSekolahController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\UnitSekolahPegawaiController;
 
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 //     return $request->user();
@@ -23,10 +24,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('user/avatar/{id}', [UsersController::class, 'delete_avatar']);
 
     Route::apiResources([
-        'users' => UsersController::class,
-        'unitsekolah' => UnitSekolahController::class,
-        'pegawai' => PegawaiController::class,
-        'setting' => SettingController::class
+        'users'                 => UsersController::class,
+        'unitsekolah'           => UnitSekolahController::class,
+        'pegawai'               => PegawaiController::class,
+        'unitsekolahpegawai'    => UnitSekolahPegawaiController::class,
+        'setting'               => SettingController::class
     ]);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');
@@ -37,4 +39,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('useralamat/{user_id}', [UserAlamatController::class, 'update']);
 
     Route::match(['get', 'post'], 'setting_logo_lembaga', [SettingController::class, 'logo_lembaga'])->name('setting.logo_lembaga');
+
+    Route::get('unitsekolah/pegawai/{id}', [UnitSekolahController::class, 'pegawais']);
 });
