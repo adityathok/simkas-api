@@ -14,7 +14,7 @@ class PegawaiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $pegawai = Pegawai::with(['user:id,name,avatar', 'user.avatarFile:id,guide'])
             ->paginate(20);

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\FormOptionsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UserMetaController;
 use App\Http\Controllers\UserAlamatController;
@@ -41,4 +42,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::match(['get', 'post'], 'setting_logo_lembaga', [SettingController::class, 'logo_lembaga'])->name('setting.logo_lembaga');
 
     Route::get('unitsekolah/pegawai/{id}', [UnitSekolahController::class, 'pegawais']);
+
+    Route::get('form-options/option-add-jabatan', [FormOptionsController::class, 'option_add_jabatan']);
 });

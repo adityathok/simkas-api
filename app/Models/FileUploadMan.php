@@ -33,7 +33,6 @@ class FileUploadMan extends Model
         return asset('filestream/' . $this->guide);
     }
 
-
     // Fungsi untuk menyimpan file 
     public static function saveFile($file, $collection = null, $user_id = null)
     {

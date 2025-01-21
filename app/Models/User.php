@@ -100,7 +100,7 @@ class User extends Authenticatable
     public function getAvatarUrlAttribute()
     {
         if ($this->avatarFile && $this->avatarFile->url) {
-            return $this->avatarFile->url;
+            return $this->avatarFile->stream;
         }
         return asset('assets/images/default-avatar.jpg');
     }

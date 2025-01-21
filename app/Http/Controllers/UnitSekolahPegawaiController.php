@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\UnitSekolah;
 use App\Models\UnitSekolahPegawai;
 
 class UnitSekolahPegawaiController extends Controller
@@ -36,7 +35,19 @@ class UnitSekolahPegawaiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'unit_sekolah_id' => 'required|min:3',
+            'user_id' => 'required|min:3',
+            'jabatan' => 'required|min:3',
+        ]);
+
+        $pegawai = UnitSekolahPegawai::create([
+            'unit_sekolah_id' => $request->unit_sekolah_id,
+            'user_id' => $request->user_id,
+            'jabatan' => $request->jabatan,
+        ]);
+
+        return response()->json($pegawai);
     }
 
     /**
