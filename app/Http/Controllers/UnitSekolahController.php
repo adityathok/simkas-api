@@ -33,24 +33,55 @@ class UnitSekolahController extends Controller
      */
     public function store(Request $request)
     {
-
-        $validated = $request->validated();
-
-        $unitSekolah = UnitSekolah::create([
-            'id' => \Illuminate\Support\Str::ulid(), // Menggunakan ULID
-            'nama' => $request->nama,
-            'jenjang' => $request->jenjang,
-            'alamat' => $request->alamat,
-            'telepon' => $request->telepon,
-            'email' => $request->email,
-            'kode_pos' => $request->kode_pos,
-            'status' => $request->status,
-            'tanggal_dibentuk' => $request->tanggal_dibentuk,
-            'kepala_sekolah_id' => $request->kepala_sekolah_id,
-            'jumlah_siswa' => $request->jumlah_siswa,
+        // 'nama',
+        // 'jenjang',
+        // 'alamat',
+        // 'desa',
+        // 'kecamatan',
+        // 'kota',
+        // 'provinsi',
+        // 'kode_pos',
+        // 'status',
+        // 'tanggal_berdiri',
+        // 'kepala_sekolah_id',
+        // 'whatsapp',
+        // 'telepon',
+        // 'email',
+        // 'logo'
+        $request->validate([
+            'nama'      => 'required|string|max:255',
+            'jenjang'   => 'required|string',
+            'alamat'    => 'required|string',
+            'desa'      => 'required|string',
+            'kecamatan' => 'required|string',
+            'kota'      => 'required|string',
+            'provinsi'  => 'required|string',
+            'kode_pos'  => 'required|string',
+            'status'    => 'required|string',
+            'tanggal_berdiri' => 'nullable|date',
+            'whatsapp'  => 'nullable|string',
+            'telepon'   => 'nullable|string',
+            'email'     => 'required|email',
+            'logo'      => 'nullable|image|mimes:jpeg,webp,png,jpg,gif,svg|max:2048',
         ]);
 
-        return response()->json($unitSekolah, 201);
+        $unitSekolah = UnitSekolah::create([
+            'nama'      => $request->nama,
+            'jenjang'   => $request->jenjang,
+            'alamat'    => $request->alamat,
+            'desa'      => $request->desa,
+            'kecamatan' => $request->kecamatan,
+            'kota'      => $request->kota,
+            'provinsi'  => $request->provinsi,
+            'kode_pos'  => $request->kode_pos,
+            'status'    => $request->status,
+            'tanggal_berdiri' => $request->tanggal_berdiri,
+            'whatsapp'  => $request->whatsapp,
+            'telepon'   => $request->telepon,
+            'email'     => $request->email,
+        ]);
+
+        return response()->json($unitSekolah);
     }
 
     /**

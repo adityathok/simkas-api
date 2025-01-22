@@ -98,5 +98,19 @@ class UnitSekolah extends Model
                 $model->id = Str::ulid();
             }
         });
+
+        //jika hapus
+        static::deleting(function ($model) {
+            //jika ada logo, hapus
+            if ($model->logo) {
+                $file = FileUploadMan::where('id', $model->logo)->first();
+                $file->delete();
+            }
+            //hapus kolom logo
+            $model->logo = null;
+
+            //hapus data pegawai di unit sekolah
+            $model->pegawais()->detach();
+        });
     }
 }
