@@ -19,7 +19,7 @@ class UnitSekolahFactory extends Factory
         $city       = fake()->city();
         $jenjang    = fake()->randomElement(['TK', 'KB', 'SD', 'SMP', 'SMA']);
         return [
-            'id'        => fake()->ulid(),
+            'id'        => fake()->unique()->numerify('01XMPL#########'),
             'nama'      => $jenjang . ' ' . $city . ' ' . fake()->numberBetween(1, 99),
             'jenjang'   => $jenjang,
             'alamat'    => fake()->address(),
