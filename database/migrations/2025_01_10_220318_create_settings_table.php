@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('value');
             $table->boolean('is_array')->default(false);
             $table->bigInteger('file_id')->unsigned()->nullable();
-            $table->foreign('file_id')->references('id')->on('file_upload_men')->onDelete('cascade');
+            $table->foreign('file_id')->references('id')->on('file_upload_men')->onDelete('set null');
             $table->timestamps();
         });
     }

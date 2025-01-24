@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pegawais', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->char('user_id', 26)->nullable();
+            $table->char('user_id', 26);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('nip')->nullable()->unique();
             $table->string('nama');
