@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('telepon')->nullable();
             $table->string('email')->nullable();
             $table->foreignId('logo')->nullable()->index();
+            $table->string('tingkat')->nullable();
+            $table->string('rombel')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

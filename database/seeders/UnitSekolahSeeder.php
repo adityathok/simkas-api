@@ -26,6 +26,35 @@ class UnitSekolahSeeder extends Seeder
         }
 
         foreach ($jenjangs as $jenjang) {
+
+            //ambil jenjang
+            switch ($jenjang) {
+                case 'TK':
+                    $tingkat = ['A', 'B'];
+                    $rombel = ['Kecil', 'Besar'];
+                    break;
+                case 'KB':
+                    $tingkat = ['A', 'B'];
+                    $rombel = ['Kecil', 'Besar'];
+                    break;
+                case 'SD':
+                    $tingkat = [1, 2, 3, 4, 5, 6];
+                    $rombel = ['A', 'B', 'C'];
+                    break;
+                case 'SMP':
+                    $tingkat = [7, 8, 9];
+                    $rombel = ['A', 'B', 'C'];
+                    break;
+                case 'SMA':
+                    $tingkat = [10, 11, 12];
+                    $rombel = ['A', 'B', 'C', 'D', 'E', 'F'];
+                    break;
+                default:
+                    $tingkat = [1, 2, 3];
+                    $rombel = ['A'];
+                    break;
+            }
+
             //buat unit
             $city = fake()->city();
             $unitsekolah = UnitSekolah::create([
@@ -43,6 +72,8 @@ class UnitSekolahSeeder extends Seeder
                 'telepon'   => fake()->phoneNumber(),
                 'email'     => fake()->unique()->safeEmail(),
                 'tanggal_berdiri' => fake()->date('Y-m-d', '2000-01-01'),
+                'tingkat'  => json_encode($tingkat),
+                'rombel'   => json_encode($rombel),
             ]);
         }
     }

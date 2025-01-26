@@ -22,6 +22,18 @@ class Kelas extends Model
         'wali_id',
     ];
 
+    //relasi ke unit sekolah
+    public function unitSekolah()
+    {
+        return $this->belongsTo(UnitSekolah::class, 'unit_sekolah_id');
+    }
+
+    //relasi ke wali kelas
+    public function wali()
+    {
+        return $this->belongsTo(User::class, 'wali_id');
+    }
+
     /**
      * Boot the model and assign a ULID to the model's ID attribute 
      * when a new instance is being created.

@@ -19,47 +19,25 @@ class KelasSeeder extends Seeder
 
         foreach ($unitSekolahList as $unitSekolah) {
 
-            //ambil jenjang
-            switch ($unitSekolah->jenjang) {
-                case 'TK':
-                    $jumlahKelas = 2;
-                    $tingkatKelas = ['A', 'B'];
-                    $subkelas = ['Kecil', 'Besar'];
-                    break;
-                case 'KB':
-                    $jumlahKelas = 2;
-                    $tingkatKelas = ['A', 'B'];
-                    $subkelas = ['Kecil', 'Besar'];
-                    break;
-                case 'SD':
-                    $jumlahKelas = 6;
-                    $tingkatKelas = [1, 2, 3, 4, 5, 6];
-                    $subkelas = ['A', 'B', 'C'];
-                    break;
-                case 'SMP':
-                    $jumlahKelas = 3;
-                    $tingkatKelas = [7, 8, 9];
-                    $subkelas = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-                    break;
-                case 'SMA':
-                    $jumlahKelas = 3;
-                    $tingkatKelas = [10, 11, 12];
-                    $subkelas = ['A', 'B', 'C', 'D', 'E', 'F'];
-                    break;
-                default:
-                    $jumlahKelas = 3;
-                    $tingkatKelas = [1, 2, 3];
-                    $subkelas = ['A'];
-                    break;
-            }
+            $tingkats = $unitSekolah->tingkat ? json_decode($unitSekolah->tingkat) : [1];
+            $rombels = $unitSekolah->rombel ? json_decode($unitSekolah->rombel) : [];
 
-            for ($i = 0; $i < $jumlahKelas; $i++) {
-                foreach ($subkelas as $sub) {
+            foreach ($tingkats as $tingkat) {
+                if ($rombels) {
+                    foreach ($rombels as $rombel) {
+                        Kelas::create([
+                            'unit_sekolah_id'   => $unitSekolah->id,
+                            'tingkat'           => $tingkat,
+                            'tahun_ajaran'      => date('Y', strtotime('-1 year')) . '/' . date('Y'),
+                            'nama'              => $tingkat . ' ' . $rombel
+                        ]);
+                    }
+                } else {
                     Kelas::create([
                         'unit_sekolah_id'   => $unitSekolah->id,
-                        'tingkat'           => $tingkatKelas[$i],
-                        'tahun_ajaran'      => date('Y', strtotime('-1 year')) . '_' . date('Y'),
-                        'nama'              => $tingkatKelas[$i] . ' ' . $sub
+                        'tingkat'           => $tingkat,
+                        'tahun_ajaran'      => date('Y', strtotime('-1 year')) . '/' . date('Y'),
+                        'nama'              => $tingkat
                     ]);
                 }
             }

@@ -33,6 +33,8 @@ class UnitSekolahFactory extends Factory
             'telepon'   => fake()->unique()->numerify('02#############'),
             'email'     => fake()->unique()->safeEmail(),
             'tanggal_berdiri' => fake()->date('Y-m-d', '2000-01-01'),
+            'tingkat'  => json_encode([1, 2, 3]),
+            'rombel'   => json_encode(['A', 'B', 'C']),
         ];
     }
 }

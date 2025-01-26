@@ -11,6 +11,7 @@ use App\Http\Controllers\UnitSekolahController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UnitSekolahPegawaiController;
+use App\Http\Controllers\KelasController;
 
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 //     return $request->user();
@@ -29,7 +30,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'unitsekolah'           => UnitSekolahController::class,
         'pegawai'               => PegawaiController::class,
         'unitsekolahpegawai'    => UnitSekolahPegawaiController::class,
-        'setting'               => SettingController::class
+        'setting'               => SettingController::class,
+        'kelas'                 => KelasController::class
     ]);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');

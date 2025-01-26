@@ -31,7 +31,9 @@ class UnitSekolah extends Model
         'whatsapp',
         'telepon',
         'email',
-        'logo'
+        'logo',
+        'tingkat',
+        'rombel',
     ];
 
     public function logoFile()
@@ -82,6 +84,12 @@ class UnitSekolah extends Model
                 'avatar'        => $user->avatar
             ];
         });
+    }
+
+    //relasi ke kelas
+    public function kelas()
+    {
+        return $this->hasMany(Kelas::class);
     }
 
     /**
