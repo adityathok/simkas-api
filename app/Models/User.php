@@ -75,6 +75,12 @@ class User extends Authenticatable
         return $this->hasOne(Pegawai::class, 'user_id');
     }
 
+    public function walikelas()
+    {
+        return $this->hasOne(Kelas::class, 'wali_id');
+    }
+
+
     public function avatarFile()
     {
         return $this->belongsTo(FileUploadMan::class, 'avatar', 'id');

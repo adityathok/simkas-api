@@ -29,4 +29,26 @@ class FormOptionsController extends Controller
             'jabatan' => Setting::get('jabatan')
         ]);
     }
+
+    public function option_add_kelas()
+    {
+        $unit = UnitSekolah::all();
+        $pegawai = Pegawai::with(['user:id,name,avatar', 'user.avatarFile:id,guide,path'])->get(); //ringkas array
+        $pegawai->transform(function ($data) {
+            return [
+                'id'            => $data->id,
+                'user_id'       => $data->user_id,
+                'pegawai_id'    => $data->user->pegawai->id,
+                'nama'          => $data->user->pegawai->nama,
+                'avatar'        => $data->user->avatar_url,
+                'nip'           => $data->user->pegawai->nip
+            ];
+        });
+        return response()->json([
+            'tahun_ajaran'          => Setting::get('tahun_ajaran'),
+            'tahun_ajaran_options'  => Setting::get('tahun_ajaran_options'),
+            'unit_sekolah'          => $unit,
+            'pegawai'               => $pegawai
+        ]);
+    }
 }

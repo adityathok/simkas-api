@@ -13,8 +13,23 @@ class KelasController extends Controller
      */
     public function index()
     {
-        $kelas = Kelas::with('unitSekolah')->paginate(20);
+        $kelas = Kelas::with('unitSekolah', 'wali.pegawai')->paginate(20);
         $kelas->withPath('/kelas');
+
+        // Meringkas hasil wali saja menggunakan collection map
+        $kelas->getCollection()->transform(function ($item) {
+            return [
+                'id'            => $item->id,
+                'nama'          => $item->nama,
+                'tingkat'       => $item->tingkat,
+                'tahun_ajaran'  => $item->tahun_ajaran,
+                'unit'          => $item->unitSekolah->nama ?? null,
+                'unit_id'       => $item->unitSekolah->id ?? null,
+                'wali'          => $item->wali->pegawai->nama ?? null,
+                'wali_id'       => $item->wali->id ?? null,
+            ];
+        });
+
         return response()->json($kelas);
     }
 
@@ -23,7 +38,21 @@ class KelasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama'              => 'required|min:1',
+            'tingkat'           => 'required|min:1',
+            'tahun_ajaran'      => 'required|min:4',
+            'unit_sekolah_id'   => 'required|min:3',
+            'wali_id'           => 'required|min:3'
+        ]);
+
+        return Kelas::create([
+            'nama'              => $request->nama,
+            'tingkat'           => $request->tingkat,
+            'tahun_ajaran'      => $request->tahun_ajaran,
+            'unit_sekolah_id'   => $request->unit_sekolah_id,
+            'wali_id'           => $request->wali_id
+        ]);
     }
 
     /**

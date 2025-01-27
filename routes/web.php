@@ -10,11 +10,12 @@ Route::get('/', function () {
 });
 Route::get('/infoapp', function () {
     return [
-        'app_name'  => Setting::get('app_name', 'Sistem Informasi Akademik Keuangan Sekolah'),
-        'lembaga'   => Setting::get('nama_lembaga', 'SIMKAS'),
-        'logo'      => Setting::get('logo_lembaga', ''),
-        "version"   => "1.0.0",
-        "status"    => "200"
+        'app_name'      => Setting::get('app_name', 'Sistem Informasi Akademik Keuangan Sekolah'),
+        'lembaga'       => Setting::get('nama_lembaga', 'SIMKAS'),
+        'logo'          => Setting::get('logo_lembaga', ''),
+        'tahun_ajaran'  => Setting::get('tahun_ajaran', date('Y') . '/' . date('Y', strtotime('+1 year'))),
+        "version"       => "1.0.0",
+        "status"        => "200"
     ];
 });
 

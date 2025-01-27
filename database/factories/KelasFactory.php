@@ -18,10 +18,10 @@ class KelasFactory extends Factory
     {
         $tingkat = fake()->randomBetween(1, 9);
         return [
-            'id' => fake()->unique()->numerify('01XMPL#########'),
-            'nama' => $tingkat . ' ' . fake()->randomElement(['A', 'B', 'C', 'D', 'E']),
-            'tingkat' => $tingkat,
-            'tahun_ajaran' => fake()->year('-1 year') . '_' . fake()->year(),
+            'id'            => fake()->unique()->numerify('01XMPL#########'),
+            'nama'          => $tingkat . ' ' . fake()->randomElement(['A', 'B', 'C', 'D', 'E']),
+            'tingkat'       => $tingkat,
+            'tahun_ajaran'  => fake()->year('-1 year') . '_' . fake()->year(),
         ];
     }
 }

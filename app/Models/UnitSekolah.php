@@ -36,6 +36,23 @@ class UnitSekolah extends Model
         'rombel',
     ];
 
+    // Menentukan kolom yang akan didekode
+    protected $casts = [
+        'tingkat' => 'json',
+        'rombel' => 'json',
+    ];
+
+    // Jika Anda ingin menggunakan accessor secara manual
+    public function getTingkatAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getRombelAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
     public function logoFile()
     {
         return $this->belongsTo(FileUploadMan::class, 'logo', 'id');

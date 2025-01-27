@@ -46,4 +46,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('unitsekolah/pegawai/{id}', [UnitSekolahController::class, 'pegawais']);
 
     Route::get('form-options/option-add-jabatan', [FormOptionsController::class, 'option_add_jabatan']);
+    Route::get('form-options/option-add-kelas', [FormOptionsController::class, 'option_add_kelas']);
 });
