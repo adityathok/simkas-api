@@ -51,4 +51,17 @@ class FormOptionsController extends Controller
             'pegawai'               => $pegawai
         ]);
     }
+
+    public function option_unitsekolah()
+    {
+        $unit = UnitSekolah::all();
+        //ringkas hasil
+        $unit->transform(function ($data) {
+            return [
+                'value' => $data->id,
+                'label' => $data->nama
+            ];
+        });
+        return response()->json($unit);
+    }
 }

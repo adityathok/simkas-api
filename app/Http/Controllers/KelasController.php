@@ -11,9 +11,26 @@ class KelasController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kelas = Kelas::with('unitSekolah', 'wali.pegawai')->paginate(20);
+        // $kelas = Kelas::with('unitSekolah', 'wali.pegawai')->paginate(20);
+        // $kelas->withPath('/kelas');
+
+        $query = Kelas::with('unitSekolah', 'wali.pegawai');
+
+        if ($request->filled('tahun_mulai') && $request->filled('tahun_selesai')) {
+            $query->where('tahun_ajaran', $request->input('tahun_mulai') . '/' . $request->input('tahun_selesai'));
+        }
+
+        if ($request->filled('cari')) {
+            $query->where('nama', 'like', '%' . $request->input('cari') . '%');
+        }
+
+        if ($request->filled('unit')) {
+            $query->where('unit_sekolah_id', $request->input('unit'));
+        }
+
+        $kelas = $query->paginate(20);
         $kelas->withPath('/kelas');
 
         // Meringkas hasil wali saja menggunakan collection map
