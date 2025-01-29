@@ -7,6 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\UnitSekolah;
 use App\Models\Pegawai;
+use App\Models\TahunAjaran;
 
 class KelasSeeder extends Seeder
 {
@@ -15,6 +16,11 @@ class KelasSeeder extends Seeder
      */
     public function run(): void
     {
+
+        //tahun ajaran aktif
+        $tahunAjaran = TahunAjaran::getActive();
+        $tahunAjaran = $tahunAjaran?->id;
+
         //Ambil semua Unit
         $unitSekolahList = UnitSekolah::all();
 
@@ -30,18 +36,20 @@ class KelasSeeder extends Seeder
                 if ($rombels) {
                     foreach ($rombels as $rombel) {
                         Kelas::create([
+                            'id'                => fake()->unique()->numerify('01XMPL###'),
                             'unit_sekolah_id'   => $unitSekolah->id,
                             'tingkat'           => $tingkat,
-                            'tahun_ajaran'      => date('Y', strtotime('-1 year')) . '/' . date('Y'),
+                            'tahun_ajaran'      => $tahunAjaran,
                             'nama'              => $tingkat . ' ' . $rombel,
                             'wali_id'           => $pegawai->user_id
                         ]);
                     }
                 } else {
                     Kelas::create([
+                        'id'                => fake()->unique()->numerify('01XMPL###'),
                         'unit_sekolah_id'   => $unitSekolah->id,
                         'tingkat'           => $tingkat,
-                        'tahun_ajaran'      => date('Y', strtotime('-1 year')) . '/' . date('Y'),
+                        'tahun_ajaran'      => $tahunAjaran,
                         'nama'              => $tingkat,
                         'wali_id'           => $pegawai->user_id
                     ]);

@@ -14,4 +14,21 @@ class TahunAjaran extends Model
         'akhir',
         'active'
     ];
+
+    //dapatkan tahun ajaran aktif
+    public static function getActive()
+    {
+        return self::where('active', true)->first();
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($model) {
+            if ($model->active) {
+                self::where('active', true)->update(['active' => false]);
+            }
+        });
+    }
 }
