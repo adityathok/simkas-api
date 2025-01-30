@@ -22,7 +22,25 @@ class TahunAjaranController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'id'        => 'required',
+            'nama'      => 'required',
+            'mulai'     => 'required',
+            'akhir'     => 'required',
+            'active'    => 'required'
+        ]);
+
+        //simpan updateorcreate
+        $tahunAjaran = TahunAjaran::updateOrCreate(
+            ['id' => $request->id],
+            [
+                'nama' => $request->nama,
+                'mulai' => $request->mulai,
+                'akhir' => $request->akhir,
+                'active' => $request->active
+            ]
+        );
+        return response()->json($tahunAjaran);
     }
 
     /**
@@ -30,7 +48,8 @@ class TahunAjaranController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $tahunAjaran = TahunAjaran::find($id);
+        return response()->json($tahunAjaran);
     }
 
     /**
@@ -38,7 +57,24 @@ class TahunAjaranController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validate = $request->validate([
+            'nama'      => 'required',
+            'mulai'     => 'required',
+            'akhir'     => 'required',
+            'active'    => 'required'
+        ]);
+
+        //simpan updateorcreate
+        $tahunAjaran = TahunAjaran::updateOrCreate(
+            [$id],
+            [
+                'nama' => $request->nama,
+                'mulai' => $request->mulai,
+                'akhir' => $request->akhir,
+                'active' => $request->active
+            ]
+        );
+        return response()->json($tahunAjaran);
     }
 
     /**
