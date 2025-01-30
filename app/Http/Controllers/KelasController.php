@@ -19,7 +19,7 @@ class KelasController extends Controller
         $query = Kelas::with('unitSekolah', 'wali.pegawai');
 
         if ($request->filled('tahun_mulai') && $request->filled('tahun_selesai')) {
-            $query->where('tahun_ajaran', $request->input('tahun_mulai') . '/' . $request->input('tahun_selesai'));
+            $query->where('tahun_ajaran', $request->input('tahun_mulai') . '_' . $request->input('tahun_selesai'));
         }
 
         if ($request->filled('cari')) {

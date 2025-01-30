@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\OptionsController;
 use App\Http\Controllers\FormOptionsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UserMetaController;
@@ -50,4 +51,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('form-options/unitsekolah', [FormOptionsController::class, 'option_unitsekolah']);
     Route::get('form-options/option-add-jabatan', [FormOptionsController::class, 'option_add_jabatan']);
     Route::get('form-options/option-add-kelas', [FormOptionsController::class, 'option_add_kelas']);
+
+    Route::get('option/{name}', [OptionsController::class, 'get']);
 });
