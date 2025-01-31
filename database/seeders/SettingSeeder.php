@@ -19,13 +19,6 @@ class SettingSeeder extends Seeder
         Setting::set('kota_lembaga', 'Sukoharjo');
         Setting::set('pimpinan_lembaga', 'Fulan Fulana S.Pd');
         Setting::set('jenjang', ['KB', 'TK', 'SD', 'SMP', 'SMA', 'Pondok']);
-        Setting::set('tahun_ajaran', date('Y') . '/' . date('Y', strtotime('+1 year')));
-        Setting::set('tahun_ajaran_options', [
-            date('Y', strtotime('-2 year')) . '/' . date('Y', strtotime('-1 year')),
-            date('Y', strtotime('-1 year')) . '/' . date('Y'),
-            date('Y') . '/' . date('Y', strtotime('+1 year')),
-            date('Y', strtotime('+1 year')) . '/' . date('Y', strtotime('+2 year')),
-        ]);
         Setting::set('jabatan', [
             'Guru',
             'Kepala Sekolah',

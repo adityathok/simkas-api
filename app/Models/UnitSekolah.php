@@ -13,7 +13,7 @@ class UnitSekolah extends Model
     // Non-incrementing ID karena ULID
     public $incrementing = false;
 
-    protected $appends = ['logo_url'];
+    protected $appends = ['logo_url', 'tingkats', 'rombels'];
 
     protected $fillable = [
         'id',
@@ -36,21 +36,26 @@ class UnitSekolah extends Model
         'rombel',
     ];
 
-    // Menentukan kolom yang akan didekode
-    protected $casts = [
-        'tingkat' => 'json',
-        'rombel' => 'json',
-    ];
-
-    // Jika Anda ingin menggunakan accessor secara manual
     public function getTingkatAttribute($value)
     {
-        return json_decode($value, true);
+        return $value ? json_decode($value, true) : null;
     }
 
     public function getRombelAttribute($value)
     {
-        return json_decode($value, true);
+        return $value ? json_decode($value, true) : null;
+    }
+
+    public function getTingkatsAttribute()
+    {
+        $tingkat = $this->tingkat;
+        return $tingkat ? json_decode($tingkat, true) : null;
+    }
+
+    public function getRombelsAttribute()
+    {
+        $rombel = $this->rombel;
+        return $rombel ? json_decode($rombel, true) : null;
     }
 
     public function logoFile()
