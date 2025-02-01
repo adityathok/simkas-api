@@ -26,8 +26,8 @@ class KelasSeeder extends Seeder
 
         foreach ($unitSekolahList as $unitSekolah) {
 
-            $tingkats = $unitSekolah->tingkat ? json_decode($unitSekolah->tingkat) : [1];
-            $rombels = $unitSekolah->rombel ? json_decode($unitSekolah->rombel) : [];
+            $tingkats = $unitSekolah->tingkat ? $unitSekolah->tingkat : [1];
+            $rombels = $unitSekolah->rombel ? $unitSekolah->rombel : [];
 
             // Contoh sederhana mendapatkan id guru
             $pegawai = Pegawai::inRandomOrder()->first();

@@ -13,7 +13,12 @@ class UnitSekolah extends Model
     // Non-incrementing ID karena ULID
     public $incrementing = false;
 
-    protected $appends = ['logo_url', 'tingkats', 'rombels'];
+    protected $casts = [
+        'tingkat' => 'array',
+        'rombel' => 'array',
+    ];
+
+    protected $appends = ['logo_url'];
 
     protected $fillable = [
         'id',
@@ -36,27 +41,27 @@ class UnitSekolah extends Model
         'rombel',
     ];
 
-    public function getTingkatAttribute($value)
-    {
-        return $value ? json_decode($value, true) : null;
-    }
+    // public function getTingkatAttribute($value)
+    // {
+    //     return $value ? json_decode($value, true) : null;
+    // }
 
-    public function getRombelAttribute($value)
-    {
-        return $value ? json_decode($value, true) : null;
-    }
+    // public function getRombelAttribute($value)
+    // {
+    //     return $value ? json_decode($value, true) : null;
+    // }
 
-    public function getTingkatsAttribute()
-    {
-        $tingkat = $this->tingkat;
-        return $tingkat ? json_decode($tingkat, true) : null;
-    }
+    // public function getTingkatsAttribute()
+    // {
+    //     $tingkat = $this->tingkat;
+    //     return $tingkat ? json_decode($tingkat, true) : null;
+    // }
 
-    public function getRombelsAttribute()
-    {
-        $rombel = $this->rombel;
-        return $rombel ? json_decode($rombel, true) : null;
-    }
+    // public function getRombelsAttribute()
+    // {
+    //     $rombel = $this->rombel;
+    //     return $rombel ? json_decode($rombel, true) : null;
+    // }
 
     public function logoFile()
     {

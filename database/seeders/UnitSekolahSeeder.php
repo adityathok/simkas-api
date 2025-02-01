@@ -72,8 +72,8 @@ class UnitSekolahSeeder extends Seeder
                 'telepon'   => fake()->phoneNumber(),
                 'email'     => fake()->unique()->safeEmail(),
                 'tanggal_berdiri' => fake()->date('Y-m-d', '2000-01-01'),
-                'tingkat'  => json_encode($tingkat),
-                'rombel'   => json_encode($rombel),
+                'tingkat'  => $tingkat,
+                'rombel'   => $rombel,
             ]);
         }
     }
