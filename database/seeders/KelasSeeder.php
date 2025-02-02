@@ -19,7 +19,7 @@ class KelasSeeder extends Seeder
 
         //tahun ajaran aktif
         $tahunAjaran = TahunAjaran::getActive();
-        $tahunAjaran = $tahunAjaran?->id;
+        $tahunAjaran = $tahunAjaran?->nama;
 
         //Ambil semua Unit
         $unitSekolahList = UnitSekolah::all();

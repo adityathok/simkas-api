@@ -41,28 +41,6 @@ class UnitSekolah extends Model
         'rombel',
     ];
 
-    // public function getTingkatAttribute($value)
-    // {
-    //     return $value ? json_decode($value, true) : null;
-    // }
-
-    // public function getRombelAttribute($value)
-    // {
-    //     return $value ? json_decode($value, true) : null;
-    // }
-
-    // public function getTingkatsAttribute()
-    // {
-    //     $tingkat = $this->tingkat;
-    //     return $tingkat ? json_decode($tingkat, true) : null;
-    // }
-
-    // public function getRombelsAttribute()
-    // {
-    //     $rombel = $this->rombel;
-    //     return $rombel ? json_decode($rombel, true) : null;
-    // }
-
     public function logoFile()
     {
         return $this->belongsTo(FileUploadMan::class, 'logo', 'id');

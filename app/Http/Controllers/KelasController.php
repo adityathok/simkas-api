@@ -13,13 +13,10 @@ class KelasController extends Controller
      */
     public function index(Request $request)
     {
-        // $kelas = Kelas::with('unitSekolah', 'wali.pegawai')->paginate(20);
-        // $kelas->withPath('/kelas');
-
         $query = Kelas::with('unitSekolah', 'wali.pegawai');
 
         if ($request->filled('tahun_mulai') && $request->filled('tahun_selesai')) {
-            $query->where('tahun_ajaran', $request->input('tahun_mulai') . '_' . $request->input('tahun_selesai'));
+            $query->where('tahun_ajaran', $request->input('tahun_mulai') . '/' . $request->input('tahun_selesai'));
         }
 
         if ($request->filled('cari')) {
@@ -77,7 +74,8 @@ class KelasController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $kelas = Kelas::with('unitSekolah', 'wali.pegawai')->find($id);
+        return response()->json($kelas);
     }
 
     /**
@@ -85,7 +83,24 @@ class KelasController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'nama'              => 'required|min:1',
+            'tingkat'           => 'required|min:1',
+            'tahun_ajaran'      => 'required|min:4',
+            'unit_sekolah_id'   => 'required|min:3',
+            'wali_id'           => 'required|min:3'
+        ]);
+
+        $kelas = Kelas::find($id);
+        $kelas->update([
+            'nama'              => $request->nama,
+            'tingkat'           => $request->tingkat,
+            'tahun_ajaran'      => $request->tahun_ajaran,
+            'unit_sekolah_id'   => $request->unit_sekolah_id,
+            'wali_id'           => $request->wali_id
+        ]);
+
+        return response()->json($kelas);
     }
 
     /**
@@ -93,6 +108,7 @@ class KelasController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $kelas = Kelas::find($id);
+        $kelas->delete();
     }
 }
