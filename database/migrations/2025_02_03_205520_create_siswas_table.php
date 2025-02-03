@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nis')->unique();
             $table->string('nisn')->nullable()->unique();
             $table->string('nama');
+            $table->string('nama_panggilan')->nullable();
             $table->string('status')->nullable();
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
