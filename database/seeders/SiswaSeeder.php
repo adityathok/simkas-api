@@ -20,6 +20,12 @@ class SiswaSeeder extends Seeder
         foreach ($getkelas as $kelas) {
             //factory 20 - 30 siswa
             Siswa::factory(rand(10, 20))->create();
+
+            //loop 15 - 30 siswa
+            for ($i = 0; $i < rand(15, 30); $i++) {
+                $siswa = Siswa::factory()->create();
+                $siswa->kelas()->attach($kelas->id);
+            }
         }
     }
 }
