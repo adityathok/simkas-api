@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pegawais', function (Blueprint $table) {
+        Schema::create('siswas', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->char('user_id', 26);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('nip')->nullable()->unique();
+            $table->string('nis')->unique();
+            $table->string('nisn')->nullable()->unique();
             $table->string('nama');
             $table->string('status')->nullable();
             $table->string('tempat_lahir')->nullable();
@@ -33,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pegawais');
+        Schema::dropIfExists('siswas');
     }
 };

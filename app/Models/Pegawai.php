@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -10,7 +11,7 @@ use App\Models\User;
 
 class Pegawai extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     // Non-incrementing ID karena ULID
     public $incrementing = false;
@@ -51,6 +52,12 @@ class Pegawai extends Model
             // Menetapkan ID menggunakan ULID jika ID kosong
             if (empty($pegawai->id)) {
                 $pegawai->id = Str::ulid();
+            }
+
+            // Menetapkan NIP jika kosong
+            if (empty($pegawai->nip)) {
+                $t = time();
+                $pegawai->nip = date("y", $t) . rand(10, 99) . $t;
             }
 
             // Membuat User baru dan menyimpan user_id di Pegawai
