@@ -17,7 +17,7 @@ class SiswaFactory extends Factory
      */
     public function definition(): array
     {
-        $gender = fake()->randomElement(['male', 'female']);
+        $gender     = fake()->randomElement(['male', 'female']);
         $first_name = fake()->firstName($gender);
         $last_name  = fake()->lastName($gender);
         $jk         = ($gender === 'male') ? 'Laki-laki' : 'Perempuan';

@@ -34,6 +34,25 @@ class Siswa extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    // Relasi ke Kelas melalui Tabel Pivot siswa_kelas
+    public function kelas()
+    {
+        return $this->belongsToMany(
+            Kelas::class,      // Model yang direlasikan
+            'siswa_kelas',     // Tabel pivot
+            'user_id',         // Foreign key di tabel pivot (mengacu ke user_id)
+            'kelas_id',        // Related key di tabel pivot (mengacu ke kelas_id)
+            'user_id',         // Local key di model Siswa
+            'id'               // Local key di model Kelas (default 'id')
+        )->withPivot('active')->withTimestamps();
+    }
+
+    // Mendapatkan Kelas Aktif
+    public function kelasAktif()
+    {
+        return $this->kelas()->wherePivot('active', true)->first();
+    }
+
     public static function boot()
     {
         parent::boot();
@@ -56,7 +75,7 @@ class Siswa extends Model
                 $model->email = $model->nis . '@sekolah.com';
             }
 
-            // Membuat User baru dan menyimpan user_id di Pegawai
+            // Membuat User baru dan menyimpan user_id di Siswa
             if (empty($model->user_id)) {
                 $user = User::create([
                     'name'      => $model->nama,
