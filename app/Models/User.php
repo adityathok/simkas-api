@@ -96,6 +96,26 @@ class User extends Authenticatable
             ->withPivot('jabatan');
     }
 
+    // Relasi ke SiswaKelas
+    public function siswaKelas()
+    {
+        return $this->hasMany(SiswaKelas::class);
+    }
+
+    // Relasi ke Kelas melalui SiswaKelas
+    public function kelas()
+    {
+        return $this->belongsToMany(Kelas::class, 'siswa_kelas')
+            ->withPivot('active')
+            ->withTimestamps();
+    }
+
+    // Mendapatkan kelas saat ini
+    public function kelasAktif()
+    {
+        return $this->kelas()->wherePivot('active', true)->first();
+    }
+
     public function getRolesy()
     {
         $roles = $this->roles()->get();

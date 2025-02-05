@@ -34,6 +34,20 @@ class Kelas extends Model
         return $this->belongsTo(User::class, 'wali_id');
     }
 
+    // Relasi ke SiswaKelas
+    public function siswaKelas()
+    {
+        return $this->hasMany(SiswaKelas::class);
+    }
+
+    // Relasi ke User melalui SiswaKelas
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'siswa_kelas')
+            ->withPivot('active')
+            ->withTimestamps();
+    }
+
     /**
      * Boot the model and assign a ULID to the model's ID attribute 
      * when a new instance is being created.

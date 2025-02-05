@@ -14,11 +14,16 @@ return new class extends Migration
         Schema::create('siswa_kelas', function (Blueprint $table) {
             $table->id();
             $table->char('user_id', 26)->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->char('kelas_id', 26)->nullable();
-            $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('cascade');
-            $table->boolean('active')->default(true);
+            $table->boolean('active')->default(false);
             $table->timestamps();
+
+            // Foreign keys
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('cascade');
+
+            // Unique constraint untuk memastikan satu kelas aktif per siswa
+            $table->unique(['user_id', 'active'], 'user_active_unique');
         });
     }
 

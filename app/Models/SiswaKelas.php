@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class SiswaKelas extends Model
+class SiswaKelas extends Pivot
 {
     protected $fillable = [
         'user_id',
@@ -14,13 +15,33 @@ class SiswaKelas extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
+    // Relasi ke User
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
+    // Relasi ke Kelas
     public function kelas()
     {
-        return $this->belongsTo(Kelas::class, 'kelas_id');
+        return $this->belongsTo(Kelas::class);
+    }
+
+    public function scopeAktif($query)
+    {
+        return $query->where('active', true);
+    }
+
+    public function pindahkanKelas($kelasBaruId)
+    {
+        // Menonaktifkan kelas saat ini
+        $this->update(['active' => false]);
+
+        // Membuat entri baru untuk kelas baru
+        self::create([
+            'user_id' => $this->user_id,
+            'kelas_id' => $kelasBaruId,
+            'active' => true,
+        ]);
     }
 }
