@@ -15,6 +15,8 @@ class Siswa extends Model
     // Non-incrementing ID karena ULID
     public $incrementing = false;
 
+    protected $hidden = ['pivot'];
+
     protected $fillable = [
         'user_id',
         'nis',
@@ -50,7 +52,14 @@ class Siswa extends Model
     // Mendapatkan Kelas Aktif
     public function kelasAktif()
     {
-        return $this->kelas()->wherePivot('active', true)->first();
+        // return $this->kelas()->wherePivot('active', true)->first();
+        return $this->belongsToMany(
+            Kelas::class,
+            'siswa_kelas',
+            'user_id',
+            'kelas_id',
+            'user_id',
+        )->wherePivot('active', true)->first();
     }
 
     public static function boot()
