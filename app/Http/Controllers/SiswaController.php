@@ -44,7 +44,33 @@ class SiswaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nis'               => 'required|min:5|numeric',
+            'nisn'              => 'required|min:5|numeric',
+            'nama'              => 'required|min:3',
+            'nama_panggilan'    => 'required|min:3',
+            'status'            => 'required|min:3',
+            'tempat_lahir'      => 'required|min:3',
+            'tanggal_lahir'     => 'required|min:3',
+            'tanggal_masuk'     => 'required|min:3',
+            'jenis_kelamin'     => 'required|min:3',
+            'email'             => 'required|min:10|email',
+        ]);
+
+        $siswa = Siswa::create([
+            'nis'               => $request->nis,
+            'nisn'              => $request->nisn,
+            'nama'              => $request->nama,
+            'nama_panggilan'    => $request->nama_panggilan,
+            'status'            => $request->status,
+            'tempat_lahir'      => $request->tempat_lahir,
+            'tanggal_lahir'     => $request->tanggal_lahir,
+            'tanggal_masuk'     => $request->tanggal_masuk,
+            'jenis_kelamin'     => $request->jenis_kelamin,
+            'email'             => $request->email
+        ]);
+
+        return response()->json($siswa);
     }
 
     /**
@@ -64,7 +90,34 @@ class SiswaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'nis'               => 'required|min:5|numeric',
+            'nisn'              => 'required|min:5|numeric',
+            'nama'              => 'required|min:3',
+            'nama_panggilan'    => 'required|min:3',
+            'status'            => 'required|min:3',
+            'tempat_lahir'      => 'required|min:3',
+            'tanggal_lahir'     => 'required|min:3',
+            'tanggal_masuk'     => 'required|min:3',
+            'jenis_kelamin'     => 'required|min:3',
+            'email'             => 'required|min:10|email',
+        ]);
+
+        $siswa = Siswa::find($id);
+        $siswa->update([
+            'nis'               => $request->nis,
+            'nisn'              => $request->nisn,
+            'nama'              => $request->nama,
+            'nama_panggilan'    => $request->nama_panggilan,
+            'status'            => $request->status,
+            'tempat_lahir'      => $request->tempat_lahir,
+            'tanggal_lahir'     => $request->tanggal_lahir,
+            'tanggal_masuk'     => $request->tanggal_masuk,
+            'jenis_kelamin'     => $request->jenis_kelamin,
+            'email'             => $request->email
+        ]);
+
+        return response()->json($siswa);
     }
 
     /**
@@ -72,6 +125,7 @@ class SiswaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $siswa = Siswa::find($id);
+        $siswa->delete();
     }
 }
