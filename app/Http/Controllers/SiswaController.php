@@ -34,6 +34,7 @@ class SiswaController extends Controller
                 'ttl'           => $s->tempat_lahir . ',' . $s->tanggal_lahir,
                 'kelas'         => $kelasAktif->nama,
                 'avatar_url'    => $s->avatar_url,
+                'status'        => $s->status,
             ];
         });
 
