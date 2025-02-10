@@ -17,7 +17,7 @@ class UserMeta extends Model
     {
         $result = [];
         foreach ($metaData as $key => $value) {
-            if (empty($value)) {
+            if (empty($value) || $value === 'null') {
                 self::where('user_id', $userId)->where('meta_key', $key)->delete();
                 $result[$key] = null;
             } else {
@@ -45,7 +45,8 @@ class UserMeta extends Model
         $metaValues = array_fill_keys($keys, null);
 
         foreach ($userMeta as $meta) {
-            $metaValues[$meta->meta_key] = $meta->meta_value;
+            $value = $meta->meta_value == 'null' ? null : $meta->meta_value;
+            $metaValues[$meta->meta_key] = $value;
         }
         return $metaValues;
     }

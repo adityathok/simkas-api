@@ -15,7 +15,9 @@ class Siswa extends Model
     // Non-incrementing ID karena ULID
     public $incrementing = false;
 
-    protected $hidden = ['pivot'];
+    protected $hidden = ['created_at', 'updated_at'];
+
+    protected $appends = ['avatar_url'];
 
     protected $fillable = [
         'user_id',
@@ -60,6 +62,17 @@ class Siswa extends Model
             'kelas_id',
             'user_id',
         )->wherePivot('active', true)->first();
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        //ambil avatar url dari user
+        return $this->user ? $this->user->avatar_url : null;
+
+        // if ($this->avatarFile && $this->avatarFile->url) {
+        //     return $this->avatarFile->stream;
+        // }
+        // return asset('assets/images/default-avatar.jpg');
     }
 
     public static function boot()

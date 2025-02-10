@@ -12,7 +12,7 @@ class SiswaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Siswa::with('kelas:id,nama,tahun_ajaran');
+        $query = Siswa::with('kelas:id,nama,tahun_ajaran', 'user:id,name,avatar');
 
         if ($request->filled('cari')) {
             $query->where('nama', 'like', '%' . $request->input('cari') . '%');
@@ -33,6 +33,7 @@ class SiswaController extends Controller
                 'jenis_kelamin' => $s->jenis_kelamin,
                 'ttl'           => $s->tempat_lahir . ',' . $s->tanggal_lahir,
                 'kelas'         => $kelasAktif->nama,
+                'avatar_url'    => $s->avatar_url,
             ];
         });
 
@@ -78,7 +79,11 @@ class SiswaController extends Controller
      */
     public function show(string $id)
     {
-        $siswa = Siswa::find($id);
+        $siswa = Siswa::with('user:id,name,avatar')->find($id);
+
+        if (!$siswa) {
+            return response()->json(['message' => 'Siswa not found'], 404);
+        }
 
         $siswa->kelas = $siswa->kelasAktif();
 
