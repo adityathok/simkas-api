@@ -48,7 +48,7 @@ class SiswaController extends Controller
     {
         $request->validate([
             'nis'               => 'required|min:5|numeric',
-            'nisn'              => 'required|min:5|numeric',
+            'nisn'              => 'nullable|min:5|numeric',
             'nama'              => 'required|min:3',
             'nama_panggilan'    => 'required|min:3',
             'status'            => 'required|min:3',
@@ -56,7 +56,7 @@ class SiswaController extends Controller
             'tanggal_lahir'     => 'required|min:3',
             'tanggal_masuk'     => 'required|min:3',
             'jenis_kelamin'     => 'required|min:3',
-            'email'             => 'required|min:10|email',
+            'email'             => 'nullable|min:10|email',
         ]);
 
         $siswa = Siswa::create([
@@ -98,7 +98,7 @@ class SiswaController extends Controller
     {
         $request->validate([
             'nis'               => 'required|min:5|numeric',
-            'nisn'              => 'required|min:5|numeric',
+            'nisn'              => 'nullable|min:5|numeric',
             'nama'              => 'required|min:3',
             'nama_panggilan'    => 'required|min:3',
             'status'            => 'required|min:3',
@@ -106,7 +106,7 @@ class SiswaController extends Controller
             'tanggal_lahir'     => 'required|min:3',
             'tanggal_masuk'     => 'required|min:3',
             'jenis_kelamin'     => 'required|min:3',
-            'email'             => 'required|min:10|email',
+            'email'             => 'nullable|min:10|email',
         ]);
 
         $siswa = Siswa::find($id);

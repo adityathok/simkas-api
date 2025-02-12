@@ -115,5 +115,14 @@ class Siswa extends Model
                 ]);
             }
         });
+
+        static::updating(function ($siswa) {
+            $user = User::find($siswa->user_id);
+            if ($user) {
+                $user->email = $siswa->email;
+                $user->name = $siswa->nama;
+                $user->save();
+            }
+        });
     }
 }
