@@ -26,13 +26,12 @@ class SiswaController extends Controller
 
             return [
                 'id'            => $s->id,
-                'nama'          => $s->nama,
+                'nama'          => $s->nama ?? null,
                 'nis'           => $s->nis,
-                'nisn'          => $s->nisn,
-                'nama'          => $s->nama,
+                'nisn'          => $s->nisn ?? null,
                 'jenis_kelamin' => $s->jenis_kelamin,
                 'ttl'           => $s->tempat_lahir . ',' . $s->tanggal_lahir,
-                'kelas'         => $kelasAktif->nama,
+                'kelas'         => $kelasAktif ? $kelasAktif->nama : null,
                 'avatar_url'    => $s->avatar_url,
                 'status'        => $s->status,
             ];

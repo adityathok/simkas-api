@@ -13,7 +13,7 @@ class Kelas extends Model
     // Non-incrementing ID karena ULID
     public $incrementing = false;
 
-    protected $hidden = ['pivot', 'created_at', 'updated_at', 'deleted_at'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     protected $fillable = [
         'id',
