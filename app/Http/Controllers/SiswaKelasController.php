@@ -47,7 +47,24 @@ class SiswaKelasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'siswa_id'  => 'required',
+            'user_id'   => 'required',
+            'kelas_id'  => 'required',
+            'active'    => 'required'
+        ]);
+
+        //temukan siswa
+        $siswa = Siswa::find($request->siswa_id);
+
+        if (!$siswa) {
+            return response()->json(['message' => 'siswa not found'], 404);
+        }
+
+        //update kelas siswa
+        $siswa->kelas()->attach($request->kelas_id, ['active' => $request->active]);
+
+        return response()->json($siswa);
     }
 
     /**

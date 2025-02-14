@@ -15,7 +15,7 @@ class OptionsController extends Controller
     //time cache
     public $time_cache = (60 * 5);
 
-    public function get(string $name)
+    public function get(request $request, string $name)
     {
         $result = [];
 
@@ -24,21 +24,51 @@ class OptionsController extends Controller
                 return $this->unitsekolah();
                 break;
             case 'kelas':
-                $result = Kelas::all();
+                return $this->kelas();
                 break;
-            case 'tahunajaran':
-                $result = TahunAjaran::all();
+            case 'tahun_ajaran':
+                return $this->tahun_ajaran();
                 break;
             case 'add_kelas':
                 return $this->add_kelas();
                 break;
+            case 'siswakelas':
+                return $this->siswakelas();
+                break;
             default:
-                $result = Cache::remember('option-' . $name, $this->time_cache, function ($name) {
-                    return Setting::get($name);
-                });
+                return Setting::get($name);
         }
 
         return response()->json($result);
+    }
+
+    public function tahun_ajaran()
+    {
+        $tahun_ajaran = TahunAjaran::all();
+        ///collection
+        $tahun_ajaran = collect($tahun_ajaran)->map(function ($item) {
+            return [
+                'value' => $item->nama,
+                'label' => $item->nama
+            ];
+        });
+
+        return $tahun_ajaran;
+    }
+
+    public function kelas()
+    {
+        $kelas = Kelas::all();
+        ///collection
+        $kelas = collect($kelas)->map(function ($data) {
+            return [
+                'value'         => $data->id,
+                'label'         => $data->nama . ' - ' . $data->tahun_ajaran,
+                'tahun_ajaran'  => $data->tahun_ajaran
+            ];
+        });
+
+        return $kelas;
     }
 
     private function unitsekolah()
@@ -48,8 +78,8 @@ class OptionsController extends Controller
             //ringkas hasil
             $unit->transform(function ($data) {
                 return [
-                    'value' => $data->id,
-                    'label' => $data->nama
+                    'value'         => $data->id,
+                    'label'         => $data->nama,
                 ];
             });
             return $unit;
