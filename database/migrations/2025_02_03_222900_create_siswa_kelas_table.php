@@ -21,9 +21,6 @@ return new class extends Migration
             // Foreign keys
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('cascade');
-
-            // Unique constraint untuk memastikan satu kelas aktif per siswa
-            $table->unique(['user_id', 'active'], 'user_active_unique');
         });
     }
 

@@ -44,4 +44,17 @@ class SiswaKelas extends Pivot
             'active' => true,
         ]);
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($model) {
+            if ($model->active) {
+                // Set semua kelas lain menjadi tidak aktif untuk user_id yang sama
+                static::where('user_id', $model->user_id)
+                    ->update(['active' => false]);
+            }
+        });
+    }
 }

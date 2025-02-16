@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Siswa;
+use App\Models\Kelas;
 use App\Models\SiswaKelas;
 
 class SiswaKelasController extends Controller
@@ -24,6 +25,8 @@ class SiswaKelasController extends Controller
                 return response()->json(['message' => 'siswa not found'], 404);
             }
 
+            // return response()->json($siswaArray);
+
             $kelas = collect($siswaArray->kelas)->map(function ($item) {
                 return [
                     'id'                => $item->id,
@@ -33,7 +36,8 @@ class SiswaKelasController extends Controller
                     'unit_sekolah_id'   => $item->unitSekolah?->id,
                     'wali'              => $item->wali?->name,
                     'wali_id'           => $item->wali?->id,
-                    'active'            => $item->pivot->active
+                    'active'            => $item->pivot->active,
+                    'kelas_id'          => $item->pivot->kelas_id
                 ];
             })->toArray();
             return response()->json($kelas);
@@ -81,13 +85,48 @@ class SiswaKelasController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $request->validate([
+            'siswa_id'  => 'required',
+            'user_id'   => 'required',
+            'kelas_id'  => 'required',
+            'active'    => 'required'
+        ]);
+
+        //temukan siswa
+        $siswa = Siswa::find($request->siswa_id);
+
+        if (!$siswa) {
+            return response()->json(['message' => 'siswa not found'], 404);
+        }
+
+        //hapus pivot
+        $siswa->kelas()->detach($request->kelas_old);
+
+        //update pivot kelas siswa
+        $siswa->kelas()->attach($request->kelas_id, ['active' => $request->active]);
+
+        return response()->json($siswa);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
         //
+        $request->validate([
+            'siswa'  => 'required',
+        ]);
+
+        $siswa = Siswa::find($request->siswa);
+
+        if (!$siswa) {
+            return response()->json(['message' => 'Siswa not found'], 404);
+        }
+
+        //hapus pivot kelas siswa
+        $siswa->kelas()->detach($id);
+
+        return response()->json(['message' => 'Kelas Siswa deleted'], 200);
     }
 }
