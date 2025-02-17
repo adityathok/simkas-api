@@ -74,7 +74,25 @@ class KelasController extends Controller
      */
     public function show(string $id)
     {
-        $kelas = Kelas::with('unitSekolah', 'wali.pegawai')->find($id);
+        $kelas = Kelas::with('unitSekolah', 'wali.pegawai', 'users.siswa')->find($id);
+
+        if ($kelas == null) {
+            return response()->json(['message' => 'kelas not found'], 404);
+        }
+
+        // Meringkas hasil siswa menggunakan collection map
+        $siswas = $kelas->users->map(function ($user) {
+            return [
+                'user_id'       => $user->id,
+                'nama'          => $user->siswa->nama ?? null,
+                'siswa_id'      => $user->siswa->id ?? null,
+                'nis'           => $user->siswa->nis ?? null,
+                'nisn'          => $user->siswa->nisn ?? null,
+                'avatar_url'    => $user->siswa->avatar_url ?? null
+            ];
+        });
+        $kelas->siswa = $siswas;
+
         return response()->json($kelas);
     }
 

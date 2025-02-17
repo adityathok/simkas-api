@@ -76,7 +76,12 @@ class SiswaKelasController extends Controller
      */
     public function show(string $id)
     {
-        //
+        //dapatkan list siswa dari id kelas
+        $siswa = Siswa::with('kelas', 'kelas.unitSekolah', 'kelas.wali')->whereHas('kelas', function ($query) use ($id) {
+            $query->where('id', $id);
+        })->get();
+
+        return response()->json($siswa);
     }
 
     /**

@@ -50,6 +50,14 @@ class Kelas extends Model
             ->withTimestamps();
     }
 
+    //dapatkan daftar siswa
+    public function siswa_kelas()
+    {
+        $siswa = $this->siswaKelas();
+
+        return $siswa;
+    }
+
     /**
      * Boot the model and assign a ULID to the model's ID attribute 
      * when a new instance is being created.
