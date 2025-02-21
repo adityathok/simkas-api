@@ -22,21 +22,23 @@ class UnitSekolahRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => 'required|string|max:255',
-            'jenjang' => 'required|in:TK,KB,SD,SMP,SMA,Pondok',
-            'alamat' => 'required|string',
-            'desa' => 'required|string',
-            'kecamatan' => 'required|string',
-            'kota' => 'required|string',
-            'provinsi' => 'required|string',
-            'kode_pos' => 'required|string',
-            'status' => 'required|in:aktif,non-aktif',
-            'tanggal_berdiri' => 'nullable|date',
+            'nama'              => 'required|string|max:255',
+            'jenjang'           => 'required|in:TK,KB,SD,SMP,SMA,Pondok',
+            'alamat'            => 'required|string',
+            'desa'              => 'required|string',
+            'kecamatan'         => 'required|string',
+            'kota'              => 'required|string',
+            'provinsi'          => 'required|string',
+            'kode_pos'          => 'required|string',
+            'status'            => 'required|in:aktif,non-aktif',
+            'tanggal_berdiri'   => 'nullable|date',
             'kepala_sekolah_id' => 'nullable|string',
-            'whatsapp' => 'required|string',
-            'telepon' => 'required|string',
-            'email' => 'nullable|email',
-            'logo' => 'nullable|image|mimes:jpeg,webp,png,jpg,gif,svg|max:2048',
+            'whatsapp'          => 'required|string',
+            'telepon'           => 'required|string',
+            'email'             => 'nullable|email',
+            'logo'              => 'nullable|image|mimes:jpeg,webp,png,jpg,gif,svg|max:2048',
+            'tingkat'           => 'required|array',
+            'rombel'            => 'required|array',
         ];
     }
 }
