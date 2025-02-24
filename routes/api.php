@@ -9,9 +9,10 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UserMetaController;
 use App\Http\Controllers\UserAlamatController;
 use App\Http\Controllers\UnitSekolahController;
+use App\Http\Controllers\UnitSekolahPegawaiController;
+use App\Http\Controllers\UnitSekolahKelasController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\UnitSekolahPegawaiController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\TahunAjaranController;
 use App\Http\Controllers\SiswaController;
@@ -30,14 +31,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('user/avatar/{id}', [UsersController::class, 'delete_avatar']);
 
     Route::apiResources([
-        'users'                 => UsersController::class,
-        'unitsekolah'           => UnitSekolahController::class,
-        'pegawai'               => PegawaiController::class,
-        'unitsekolahpegawai'    => UnitSekolahPegawaiController::class,
         'setting'               => SettingController::class,
+        'tahunajaran'           => TahunAjaranController::class,
+        'users'                 => UsersController::class,
+        'pegawai'               => PegawaiController::class,
+        'unitsekolah'           => UnitSekolahController::class,
+        'unitsekolahpegawai'    => UnitSekolahPegawaiController::class,
+        'unitsekolahkelas'      => UnitSekolahKelasController::class,
         'kelas'                 => KelasController::class,
         'siswa'                 => SiswaController::class,
-        'tahunajaran'           => TahunAjaranController::class,
         'siswakelas'            => SiswaKelasController::class
     ]);
 
