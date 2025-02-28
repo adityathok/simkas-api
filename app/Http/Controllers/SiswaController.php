@@ -133,4 +133,29 @@ class SiswaController extends Controller
         $siswa = Siswa::find($id);
         $siswa->delete();
     }
+
+
+    /**
+     * Cari siswa dari nama / nis.
+     */
+    public function search(Request $request)
+    {
+        $request->validate([
+            'cari' => 'required|min:3',
+        ]);
+        $cari = $request->cari;
+
+        //cari berdasarkan nama / nis 
+        $siswa = Siswa::select('id', 'nama', 'user_id', 'nis', 'status')
+            ->where('nama', 'like', '%' . $cari . '%')
+            ->orWhere('nis', 'like', '%' . $cari . '%')
+            ->with(['user:id,avatar', 'kelasAktif:nama'])
+            ->get();
+
+        if (empty($siswa) || $siswa->isEmpty()) {
+            return response()->json(['message' => 'Siswa not found'], 404);
+        }
+
+        return response()->json($siswa);
+    }
 }

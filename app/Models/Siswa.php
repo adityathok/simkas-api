@@ -54,14 +54,8 @@ class Siswa extends Model
     // Mendapatkan Kelas Aktif
     public function kelasAktif()
     {
-        // return $this->kelas()->wherePivot('active', true)->first();
-        return $this->belongsToMany(
-            Kelas::class,
-            'siswa_kelas',
-            'user_id',
-            'kelas_id',
-            'user_id',
-        )->wherePivot('active', true)->first();
+        return $this->belongsToMany(Kelas::class, 'siswa_kelas', 'user_id', 'kelas_id', 'user_id', 'id')
+            ->wherePivot('active', true);
     }
 
     public function getAvatarUrlAttribute()
