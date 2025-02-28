@@ -42,15 +42,4 @@ class TahunAjaran extends Model
         $nama = explode('/', $nama);
         return $nama[1];
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::saving(function ($model) {
-            if ($model->active) {
-                self::where('active', true)->update(['active' => false]);
-            }
-        });
-    }
 }
