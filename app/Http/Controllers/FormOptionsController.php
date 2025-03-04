@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Setting;
 use App\Models\UnitSekolah;
 use App\Models\Pegawai;
+use App\Models\TahunAjaran;
 
 class FormOptionsController extends Controller
 {
@@ -45,8 +46,7 @@ class FormOptionsController extends Controller
             ];
         });
         return response()->json([
-            'tahun_ajaran'          => Setting::get('tahun_ajaran'),
-            'tahun_ajaran_options'  => Setting::get('tahun_ajaran_options'),
+            'tahun_ajaran'          => TahunAjaran::all(),
             'unit_sekolah'          => $unit,
             'pegawai'               => $pegawai
         ]);

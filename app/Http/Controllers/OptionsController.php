@@ -91,10 +91,11 @@ class OptionsController extends Controller
     private function add_kelas()
     {
         // $result = Cache::remember('option-addkelas', $this->time_cache, function () {
-        $unit = UnitSekolah::all();
         $pegawai = Pegawai::with(['user:id,name,avatar', 'user.avatarFile:id,guide,path'])->get(); //ringkas array
         $pegawai->transform(function ($data) {
             return [
+                'value'         => $data->user_id,
+                'label'         => $data->user->pegawai->nama,
                 'id'            => $data->id,
                 'user_id'       => $data->user_id,
                 'pegawai_id'    => $data->user->pegawai->id,
@@ -103,8 +104,31 @@ class OptionsController extends Controller
                 'nip'           => $data->user->pegawai->nip
             ];
         });
+
+
+        $unit = UnitSekolah::all();
+        $unit->transform(function ($data) {
+            return [
+                'value'     => $data->id,
+                'label'     => $data->nama,
+                'id'        => $data->id,
+                'tingkat'   => $data->tingkat ?? [],
+                'rombel'    => $data->rombel ?? []
+            ];
+        });
+
+        $tahun_ajarans = TahunAjaran::all();
+        $tahun_ajarans->transform(function ($data) {
+            return [
+                'value' => $data->nama,
+                'label' => $data->nama,
+                'active' => $data->active
+            ];
+        });
+
         return [
-            'tahun_ajaran'  => TahunAjaran::getActive(),
+            'tahun_ajaran'  => TahunAjaran::getActive()->nama,
+            'tahun_ajarans' => $tahun_ajarans,
             'unit_sekolah'  => $unit,
             'pegawai'       => $pegawai
         ];
