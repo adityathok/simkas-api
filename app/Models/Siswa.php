@@ -17,7 +17,7 @@ class Siswa extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
-    protected $appends = ['avatar_url'];
+    protected $appends = ['avatar_url', 'kelas_siswa'];
 
     protected $fillable = [
         'user_id',
@@ -56,6 +56,11 @@ class Siswa extends Model
     {
         return $this->belongsToMany(Kelas::class, 'siswa_kelas', 'user_id', 'kelas_id', 'user_id', 'id')
             ->wherePivot('active', true);
+    }
+
+    public function getKelasSiswaAttribute()
+    {
+        return $this->kelasAktif()->first();
     }
 
     public function getAvatarUrlAttribute()

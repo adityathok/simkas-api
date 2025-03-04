@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Models\Siswa;
 
@@ -79,13 +80,11 @@ class SiswaController extends Controller
      */
     public function show(string $id)
     {
-        $siswa = Siswa::with('user:id,name,avatar')->find($id);
+        $siswa = Siswa::with(['user:id,avatar'])->find($id);
 
         if (!$siswa) {
             return response()->json(['message' => 'Siswa not found'], 404);
         }
-
-        $siswa->kelas = $siswa->kelasAktif();
 
         return response()->json($siswa);
     }
@@ -145,12 +144,15 @@ class SiswaController extends Controller
         ]);
         $cari = $request->cari;
 
-        //cari berdasarkan nama / nis 
-        $siswa = Siswa::select('id', 'nama', 'user_id', 'nis', 'status')
-            ->where('nama', 'like', '%' . $cari . '%')
-            ->orWhere('nis', 'like', '%' . $cari . '%')
-            ->with(['user:id,avatar', 'kelasAktif:nama'])
-            ->get();
+        // Cari berdasarkan nama / nis 
+        // Gunakan caching dengan waktu 5 menit (300 detik)
+        $siswa = Cache::remember('siswa_search_' . $cari, 5, function () use ($cari) {
+            return Siswa::select('id', 'nama', 'user_id', 'nis', 'status')
+                ->where('nama', 'like', '%' . $cari . '%')
+                ->orWhere('nis', 'like', '%' . $cari . '%')
+                ->with(['user:id,avatar', 'kelasAktif:nama'])
+                ->get();
+        });
 
         if (empty($siswa) || $siswa->isEmpty()) {
             return response()->json(['message' => 'Siswa not found'], 404);
