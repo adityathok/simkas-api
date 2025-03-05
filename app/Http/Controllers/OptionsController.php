@@ -49,7 +49,8 @@ class OptionsController extends Controller
         $tahun_ajaran = collect($tahun_ajaran)->map(function ($item) {
             return [
                 'value' => $item->nama,
-                'label' => $item->nama
+                'label' => $item->nama,
+                'active' => $item->active
             ];
         });
 
@@ -112,6 +113,7 @@ class OptionsController extends Controller
                 'value'     => $data->id,
                 'label'     => $data->nama,
                 'id'        => $data->id,
+                'nama'      => $data->nama,
                 'tingkat'   => $data->tingkat ?? [],
                 'rombel'    => $data->rombel ?? []
             ];
