@@ -24,7 +24,7 @@ class OptionsController extends Controller
                 return $this->unitsekolah();
                 break;
             case 'kelas':
-                return $this->kelas();
+                return $this->kelas($request);
                 break;
             case 'tahun_ajaran':
                 return $this->tahun_ajaran();
@@ -57,9 +57,16 @@ class OptionsController extends Controller
         return $tahun_ajaran;
     }
 
-    public function kelas()
+    public function kelas($request = null)
     {
-        $kelas = Kelas::all();
+        $tahun_ajaran = $request->tahun_ajaran ?? TahunAjaran::getActive()->nama;
+        $unit = $request->unit_sekolah ?? '';
+
+        $kelas = Kelas::where('unit_sekolah_id', $unit)
+            ->where('tahun_ajaran', $tahun_ajaran)
+            ->orderBy('nama', 'asc')
+            ->get();
+
         ///collection
         $kelas = collect($kelas)->map(function ($data) {
             return [
