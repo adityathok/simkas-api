@@ -76,10 +76,15 @@ class SiswaKelasController extends Controller
      */
     public function show(string $id)
     {
-        //dapatkan list siswa dari id kelas
-        $siswa = Siswa::with('kelas', 'kelas.unitSekolah', 'kelas.wali')->whereHas('kelas', function ($query) use ($id) {
-            $query->where('id', $id);
-        })->get();
+
+        //dapatkan info siswa di kelas
+        $siswa = Siswa::whereHas('kelas', function ($query) use ($id) {
+            $query->where('kelas_id', $id);
+        })->with('user')->get();
+
+        if (!$siswa) {
+            return response()->json(['message' => 'Siswa not found'], 404);
+        }
 
         return response()->json($siswa);
     }
@@ -133,5 +138,47 @@ class SiswaKelasController extends Controller
         $siswa->kelas()->detach($id);
 
         return response()->json(['message' => 'Kelas Siswa deleted'], 200);
+    }
+
+    public function naik_kelas(Request $request)
+    {
+        $request->validate([
+            'siswa'  => 'required',
+            'kelas_from' => 'required',
+            'kelas_to' => 'required'
+        ]);
+
+        $siswas     = $request->siswa;
+        $kelas_id   = $request->kelas_to;
+
+        $response = [];
+
+        if ($siswas) {
+            foreach ($siswas as $sis) {
+
+                $message = '';
+
+                //temukan siswa
+                $siswa = Siswa::find($sis['siswa_id']);
+
+                if (!$siswa) {
+                    $message = 'siswa not found';
+                } else {
+
+                    //update kelas siswa
+                    $siswa->kelas()->attach($kelas_id, ['active' => true]);
+
+                    $message = 'Siswa success moved';
+                }
+
+
+                $response[] = [
+                    'siswa' => $sis,
+                    'message' => $message
+                ];
+            }
+        }
+
+        return response()->json($response);
     }
 }

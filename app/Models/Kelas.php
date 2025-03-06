@@ -36,6 +36,12 @@ class Kelas extends Model
         return $this->belongsTo(User::class, 'wali_id');
     }
 
+    public function siswa()
+    {
+        return $this->belongsToMany(Siswa::class, 'siswa_kelas', 'kelas_id', 'user_id')
+            ->withPivot('id'); // Jika ingin mengakses kolom lain di pivot
+    }
+
     // Relasi ke SiswaKelas
     public function siswaKelas()
     {
