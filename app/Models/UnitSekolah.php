@@ -106,9 +106,9 @@ class UnitSekolah extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            // Menetapkan ID menggunakan ULID jika ID kosong
+            // Menetapkan ID menggunakan random jika ID kosong
             if (empty($model->id)) {
-                $model->id = Str::ulid();
+                $model->id = 'UNT' . Str::random(5);
             }
         });
 

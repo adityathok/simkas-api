@@ -80,7 +80,9 @@ class SiswaKelasController extends Controller
         //dapatkan info siswa di kelas
         $siswa = Siswa::whereHas('kelas', function ($query) use ($id) {
             $query->where('kelas_id', $id);
-        })->with('user')->get();
+        })->with('user')
+            ->orderBy('nama', 'asc') // Urutkan berdasarkan kolom `nama`
+            ->get();
 
         if (!$siswa) {
             return response()->json(['message' => 'Siswa not found'], 404);
