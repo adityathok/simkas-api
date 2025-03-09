@@ -155,9 +155,9 @@ class SiswaKelasController extends Controller
     public function naik_kelas(Request $request)
     {
         $request->validate([
-            'siswa'  => 'required',
-            'kelas_from' => 'required',
-            'kelas_to' => 'required'
+            'siswa'         => 'required',
+            'kelas_from'    => 'required',
+            'kelas_to'      => 'required'
         ]);
 
         $siswas     = $request->siswa;
@@ -178,9 +178,14 @@ class SiswaKelasController extends Controller
                 } else {
 
                     //update kelas siswa
-                    $siswa->kelas()->attach($kelas_id, ['active' => true]);
+                    // $siswa->kelas()->attach($kelas_id, ['active' => true]);
+                    SiswaKelas::create([
+                        'user_id'   => $siswa->user_id,
+                        'kelas_id'  => $kelas_id,
+                        'active'    => true,
+                    ]);
 
-                    $message = 'Siswa success moved';
+                    $message = 'Siswa success pindah kelas';
                 }
 
 
