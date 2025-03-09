@@ -1,0 +1,13 @@
+{
+    "name": "simkas-api",
+    "version": "1.0.0",
+    "description": "Aplikasi Backend SIMKAS",
+    "main": "index.js",
+    "scripts": {
+        "build": "node src/build.js"
+    },
+    "dependencies": {
+        "archiver": "^5.3.1",
+        "fs": "0.0.1-security"
+    }
+}
