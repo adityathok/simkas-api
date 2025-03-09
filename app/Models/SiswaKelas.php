@@ -59,5 +59,12 @@ class SiswaKelas extends Pivot
                     ->update(['active' => false]);
             }
         });
+
+        static::updating(function ($siswaKelas) {
+            if ($siswaKelas->isDirty('active') && $siswaKelas->active) {
+                // Nonaktifkan semua kelas lain untuk siswa ini
+                self::where('user_id', $siswaKelas->user_id)->where('id', '!=', $siswaKelas->id)->update(['active' => false]);
+            }
+        });
     }
 }

@@ -60,10 +60,17 @@ class OptionsController extends Controller
     public function kelas($request = null)
     {
         $tahun_ajaran = $request->tahun_ajaran ?? TahunAjaran::getActive()->nama;
-        $unit = $request->unit_sekolah ?? '';
+        $unit = $request->unit_sekolah ?? null;
 
-        $kelas = Kelas::where('unit_sekolah_id', $unit)
-            ->where('tahun_ajaran', $tahun_ajaran)
+        // $kelas = Kelas::where('unit_sekolah_id', $unit)
+        //     ->where('tahun_ajaran', $tahun_ajaran)
+        //     ->orderBy('nama', 'asc')
+        //     ->get();
+
+        $kelas = Kelas::where('tahun_ajaran', $tahun_ajaran)
+            ->when($unit, function ($query) use ($unit) {
+                return $query->where('unit_sekolah_id', $unit);
+            })
             ->orderBy('nama', 'asc')
             ->get();
 

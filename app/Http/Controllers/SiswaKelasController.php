@@ -66,7 +66,12 @@ class SiswaKelasController extends Controller
         }
 
         //update kelas siswa
-        $siswa->kelas()->attach($request->kelas_id, ['active' => $request->active]);
+        // $siswa->kelas()->attach($request->kelas_id, ['active' => $request->active]);
+        SiswaKelas::create([
+            'user_id'   => $request->user_id,
+            'kelas_id'  => $request->kelas_id,
+            'active'    => $request->active,
+        ]);
 
         return response()->json($siswa);
     }
@@ -115,7 +120,12 @@ class SiswaKelasController extends Controller
         $siswa->kelas()->detach($request->kelas_old);
 
         //update pivot kelas siswa
-        $siswa->kelas()->attach($request->kelas_id, ['active' => $request->active]);
+        // $siswa->kelas()->attach($request->kelas_id, ['active' => $request->active]);
+        SiswaKelas::create([
+            'user_id'   => $request->user_id,
+            'kelas_id'  => $request->kelas_id,
+            'active'    => $request->active,
+        ]);
 
         return response()->json($siswa);
     }
