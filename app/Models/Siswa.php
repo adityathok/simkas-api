@@ -74,6 +74,13 @@ class Siswa extends Model
         // return asset('assets/images/default-avatar.jpg');
     }
 
+    // Relasi ke siswa_wali 
+    public function SiswaWali()
+    {
+        return $this->hasMany(SiswaWali::class);
+    }
+
+
     public static function boot()
     {
         parent::boot();
