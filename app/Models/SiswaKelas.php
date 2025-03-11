@@ -16,6 +16,10 @@ class SiswaKelas extends Pivot
         'active',
     ];
 
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+
     protected $hidden = ['created_at', 'updated_at'];
 
     // Relasi ke User

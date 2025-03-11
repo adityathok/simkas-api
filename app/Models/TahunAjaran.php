@@ -21,6 +21,10 @@ class TahunAjaran extends Model
         'active'
     ];
 
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+
     //dapatkan tahun ajaran aktif
     public static function getActive()
     {

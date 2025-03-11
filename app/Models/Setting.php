@@ -13,6 +13,10 @@ class Setting extends Model
         'file_id',
     ];
 
+    protected $casts = [
+        'is_array' => 'boolean',
+    ];
+
     //ambil setting
     public static function get($key, $default = null)
     {
