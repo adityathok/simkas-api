@@ -71,7 +71,35 @@ class SiswaWaliController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'siswa_id'      => 'required|min:6',
+            'nama'          => 'required|min:4',
+            'hubungan'      => 'required|min:3',
+            'tahun_lahir'   => 'nullable|integer',
+            'tanggal_lahir' => 'nullable|date',
+            'pendidikan'    => 'nullable',
+            'pekerjaan'     => 'nullable',
+            'penghasilan'   => 'nullable',
+            'telepon'       => 'nullable',
+            'email'         => 'nullable|email',
+            'alamat'        => 'nullable',
+        ]);
+
+        $wali = SiswaWali::find($id);
+        $wali->update([
+            'siswa_id'      => $request->siswa_id,
+            'nama'          => $request->nama,
+            'hubungan'      => $request->hubungan,
+            'tahun_lahir'   => $request->tahun_lahir,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'pendidikan'    => $request->pendidikan,
+            'pekerjaan'     => $request->pekerjaan,
+            'penghasilan'   => $request->penghasilan,
+            'telepon'       => $request->telepon,
+            'email'         => $request->email,
+            'alamat'        => $request->alamat,
+        ]);
+        return response()->json($wali);
     }
 
     /**
