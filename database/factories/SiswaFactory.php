@@ -39,7 +39,7 @@ class SiswaFactory extends Factory
             'nisn'              => fake()->unique()->numerify('100#######'),
             'nama'              => $name,
             'nama_panggilan'    => Str::lower($first_name),
-            'status'            => fake()->randomElement(['Aktif', 'Keluar', 'Pindah', 'Lulus']),
+            'status'            => fake()->randomElement(['aktif', 'keluar', 'pindah', 'lulus']),
             'tempat_lahir'      => fake()->city(),
             'tanggal_lahir'     => fake()->date('Y-m-d', '2010-01-01'),
             'tanggal_masuk'     => fake()->date('Y-m-d', '2023-01-01'),
