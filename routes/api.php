@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ConfigAppController;
 use App\Http\Controllers\OptionsController;
 use App\Http\Controllers\FormOptionsController;
 use App\Http\Controllers\UsersController;
@@ -23,6 +24,8 @@ use App\Http\Controllers\SiswaWaliController;
 //     return $request->user();
 // });
 Route::middleware('auth:sanctum')->get('/user', [UsersController::class, 'show_user']);
+
+Route::get('config_app', [ConfigAppController::class, 'index']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
