@@ -66,6 +66,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('option/{name}', [OptionsController::class, 'get']);
     Route::get('options', [OptionsController::class, 'gets']);
     Route::post('siswa/search', [SiswaController::class, 'search']);
+    Route::post('siswa/import', [SiswaController::class, 'import']);
 
     Route::post('siswakelas/naik_kelas', [SiswaKelasController::class, 'naik_kelas']);
 });

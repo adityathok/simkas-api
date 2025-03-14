@@ -163,4 +163,17 @@ class SiswaController extends Controller
 
         return response()->json($siswa);
     }
+
+    //import data siswa by NIS
+    public function import(Request $request)
+    {
+        $request->validate([
+            'nis' => 'required|min:4',
+        ]);
+
+        $nis = $request->nis;
+        $siswa = Siswa::where('nis', $nis)->first();
+
+        return response()->json($siswa);
+    }
 }
