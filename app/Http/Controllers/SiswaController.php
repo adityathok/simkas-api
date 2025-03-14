@@ -18,6 +18,9 @@ class SiswaController extends Controller
         if ($request->filled('cari')) {
             $query->where('nama', 'like', '%' . $request->input('cari') . '%');
         }
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
 
         $siswa = $query->paginate(20);
         $siswa->withPath('/siswa');

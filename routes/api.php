@@ -64,6 +64,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('form-options/option-add-kelas', [FormOptionsController::class, 'option_add_kelas']);
 
     Route::get('option/{name}', [OptionsController::class, 'get']);
+    Route::get('options', [OptionsController::class, 'gets']);
     Route::post('siswa/search', [SiswaController::class, 'search']);
 
     Route::post('siswakelas/naik_kelas', [SiswaKelasController::class, 'naik_kelas']);

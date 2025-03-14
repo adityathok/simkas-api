@@ -42,6 +42,45 @@ class OptionsController extends Controller
         return response()->json($result);
     }
 
+    public function gets(request $request)
+    {
+        $keys = $request->query('keys');
+        $keys = $keys ? explode(',', $request->query('keys', '')) : '';
+
+        $result = [];
+        if ($keys):
+            foreach ($keys as $key) {
+                $result[$key] = $this->get_option($key);
+            }
+        endif;
+
+        return response()->json($result);
+    }
+
+    private function get_option($key, $request = null)
+    {
+
+        switch ($key) {
+            case 'unitsekolah':
+                return $this->unitsekolah();
+                break;
+            case 'kelas':
+                return $this->kelas($request);
+                break;
+            case 'tahun_ajaran':
+                return $this->tahun_ajaran();
+                break;
+            case 'add_kelas':
+                return $this->add_kelas();
+                break;
+            case 'siswakelas':
+                return $this->siswakelas();
+                break;
+            default:
+                return Setting::get($key);
+        }
+    }
+
     public function tahun_ajaran()
     {
         $tahun_ajaran = TahunAjaran::all();
