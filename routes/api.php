@@ -19,6 +19,7 @@ use App\Http\Controllers\TahunAjaranController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\SiswaKelasController;
 use App\Http\Controllers\SiswaWaliController;
+use App\Http\Controllers\SiswaImportController;
 
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 //     return $request->user();
@@ -66,7 +67,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('option/{name}', [OptionsController::class, 'get']);
     Route::get('options', [OptionsController::class, 'gets']);
     Route::post('siswa/search', [SiswaController::class, 'search']);
-    Route::post('siswa/import', [SiswaController::class, 'import']);
+    Route::post('siswa_import', [SiswaImportController::class, 'import']);
 
     Route::post('siswakelas/naik_kelas', [SiswaKelasController::class, 'naik_kelas']);
 });
