@@ -175,6 +175,7 @@ class SiswaImportController extends Controller
                 'ibu_pendikan'      => 'ibu_pendidikan',
                 'wali_pendikan'     => 'wali_pendidikan',
                 'nomor_registasi'   => 'nomor_registrasi',
+                'nomer_peserta_uian'    => 'nomor_peserta_ujian',
             ];
             //perbaiki key
             if (isset($arrayKeyFix[$key])) {
