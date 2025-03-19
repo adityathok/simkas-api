@@ -5,10 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class JurnalKas extends Model
 {
     use SoftDeletes;
+
+    // Non-incrementing ID karena CHAR
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
         'id',
@@ -31,9 +36,11 @@ class JurnalKas extends Model
 
         static::creating(function ($model) {
             //jika id kosong, buat id dari random 6
-            if (empty($model->id)) {
+            Log::info('ID sebelum diset:', [$model]);
+            if (!$model->id) {
                 $model->id = strtoupper(Str::random(6));
             }
+            Log::info('ID setelah diset:', ['id' => $model->id]);
         });
     }
 }

@@ -11,6 +11,9 @@ class AkunPendapatan extends Model
 {
     use SoftDeletes;
 
+    // Non-incrementing ID karena CHAR
+    public $incrementing = false;
+
     protected $fillable = [
         'nama',
         'neraca',
