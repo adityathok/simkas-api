@@ -30,6 +30,8 @@ class JurnalKas extends Model
         'likuiditas' => 'boolean',
     ];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     public static function boot()
     {
         parent::boot();

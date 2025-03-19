@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             UnitSekolahPegawaiSeeder::class,
             KelasSeeder::class,
             // SiswaSeeder::class,
-            JurnalKasSeeder::class
+            JurnalKasSeeder::class,
+            AkunPendapatanSeeder::class
         ]);
     }
 }
