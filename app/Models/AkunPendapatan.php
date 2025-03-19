@@ -34,7 +34,7 @@ class AkunPendapatan extends Model
         static::creating(function ($model) {
             //jika id kosong, buat id dari random 6
             if (empty($model->id)) {
-                $model->id = strtoupper(Str::random(6));
+                $model->id = 'in' . strtoupper(Str::random(6));
             }
         });
     }
