@@ -12,7 +12,7 @@ class JurnalKasController extends Controller
      */
     public function index()
     {
-        $jurnalKas = JurnalKas::paginate(20);
+        $jurnalKas = JurnalKas::orderBy('nama', 'asc')->paginate(20);
         $jurnalKas->withPath('/jurnalKas');
 
         return response()->json($jurnalKas);
@@ -23,7 +23,23 @@ class JurnalKasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama'  => 'required',
+            'kas'   => 'required',
+            'neraca' => 'required|boolean',
+            'jurnal_khusus' => 'required|boolean',
+            'likuiditas' => 'required|boolean',
+        ]);
+
+        $jurnalkas = JurnalKas::create([
+            'nama'  => $request->nama,
+            'kas'   => $request->kas,
+            'neraca' => $request->neraca,
+            'jurnal_khusus' => $request->jurnal_khusus,
+            'likuiditas' => $request->likuiditas
+        ]);
+
+        return response()->json($jurnalkas);
     }
 
     /**
@@ -39,7 +55,26 @@ class JurnalKasController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'nama'  => 'required',
+            'kas'   => 'required',
+            'neraca' => 'required|boolean',
+            'jurnal_khusus' => 'required|boolean',
+            'likuiditas' => 'required|boolean',
+        ]);
+
+        //temukan jurnal kas
+        $jurnalKas = JurnalKas::find($id);
+
+        $jurnalKas->update([
+            'nama'  => $request->nama,
+            'kas'   => $request->kas,
+            'neraca' => $request->neraca,
+            'jurnal_khusus' => $request->jurnal_khusus,
+            'likuiditas' => $request->likuiditas
+        ]);
+
+        return response()->json($jurnalKas);
     }
 
     /**
@@ -47,6 +82,9 @@ class JurnalKasController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        //temukan jurnal kas
+        $jurnalKas = JurnalKas::find($id);
+
+        $jurnalKas->delete();
     }
 }
