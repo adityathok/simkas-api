@@ -27,6 +27,12 @@ class AkunPendapatan extends Model
         'jurnal_khusus' => 'boolean',
     ];
 
+    //relasi ke jurnalkas
+    public function jurnalkas()
+    {
+        return $this->belongsTo(JurnalKas::class);
+    }
+
     public static function boot()
     {
         parent::boot();

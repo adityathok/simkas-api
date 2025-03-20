@@ -21,6 +21,8 @@ use App\Http\Controllers\SiswaKelasController;
 use App\Http\Controllers\SiswaWaliController;
 use App\Http\Controllers\SiswaImportController;
 use App\Http\Controllers\JurnalKasController;
+use App\Http\Controllers\AkunPendapatanController;
+use Database\Seeders\AkunPendapatanSeeder;
 
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 //     return $request->user();
@@ -48,7 +50,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'siswa'                 => SiswaController::class,
         'siswakelas'            => SiswaKelasController::class,
         'siswawali'             => SiswaWaliController::class,
-        'jurnalkas'             => JurnalKasController::class
+        'jurnalkas'             => JurnalKasController::class,
+        'akunpendapatan'        => AkunPendapatanController::class
     ]);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');

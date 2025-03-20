@@ -47,7 +47,10 @@ class JurnalKasController extends Controller
      */
     public function show(string $id)
     {
-        //
+        //temukan jurnal kas
+        $jurnalKas = JurnalKas::find($id);
+
+        return response()->json($jurnalKas);
     }
 
     /**

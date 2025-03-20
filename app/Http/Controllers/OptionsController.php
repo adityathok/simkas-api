@@ -9,6 +9,7 @@ use App\Models\Kelas;
 use App\Models\TahunAjaran;
 use App\Models\Setting;
 use App\Models\Pegawai;
+use App\Models\JurnalKas;
 
 class OptionsController extends Controller
 {
@@ -34,6 +35,9 @@ class OptionsController extends Controller
                 break;
             case 'siswakelas':
                 return $this->siswakelas();
+                break;
+            case 'jurnalkas':
+                return $this->jurnalkas();
                 break;
             default:
                 return Setting::get($name);
@@ -75,6 +79,9 @@ class OptionsController extends Controller
                 break;
             case 'siswakelas':
                 return $this->siswakelas();
+                break;
+            case 'jurnalkas':
+                return $this->jurnalkas();
                 break;
             default:
                 return Setting::get($key);
@@ -190,5 +197,18 @@ class OptionsController extends Controller
         // });
 
         return $result;
+    }
+
+    //jurnalkas
+    public function jurnalkas()
+    {
+        $jurnalkas = JurnalKas::all();
+        $jurnalkas->transform(function ($data) {
+            return [
+                'value' => $data->id,
+                'label' => $data->nama,
+            ];
+        });
+        return $jurnalkas;
     }
 }
