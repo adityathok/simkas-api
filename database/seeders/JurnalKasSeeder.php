@@ -17,7 +17,7 @@ class JurnalKasSeeder extends Seeder
         //array seeder jurnal kas
         $jurnalKas = [
             [
-                'id'            => 'hutang',
+                'id'            => 'JHUTANG',
                 'nama'          => 'Hutang',
                 'kas'           => 'neraca',
                 'neraca'        => true,
@@ -25,7 +25,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => false
             ],
             [
-                'id'            => 'bos',
+                'id'            => 'JBOS',
                 'nama'          => 'Dana Bantuan Negara BOS',
                 'kas'           => 'neraca',
                 'neraca'        => true,
@@ -33,7 +33,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => false
             ],
             [
-                'id'            => 'tabungan',
+                'id'            => 'JTABUNGAN',
                 'nama'          => 'Tabungan',
                 'kas'           => 'neraca',
                 'neraca'        => true,
@@ -41,7 +41,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => false
             ],
             [
-                'id'            => 'buku',
+                'id'            => 'JBUKU',
                 'nama'          => 'Buku',
                 'kas'           => 'jurnal',
                 'neraca'        => false,
@@ -49,7 +49,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => true
             ],
             [
-                'id'            => 'seragam',
+                'id'            => 'JSERAGAM',
                 'nama'          => 'Seragam',
                 'kas'           => 'jurnal',
                 'neraca'        => false,
@@ -57,7 +57,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => true
             ],
             [
-                'id'            => 'sarpras',
+                'id'            => 'JSARPRAS',
                 'nama'          => 'Sarpras',
                 'kas'           => 'jurnal',
                 'neraca'        => false,
@@ -65,7 +65,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => true
             ],
             [
-                'id'            => 'gedung',
+                'id'            => 'JGEDUNG',
                 'nama'          => 'Gedung',
                 'kas'           => 'jurnal',
                 'neraca'        => false,
@@ -73,7 +73,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => true
             ],
             [
-                'id'            => 'infaqdakwah',
+                'id'            => 'JINFAQ',
                 'nama'          => 'Donasi infaq dakwah dan sosial',
                 'kas'           => 'jurnal',
                 'neraca'        => false,
@@ -81,7 +81,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => true
             ],
             [
-                'id'            => 'piutangp',
+                'id'            => 'JPIUTANGP',
                 'nama'          => 'Piutang Pegawai',
                 'kas'           => 'jurnal',
                 'neraca'        => false,
@@ -89,7 +89,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => true
             ],
             [
-                'id'            => 'konsumsi',
+                'id'            => 'JKONSUMSI',
                 'nama'          => 'Konsumsi',
                 'kas'           => 'jurnal',
                 'neraca'        => false,
@@ -97,7 +97,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => true
             ],
             [
-                'id'            => 'bkoperasi',
+                'id'            => 'JBKOPERASI',
                 'nama'          => 'Bisnis Koperasi',
                 'kas'           => 'jurnal',
                 'neraca'        => false,
@@ -105,7 +105,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => true
             ],
             [
-                'id'            => 'bhexaair',
+                'id'            => 'JBHEXAAIR',
                 'nama'          => 'Bisnis Hexa Air',
                 'kas'           => 'jurnal',
                 'neraca'        => false,
@@ -113,7 +113,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => true
             ],
             [
-                'id'            => 'kasxpondok',
+                'id'            => 'JKASXPONDOK',
                 'nama'          => 'Kas Ekskul Pondok',
                 'kas'           => 'jurnal',
                 'neraca'        => false,
@@ -121,7 +121,7 @@ class JurnalKasSeeder extends Seeder
                 'likuiditas'    => true
             ],
             [
-                'id'            => 'kaskurbantu',
+                'id'            => 'JKASKURBANTU',
                 'nama'          => 'Kas Kurban TU',
                 'kas'           => 'jurnal',
                 'neraca'        => false,

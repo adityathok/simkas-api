@@ -16,7 +16,7 @@ class AkunPendapatanSeeder extends Seeder
         //array akun pendapatan
         $akuns = [
             [
-                'id'            => 'inkasneraca',
+                'id'            => 'INKASNERACA',
                 'nama'          => 'Kas Neraca',
                 'neraca'        => true,
                 'jurnal_khusus' => false,
@@ -24,7 +24,7 @@ class AkunPendapatanSeeder extends Seeder
                 'admin_id'      => null
             ],
             [
-                'id'            => 'intlampau',
+                'id'            => 'INTLAMPAU',
                 'nama'          => 'Tunggakan Lampau',
                 'neraca'        => false,
                 'jurnal_khusus' => false,
@@ -32,7 +32,7 @@ class AkunPendapatanSeeder extends Seeder
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inoprsnl',
+                'id'            => 'INOPRSNL',
                 'nama'          => 'Operasional',
                 'neraca'        => false,
                 'jurnal_khusus' => false,
@@ -40,7 +40,7 @@ class AkunPendapatanSeeder extends Seeder
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inspppen',
+                'id'            => 'INSPPEN',
                 'nama'          => 'SPP Pendidikan',
                 'neraca'        => false,
                 'jurnal_khusus' => false,
@@ -48,7 +48,7 @@ class AkunPendapatanSeeder extends Seeder
                 'admin_id'      => null
             ],
             [
-                'id'            => 'indaftar',
+                'id'            => 'INDAFTAR',
                 'nama'          => 'Pendaftaran',
                 'neraca'        => false,
                 'jurnal_khusus' => false,
@@ -56,115 +56,115 @@ class AkunPendapatanSeeder extends Seeder
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inhutang',
+                'id'            => 'INHUTANG',
                 'nama'          => 'Hutang',
                 'neraca'        => true,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'hutang',
+                'jurnalkas_id'  => 'JHUTANG',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inbos',
+                'id'            => 'INBOS',
                 'nama'          => 'Dana Bantuan Negara BOS',
                 'neraca'        => true,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'bos',
+                'jurnalkas_id'  => 'JBOS',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'intabung',
+                'id'            => 'INTABUNGAN',
                 'nama'          => 'Tabungan',
                 'neraca'        => true,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'tabungan',
+                'jurnalkas_id'  => 'JTABUNGAN',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inbuku',
+                'id'            => 'INBUKU',
                 'nama'          => 'Buku',
                 'neraca'        => false,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'buku',
+                'jurnalkas_id'  => 'JBUKU',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inseragam',
+                'id'            => 'INSERAGAM',
                 'nama'          => 'Seragam',
                 'neraca'        => false,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'seragam',
+                'jurnalkas_id'  => 'JSERAGAM',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'insarpras',
+                'id'            => 'INSARPRAS',
                 'nama'          => 'Sarpras',
                 'neraca'        => false,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'sarpras',
+                'jurnalkas_id'  => 'JSARPRAS',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'ingedung',
+                'id'            => 'INGEDUNG',
                 'nama'          => 'Gedung',
                 'neraca'        => false,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'gedung',
+                'jurnalkas_id'  => 'JGEDUNG',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'ininfaq',
+                'id'            => 'ININFAQ',
                 'nama'          => 'Donasi Infaq Dakwah Sosial',
                 'neraca'        => false,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'infaqdakwah',
+                'jurnalkas_id'  => 'JINFAQ',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inpiutangp',
+                'id'            => 'INPIUTANGP',
                 'nama'          => 'Piutang Pegawai',
                 'neraca'        => false,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'piutangp',
+                'jurnalkas_id'  => 'JPIUTANGP',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inkonsumsi',
+                'id'            => 'INKONSUMSI',
                 'nama'          => 'Konsumsi',
                 'neraca'        => false,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'konsumsi',
+                'jurnalkas_id'  => 'JKONSUMSI',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inbkoperasi',
+                'id'            => 'INBKOPERASI',
                 'nama'          => 'Bisnis Koperasi',
                 'neraca'        => false,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'bkoperasi',
+                'jurnalkas_id'  => 'JBKOPERASI',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inbhexaair',
+                'id'            => 'INBHEXAAIR',
                 'nama'          => 'Bisnis Hexa Air',
                 'neraca'        => false,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'bhexaair',
+                'jurnalkas_id'  => 'JBHEXAAIR',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inkasxpondok',
+                'id'            => 'INKASXPONDOK',
                 'nama'          => 'Kas Ekskul Pondok',
                 'neraca'        => false,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'kasxpondok',
+                'jurnalkas_id'  => 'JKASXPONDOK',
                 'admin_id'      => null
             ],
             [
-                'id'            => 'inkaskurbantu',
+                'id'            => 'INKASKURBANTU',
                 'nama'          => 'Kas Kurban TU',
                 'neraca'        => false,
                 'jurnal_khusus' => true,
-                'jurnalkas_id'  => 'kaskurbantu',
+                'jurnalkas_id'  => 'JKASKURBANTU',
                 'admin_id'      => null
             ],
         ];
