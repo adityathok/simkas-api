@@ -32,6 +32,12 @@ class JurnalKas extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
+    // relasi ke akun pendapatan
+    public function akunpendapatan()
+    {
+        return $this->hasMany(AkunPendapatan::class);
+    }
+
     public static function boot()
     {
         parent::boot();
@@ -40,7 +46,7 @@ class JurnalKas extends Model
             //jika id kosong, buat id dari random 6
             Log::info('ID sebelum diset:', [$model]);
             if (!$model->id) {
-                $model->id = strtoupper(Str::random(6));
+                $model->id = 'J' . strtoupper(Str::random(6));
             }
             Log::info('ID setelah diset:', ['id' => $model->id]);
         });

@@ -19,11 +19,12 @@ class AkunPengeluaran extends Model
         'pendapatan_id',
         'admin_id',
     ];
+    protected $hidden = ['created_at', 'updated_at'];
 
     //relasi ke akun pendapatan
     public function akunpendapatan()
     {
-        return $this->belongsTo(AkunPendapatan::class);
+        return $this->belongsTo(AkunPendapatan::class, 'pendapatan_id');
     }
 
     public static function boot()
@@ -33,7 +34,7 @@ class AkunPengeluaran extends Model
         static::creating(function ($model) {
             //jika id kosong, buat id dari random 6
             if (empty($model->id)) {
-                $model->id = 'out' . strtoupper(Str::random(6));
+                $model->id = 'OUT' . strtoupper(Str::random(6));
             }
         });
     }

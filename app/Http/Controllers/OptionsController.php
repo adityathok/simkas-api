@@ -10,6 +10,7 @@ use App\Models\TahunAjaran;
 use App\Models\Setting;
 use App\Models\Pegawai;
 use App\Models\JurnalKas;
+use App\Models\AkunPendapatan;
 
 class OptionsController extends Controller
 {
@@ -38,6 +39,9 @@ class OptionsController extends Controller
                 break;
             case 'jurnalkas':
                 return $this->jurnalkas();
+                break;
+            case 'akunpendapatan':
+                return $this->akunpendapatan();
                 break;
             default:
                 return Setting::get($name);
@@ -210,5 +214,18 @@ class OptionsController extends Controller
             ];
         });
         return $jurnalkas;
+    }
+
+    //akunpendapatan
+    public function akunpendapatan()
+    {
+        $AkunPendapatan = AkunPendapatan::all();
+        $AkunPendapatan->transform(function ($data) {
+            return [
+                'value' => $data->id,
+                'label' => $data->nama,
+            ];
+        });
+        return $AkunPendapatan;
     }
 }

@@ -122,7 +122,7 @@ class AkunPengeluaranSeeder extends Seeder
             ],
             [
                 'id'            => 'OUTSARPRAS',
-                'nama'          => 'SARPRAS',
+                'nama'          => 'Sarpras',
                 'sumber'        => 'jurnalkas',
                 'pendapatan_id' => 'INSARPRAS',
                 'admin_id'      => null,
@@ -157,7 +157,7 @@ class AkunPengeluaranSeeder extends Seeder
             ],
             [
                 'id'            => 'OUTKASKURBANTU',
-                'nama'          => 'Kas KURBAN TU',
+                'nama'          => 'Kas Kurban TU',
                 'sumber'        => 'jurnalkas',
                 'pendapatan_id' => 'INKASKURBANTU',
                 'admin_id'      => null,

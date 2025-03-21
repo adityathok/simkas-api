@@ -26,11 +26,18 @@ class AkunPendapatan extends Model
         'neraca' => 'boolean',
         'jurnal_khusus' => 'boolean',
     ];
+    protected $hidden = ['created_at', 'updated_at'];
 
     //relasi ke jurnalkas
     public function jurnalkas()
     {
         return $this->belongsTo(JurnalKas::class);
+    }
+
+    //relasi ke akun pengeluaran
+    public function akunpengeluaran()
+    {
+        return $this->hasMany(AkunPengeluaran::class);
     }
 
     public static function boot()
@@ -40,7 +47,7 @@ class AkunPendapatan extends Model
         static::creating(function ($model) {
             //jika id kosong, buat id dari random 6
             if (empty($model->id)) {
-                $model->id = 'in' . strtoupper(Str::random(6));
+                $model->id = 'IN' . strtoupper(Str::random(6));
             }
         });
     }
