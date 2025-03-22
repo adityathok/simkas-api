@@ -11,16 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('akun_pengeluarans', function (Blueprint $table) {
+        Schema::create('tagihans', function (Blueprint $table) {
             $table->char('id', 26)->primary();
             $table->string('nama');
-            $table->string('sumber');
-            $table->char('pendapatan_id', 26)->nullable();
+            $table->char('batch_id', 26)->nullable();
+            $table->decimal('nominal', 10, 2);
+            $table->enum('status', ['belum', 'lunas', 'batal'])->default('belum');
+            $table->char('user_id', 26)->nullable();
             $table->char('admin_id', 26)->nullable();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('pendapatan_id')->references('id')->on('akun_pendapatans')->onDelete('set null');
+            $table->foreign('batch_id')->references('id')->on('tagihan_batches')->onDelete('set null');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('admin_id')->references('id')->on('users')->onDelete('set null');
         });
     }
@@ -30,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('akun_pengeluarans');
+        Schema::dropIfExists('tagihans');
     }
 };
