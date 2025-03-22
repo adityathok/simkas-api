@@ -23,6 +23,7 @@ return new class extends Migration
             $table->char('user_id', 26)->nullable();
             $table->char('admin_id', 26)->nullable();
             $table->text('keterangan')->nullable();
+            $table->timestamp('tanggal');
             $table->timestamps();
             $table->softDeletes();
 
