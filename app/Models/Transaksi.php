@@ -22,6 +22,42 @@ class Transaksi extends Model
     ];
     protected $hidden = ['created_at', 'updated_at'];
 
+    //relasi ke akun pendapatan
+    public function akunpendapatan()
+    {
+        return $this->belongsTo(AkunPendapatan::class, 'pendapatan_id');
+    }
+
+    //relasi ke akun pengeluaran
+    public function akunpengeluaran()
+    {
+        return $this->belongsTo(AkunPengeluaran::class, 'pendapatan_id');
+    }
+
+    //relasi ke akun rekening
+    public function akunrekening()
+    {
+        return $this->belongsTo(AkunRekening::class, 'rekening_id');
+    }
+
+    //relasi ke tagihan
+    public function tagihan()
+    {
+        return $this->belongsTo(Tagihan::class, 'tagihan_id');
+    }
+
+    //relasi ke admin
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'admin_id');
+    }
+
+    //relasi ke user
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public static function boot()
     {
         parent::boot();

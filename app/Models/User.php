@@ -117,6 +117,12 @@ class User extends Authenticatable
         return $this->kelas()->wherePivot('active', true)->first();
     }
 
+    //relasi ke transaksi
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class);
+    }
+
     public function getRolesy()
     {
         $roles = $this->roles()->get();

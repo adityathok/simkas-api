@@ -22,6 +22,12 @@ class AkunRekening extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
+    //relasi ke transaksi
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class);
+    }
+
     public static function boot()
     {
         parent::boot();

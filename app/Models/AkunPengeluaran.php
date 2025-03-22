@@ -27,6 +27,12 @@ class AkunPengeluaran extends Model
         return $this->belongsTo(AkunPendapatan::class, 'pendapatan_id');
     }
 
+    //relasi ke transaksi
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class);
+    }
+
     public static function boot()
     {
         parent::boot();

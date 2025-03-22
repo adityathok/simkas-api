@@ -40,6 +40,12 @@ class AkunPendapatan extends Model
         return $this->hasMany(AkunPengeluaran::class);
     }
 
+    //relasi ke transaksi
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class);
+    }
+
     public static function boot()
     {
         parent::boot();
