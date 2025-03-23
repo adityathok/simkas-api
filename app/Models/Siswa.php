@@ -60,7 +60,17 @@ class Siswa extends Model
 
     public function getKelasSiswaAttribute()
     {
-        return $this->kelasAktif()->first();
+        $kelas = $this->kelasAktif()->first();
+
+        if ($kelas) {
+            return [
+                'id'            => $kelas->id,
+                'nama'          => $kelas->nama,
+                'tahun_ajaran'  => $kelas->tahun_ajaran
+            ];
+        } else {
+            return null;
+        }
     }
 
     public function getAvatarUrlAttribute()

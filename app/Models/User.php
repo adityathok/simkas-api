@@ -44,6 +44,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
@@ -121,6 +124,16 @@ class User extends Authenticatable
     public function transaksi()
     {
         return $this->hasMany(Transaksi::class);
+    }
+
+    //function dapatkan info user berdasarkan type
+    public function profil()
+    {
+        if ($this->type == 'siswa') {
+            return $this->siswa;
+        } elseif ($this->type == 'pegawai') {
+            return $this->pegawai;
+        }
     }
 
     public function getRolesy()

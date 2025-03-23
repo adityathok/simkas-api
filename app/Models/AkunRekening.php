@@ -20,7 +20,12 @@ class AkunRekening extends Model
         'admin_id',
     ];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = [
+        'saldo',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     //relasi ke transaksi
     public function transaksi()

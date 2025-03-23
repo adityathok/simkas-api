@@ -20,7 +20,8 @@ class Transaksi extends Model
         'pendapatan_id',
         'admin_id',
     ];
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+    protected $appends = ['nominal_label'];
 
     //relasi ke akun pendapatan
     public function akunpendapatan()
@@ -56,6 +57,12 @@ class Transaksi extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // Accessor untuk nominal_label
+    public function getNominalLabelAttribute()
+    {
+        return number_format($this->nominal, 2, ',', '.');
     }
 
     public static function boot()

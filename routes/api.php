@@ -24,6 +24,7 @@ use App\Http\Controllers\JurnalKasController;
 use App\Http\Controllers\AkunPendapatanController;
 use App\Http\Controllers\AkunPengeluaranController;
 use App\Http\Controllers\AkunRekeningController;
+use App\Http\Controllers\TransaksiController;
 
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 //     return $request->user();
@@ -54,7 +55,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'jurnalkas'             => JurnalKasController::class,
         'akunpendapatan'        => AkunPendapatanController::class,
         'akunpengeluaran'       => AkunPengeluaranController::class,
-        'akunrekening'          => AkunRekeningController::class
+        'akunrekening'          => AkunRekeningController::class,
+        'transaksi'             => TransaksiController::class,
     ]);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');
