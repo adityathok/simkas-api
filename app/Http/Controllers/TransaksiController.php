@@ -4,14 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaksi;
+use Carbon\Carbon;
 
 class TransaksiController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+
+        $count = $request->input('count') ?? 20;
+        $date_start = $request->input('date_start') ?? null;
+        $date_end = $request->input('date_end') ?? null;
+
+        if ($date_start) {
+            $date_s   = trim($date_start, '"');
+            $tgl_s    = Carbon::parse($date_s);
+            $date_start = $tgl_s->format('Y-m-d 00:00:00');
+        }
+        if ($date_start && !$date_end) {
+            $date_s   = Carbon::parse($date_start);
+            $date_end = $date_s->format('Y-m-d 23:59:59');
+        }
+        if ($date_end) {
+            $date_s   = trim($date_end, '"');
+            $tgl_s    = Carbon::parse($date_s);
+            $date_end = $tgl_s->format('Y-m-d 23:59:59');
+        }
 
         $transaksi = Transaksi::with(
             'akunpendapatan:id,nama',
@@ -23,8 +43,11 @@ class TransaksiController extends Controller
             'user.pegawai:id,nama,user_id',
             'admin.pegawai:id,nama,user_id'
         )
+            ->when($date_start, function ($query) use ($date_start, $date_end) {
+                return $query->whereBetween('tanggal', [$date_start, $date_end]);
+            })
             ->orderBy('tanggal', 'desc')
-            ->paginate(20);
+            ->paginate($count);
         $transaksi->withPath('/transaksi');
 
         return response()->json($transaksi);
