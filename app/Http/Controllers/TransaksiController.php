@@ -101,7 +101,36 @@ class TransaksiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'nama'          => 'required|min:3',
+            'nominal'       => 'required|numeric',
+            'arus'          => 'required|in:masuk,keluar',
+            'pendapan_id'   => 'nullable|exists:akun_pendapatans,id',
+            'pengeluaran_id' => 'nullable|exists:akun_pengeluarans,id',
+            'rekening_id'   => 'nullable|exists:akun_rekenings,id',
+            'tagihan_id'    => 'nullable|exists:tagihans,id',
+            'keterangan'    => 'nullable',
+            'user_id'       => 'nullable|exists:users,id',
+            'tanggal'       => 'nullable|date',
+        ]);
+
+        //temukan transaksi
+        $transaksi = Transaksi::find($id);
+
+        //update
+        $transaksi->update([
+            'nama'          => $request->nama,
+            'nominal'       => $request->nominal,
+            'arus'          => $request->arus,
+            'pendapatan_id' => $request->pendapatan_id,
+            'pengeluaran_id' => $request->pengeluaran_id,
+            'rekening_id'   => $request->rekening_id ?? 'CASH',
+            'tagihan_id'    => $request->tagihan_id ?? null,
+            'user_id'       => $request->user_id,
+            'keterangan'    => $request->keterangan,
+            'tanggal'       => $request->tanggal ?? null,
+        ]);
+        return response()->json($transaksi);
     }
 
     /**

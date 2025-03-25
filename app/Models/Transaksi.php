@@ -24,7 +24,8 @@ class Transaksi extends Model
         'arus',
         'user_id',
         'admin_id',
-        'tanggal'
+        'tanggal',
+        'keterangan',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     protected $appends = ['nominal_label'];
