@@ -67,7 +67,7 @@ class TransaksiController extends Controller
             'rekening_id'   => 'nullable|exists:akun_rekenings,id',
             'tagihan_id'    => 'nullable|exists:tagihans,id',
             'keterangan'    => 'nullable',
-            'user_id'       => 'required|exists:users,id',
+            'user_id'       => 'nullable|exists:users,id',
             'tanggal'       => 'nullable|date',
         ]);
 

@@ -24,6 +24,7 @@ class Transaksi extends Model
         'arus',
         'user_id',
         'admin_id',
+        'tanggal'
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     protected $appends = ['nominal_label'];
@@ -77,8 +78,15 @@ class Transaksi extends Model
         static::creating(function ($model) {
             //jika id kosong, buat id dari ULID
             if (empty($model->id)) {
-                $model->id = Str::ulid();
+
+                // Hitung jumlah transaksi hari ini
+                $count = Transaksi::whereDate('created_at', today())->count();
+                // Tentukan urutan transaksi hari ini (dimulai dari 0001)
+                $sequence = str_pad($count + 1, 5, '0', STR_PAD_LEFT);
+
+                $model->id = Carbon::now()->format('ymd') . $sequence . Str::upper(Str::random(4));
             }
+
             //jika tanggal kosong, buat tanggal sekarang format Y-m-d H:i:s
             if (empty($model->tanggal)) {
                 $model->tanggal = Carbon::now()->format('Y-m-d H:i:s');
