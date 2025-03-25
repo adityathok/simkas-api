@@ -37,7 +37,7 @@ class Transaksi extends Model
     //relasi ke akun pengeluaran
     public function akunpengeluaran()
     {
-        return $this->belongsTo(AkunPengeluaran::class, 'pendapatan_id');
+        return $this->belongsTo(AkunPengeluaran::class, 'pengeluaran_id');
     }
 
     //relasi ke akun rekening

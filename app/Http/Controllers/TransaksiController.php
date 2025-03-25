@@ -68,6 +68,7 @@ class TransaksiController extends Controller
             'tagihan_id'    => 'nullable|exists:tagihans,id',
             'keterangan'    => 'nullable',
             'user_id'       => 'required|exists:users,id',
+            'tanggal'       => 'nullable|date',
         ]);
 
         $transaksi = Transaksi::create([
@@ -81,6 +82,7 @@ class TransaksiController extends Controller
             'user_id'       => $request->user_id,
             'admin_id'      => auth()->user()->id,
             'keterangan'    => $request->keterangan,
+            'tanggal'       => $request->tanggal ?? null,
         ]);
 
         return response()->json($transaksi);
