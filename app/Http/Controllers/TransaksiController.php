@@ -58,7 +58,32 @@ class TransaksiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama'          => 'required|min:3',
+            'nominal'       => 'required|numeric',
+            'arus'          => 'required|in:masuk,keluar',
+            'pendapan_id'   => 'nullable|exists:akun_pendapatans,id',
+            'pengeluaran_id' => 'nullable|exists:akun_pengeluarans,id',
+            'rekening_id'   => 'nullable|exists:akun_rekenings,id',
+            'tagihan_id'    => 'nullable|exists:tagihans,id',
+            'keterangan'    => 'nullable',
+            'user_id'       => 'required|exists:users,id',
+        ]);
+
+        $transaksi = Transaksi::create([
+            'nama'          => $request->nama,
+            'nominal'       => $request->nominal,
+            'arus'          => $request->arus,
+            'pendapatan_id' => $request->arus == 'masuk' ? $request->pendapatan_id : null,
+            'pengeluaran_id' => $request->arus == 'keluar' ? $request->pengeluaran_id : null,
+            'rekening_id'   => $request->rekening_id ?? 'CASH',
+            'tagihan_id'    => $request->tagihan_id ?? null,
+            'user_id'       => $request->user_id,
+            'admin_id'      => auth()->user()->id,
+            'keterangan'    => $request->keterangan,
+        ]);
+
+        return response()->json($transaksi);
     }
 
     /**

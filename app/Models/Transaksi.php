@@ -16,8 +16,13 @@ class Transaksi extends Model
 
     protected $fillable = [
         'nama',
-        'sumber',
+        'nominal',
         'pendapatan_id',
+        'pengeluaran_id',
+        'rekening_id',
+        'tagihan_id',
+        'arus',
+        'user_id',
         'admin_id',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

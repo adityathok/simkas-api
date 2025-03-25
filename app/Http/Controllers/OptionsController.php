@@ -11,43 +11,46 @@ use App\Models\Setting;
 use App\Models\Pegawai;
 use App\Models\JurnalKas;
 use App\Models\AkunPendapatan;
+use App\Models\AkunPengeluaran;
+use App\Models\AkunRekening;
+use App\Models\Siswa;
 
 class OptionsController extends Controller
 {
     //time cache
     public $time_cache = (60 * 5);
 
-    public function get(request $request, string $name)
+    public function get(Request $request, string $name)
     {
-        $result = [];
+        // Buat key cache berdasarkan nama dan parameter request
+        $cache_key = 'option-' . $name . '-' . md5(json_encode($request->all()));
 
-        switch ($name) {
-            case 'unitsekolah':
-                return $this->unitsekolah();
-                break;
-            case 'kelas':
-                return $this->kelas($request);
-                break;
-            case 'tahun_ajaran':
-                return $this->tahun_ajaran();
-                break;
-            case 'add_kelas':
-                return $this->add_kelas();
-                break;
-            case 'siswakelas':
-                return $this->siswakelas();
-                break;
-            case 'jurnalkas':
-                return $this->jurnalkas();
-                break;
-            case 'akunpendapatan':
-                return $this->akunpendapatan();
-                break;
-            default:
-                return Setting::get($name);
-        }
-
-        return response()->json($result);
+        // Gunakan cache dengan waktu kadaluwarsa (misalnya 10 menit)
+        return Cache::remember($cache_key, 10, function () use ($request, $name) {
+            switch ($name) {
+                case 'unitsekolah':
+                    return $this->unitsekolah();
+                case 'kelas':
+                    return $this->kelas($request);
+                case 'tahun_ajaran':
+                    return $this->tahun_ajaran();
+                case 'add_kelas':
+                    return $this->add_kelas();
+                case 'siswakelas':
+                    return $this->siswakelas($request);
+                case 'jurnalkas':
+                    return $this->jurnalkas();
+                case 'akunpendapatan':
+                    return $this->akunpendapatan();
+                case 'akunpengeluaran':
+                    return $this->akunpengeluaran();
+                case 'akunrekening':
+                    return $this->akunrekening();
+                default:
+                    // Ambil nilai default dari Setting dan simpan di cache
+                    return Setting::get($name);
+            }
+        });
     }
 
     public function gets(request $request)
@@ -82,10 +85,19 @@ class OptionsController extends Controller
                 return $this->add_kelas();
                 break;
             case 'siswakelas':
-                return $this->siswakelas();
+                return $this->siswakelas($request);
                 break;
             case 'jurnalkas':
                 return $this->jurnalkas();
+                break;
+            case 'akunpendapatan':
+                return $this->akunpendapatan();
+                break;
+            case 'akunpengeluaran':
+                return $this->akunpengeluaran();
+                break;
+            case 'akunrekening':
+                return $this->akunrekening();
                 break;
             default:
                 return Setting::get($key);
@@ -227,5 +239,52 @@ class OptionsController extends Controller
             ];
         });
         return $AkunPendapatan;
+    }
+
+    //akunpengeluaran
+    public function akunpengeluaran()
+    {
+        $akunpengeluaran = AkunPengeluaran::all();
+        $akunpengeluaran->transform(function ($data) {
+            return [
+                'value' => $data->id,
+                'label' => $data->nama,
+            ];
+        });
+        return $akunpengeluaran;
+    }
+
+    //akunrekening
+    public function akunrekening()
+    {
+        $akunrekening = AkunRekening::all();
+        $akunrekening->transform(function ($data) {
+            return [
+                'value' => $data->id,
+                'label' => $data->nama,
+            ];
+        });
+        return $akunrekening;
+    }
+
+    //siswakelas
+    public function siswakelas(request $request)
+    {
+        $kelas_id = $request->kelas_id;
+
+        $siswas = Siswa::whereHas('kelas', function ($query) use ($kelas_id) {
+            $query->where('kelas_id', $kelas_id);
+        })->with('user')
+            ->orderBy('nama', 'asc') // Urutkan berdasarkan kolom `nama`
+            ->get();
+
+        $siswas->transform(function ($data) {
+            return [
+                'value' => $data->user_id,
+                'label' => $data->nama,
+            ];
+        });
+
+        return $siswas;
     }
 }
