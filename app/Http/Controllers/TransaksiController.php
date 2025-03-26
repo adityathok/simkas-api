@@ -33,6 +33,12 @@ class TransaksiController extends Controller
             $date_end = $tgl_s->format('Y-m-d 23:59:59');
         }
 
+        //filters
+        $arus = $request->input('arus') ?? null;
+        $pendapatan_id = $request->input('pendapatan_id') ?? null;
+        $pengeluaran_id = $request->input('pengeluaran_id') ?? null;
+        $rekening_id = $request->input('rekening_id') ?? null;
+
         $transaksi = Transaksi::with(
             'akunpendapatan:id,nama',
             'akunpengeluaran:id,nama',
@@ -45,6 +51,18 @@ class TransaksiController extends Controller
         )
             ->when($date_start, function ($query) use ($date_start, $date_end) {
                 return $query->whereBetween('tanggal', [$date_start, $date_end]);
+            })
+            ->when($arus, function ($query) use ($arus) {
+                return $query->where('arus', $arus);
+            })
+            ->when($pendapatan_id, function ($query) use ($pendapatan_id) {
+                return $query->where('pendapatan_id', $pendapatan_id);
+            })
+            ->when($pengeluaran_id, function ($query) use ($pengeluaran_id) {
+                return $query->where('pengeluaran_id', $pengeluaran_id);
+            })
+            ->when($rekening_id, function ($query) use ($rekening_id) {
+                return $query->where('rekening_id', $rekening_id);
             })
             ->orderBy('tanggal', 'desc')
             ->paginate($count);
@@ -122,8 +140,8 @@ class TransaksiController extends Controller
             'nama'          => $request->nama,
             'nominal'       => $request->nominal,
             'arus'          => $request->arus,
-            'pendapatan_id' => $request->pendapatan_id,
-            'pengeluaran_id' => $request->pengeluaran_id,
+            'pendapatan_id' => $request->arus == 'masuk' ? $request->pendapatan_id : null,
+            'pengeluaran_id' => $request->arus == 'keluar' ? $request->pengeluaran_id : null,
             'rekening_id'   => $request->rekening_id ?? 'CASH',
             'tagihan_id'    => $request->tagihan_id ?? null,
             'user_id'       => $request->user_id,

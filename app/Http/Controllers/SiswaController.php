@@ -163,4 +163,24 @@ class SiswaController extends Controller
 
         return response()->json($siswa);
     }
+
+    //cari siswa berdasarkan user_id    
+    public function searchbyuserid(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|min:3',
+        ]);
+        $user_id = $request->user_id;
+
+        $siswa = Siswa::select('id', 'nama', 'user_id', 'nis', 'status')
+            ->where('user_id', $user_id)
+            ->with(['user:id,avatar', 'kelasAktif:nama'])
+            ->get();
+
+        if (empty($siswa) || $siswa->isEmpty()) {
+            return response()->json(['message' => 'Siswa not found'], 404);
+        }
+
+        return response()->json($siswa);
+    }
 }
