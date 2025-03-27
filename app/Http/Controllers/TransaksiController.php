@@ -38,6 +38,7 @@ class TransaksiController extends Controller
         $pendapatan_id = $request->input('pendapatan_id') ?? null;
         $pengeluaran_id = $request->input('pengeluaran_id') ?? null;
         $rekening_id = $request->input('rekening_id') ?? null;
+        $user_id = $request->input('user_id') ?? null;
 
         $transaksi = Transaksi::with(
             'akunpendapatan:id,nama',
@@ -63,6 +64,9 @@ class TransaksiController extends Controller
             })
             ->when($rekening_id, function ($query) use ($rekening_id) {
                 return $query->where('rekening_id', $rekening_id);
+            })
+            ->when($user_id, function ($query) use ($user_id) {
+                return $query->where('user_id', $user_id);
             })
             ->orderBy('tanggal', 'desc')
             ->paginate($count);
