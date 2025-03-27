@@ -28,6 +28,10 @@ class Pegawai extends Model
         'user_id',
     ];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
+    protected $appends = ['avatar_url'];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -38,6 +42,12 @@ class Pegawai extends Model
     {
         return $this->belongsToMany(UnitSekolah::class, 'unit_sekolah_pegawais', 'pegawai_id', 'unit_sekolah_id')
             ->withTimestamps()->withPivot('jabatan');
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        //ambil avatar url dari user
+        return $this->user ? $this->user->avatar_url : null;
     }
 
     /**

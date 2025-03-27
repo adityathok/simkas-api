@@ -174,4 +174,21 @@ class PegawaiController extends Controller
             return response()->json($pegawai);
         }
     }
+
+    public function search(string $key)
+    {
+
+        //cari pegawai berdasarkan nama / nip
+        $pegawai = Pegawai::select('id', 'nama', 'user_id', 'nip', 'status')
+            ->where('nama', 'like', '%' . $key . '%')
+            ->orWhere('nip', 'like', '%' . $key . '%')
+            ->with(['user:id,avatar'])
+            ->get();
+
+        if (empty($pegawai) || $pegawai->isEmpty()) {
+            return response()->json(['message' => 'Pegawai not found'], 404);
+        }
+
+        return response()->json($pegawai);
+    }
 }
