@@ -187,4 +187,26 @@ class UsersController extends Controller
 
         return response()->json($user);
     }
+
+    public function searchbyid(string $id)
+    {
+
+        //get users by id
+        $user = User::select('id', 'name', 'type')
+            ->where('id', $id)
+            ->with(['pegawai:nama,nip,status,user_id,id', 'siswa:nama,nis,status,user_id,id', 'siswa.kelasAktif'])
+            ->get();
+
+        if ($user && isset($user[0])) {
+            $user = $user[0];
+            if ($user->pegawai) {
+                $user = $user->pegawai;
+            }
+            if ($user->siswa) {
+                $user = $user->siswa;
+            }
+        }
+
+        return response()->json($user);
+    }
 }

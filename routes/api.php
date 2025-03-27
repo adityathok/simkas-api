@@ -81,6 +81,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('siswa_import', [SiswaImportController::class, 'import']);
 
     Route::get('pegawai/search/{key}', [PegawaiController::class, 'search']);
+    Route::get('user/searchbyid/{id}', [UsersController::class, 'searchbyid']);
 
     Route::post('siswakelas/naik_kelas', [SiswaKelasController::class, 'naik_kelas']);
 });
