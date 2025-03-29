@@ -22,7 +22,7 @@ class SiswaFactory extends Factory
         $last_name  = fake()->lastName($gender);
         $jk         = ($gender === 'male') ? 'Laki-laki' : 'Perempuan';
 
-        $longName = fake()->randomElement([1, 2, 3, 4, 5]);
+        $longName = fake()->randomElement([2, 3, 4, 5]);
         if ($longName == 1) {
             $name = $first_name;
         } elseif ($longName == 2) {

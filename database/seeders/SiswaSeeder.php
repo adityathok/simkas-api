@@ -23,6 +23,7 @@ class SiswaSeeder extends Seeder
         //dapatkan daftar kelas
         $getkelas = Kelas::all();
 
+        $n = 0;
         foreach ($getkelas as $kelas) {
             //loop 2 - 5 siswa
             for ($i = 0; $i < rand(2, 5); $i++) {
@@ -145,6 +146,9 @@ class SiswaSeeder extends Seeder
                     ]);
                 }
             }
+
+            $n++;
+            $this->command->info($n . ' Siswa berhasil dibuat.');
         }
     }
 }

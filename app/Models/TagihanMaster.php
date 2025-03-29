@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
-class TagihanBatch extends Model
+class TagihanMaster extends Model
 {
     use SoftDeletes;
 
@@ -16,19 +16,32 @@ class TagihanBatch extends Model
 
     protected $fillable = [
         'nama',
-        'status',
-        'tanggal',
-        'jumlah',
+        'nominal',
+        'type',
+        'total_tagihan',
         'total_nominal',
         'keterangan',
-        'expired',
-        'pendapatan_id',
+        'due_date',
+        'periode_start',
+        'periode_end',
+        'akun_pendapatan_id',
         'tahun_ajaran',
         'unit_sekolah_id',
         'kelas_id',
         'user_type',
         'admin_id',
     ];
+
+    //relasi ke tagihan
+    public function tagihan()
+    {
+        return $this->hasMany(Tagihan::class);
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'admin_id');
+    }
 
     public static function boot()
     {
@@ -37,7 +50,7 @@ class TagihanBatch extends Model
         static::creating(function ($model) {
             //jika id kosong, buat id dari date dan random 4
             if (empty($model->id)) {
-                $model->id = Carbon::now()->format('ymd') . strtoupper(Str::random(4));
+                $model->id = 'TM' . Carbon::now()->format('ymd') . strtoupper(Str::random(4));
             }
         });
     }
