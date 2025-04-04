@@ -25,6 +25,8 @@ use App\Http\Controllers\AkunPendapatanController;
 use App\Http\Controllers\AkunPengeluaranController;
 use App\Http\Controllers\AkunRekeningController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\TagihanController;
+use App\Http\Controllers\TagihanMasterController;
 
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 //     return $request->user();
@@ -57,6 +59,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'akunpengeluaran'       => AkunPengeluaranController::class,
         'akunrekening'          => AkunRekeningController::class,
         'transaksi'             => TransaksiController::class,
+        'tagihan'               => TagihanController::class,
+        'tagihanmaster'         => TagihanMasterController::class,
     ]);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');

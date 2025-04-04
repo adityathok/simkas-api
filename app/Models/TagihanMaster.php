@@ -31,6 +31,7 @@ class TagihanMaster extends Model
         'user_type',
         'admin_id',
     ];
+    protected $appends = ['nominal_label'];
 
     //relasi ke tagihan
     public function tagihan()
@@ -41,6 +42,19 @@ class TagihanMaster extends Model
     public function admin()
     {
         return $this->belongsTo(User::class, 'admin_id');
+    }
+
+    //relasi ke akun pendapatan
+    public function akunpendapatan()
+    {
+        return $this->belongsTo(AkunPendapatan::class, 'akun_pendapatan_id');
+    }
+
+
+    // Accessor untuk nominal_label
+    public function getNominalLabelAttribute()
+    {
+        return number_format($this->nominal, 2, ',', '.');
     }
 
     public static function boot()
