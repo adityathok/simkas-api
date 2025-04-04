@@ -82,7 +82,18 @@ class TagihanController extends Controller
      */
     public function show(string $id)
     {
-        //
+
+        //get tagihan
+        $tagihan = Tagihan::with(
+            'tagihan_master',
+            'tagihan_master.akunpendapatan:id,nama',
+            'transaksi',
+            'user:id,name,type',
+            'user.siswa:id,nama,user_id,nis',
+            'user.pegawai:id,nama,user_id',
+        )
+            ->find($id);
+        return response()->json($tagihan);
     }
 
     /**
@@ -98,6 +109,8 @@ class TagihanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        //get tagihan
+        $tagihan = Tagihan::find($id);
+        $tagihan->delete();
     }
 }
