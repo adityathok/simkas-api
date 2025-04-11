@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Models\Siswa;
+use App\Models\Kelas;
+use App\Models\TahunAjaran;
 
 class SiswaController extends Controller
 {
@@ -182,5 +184,46 @@ class SiswaController extends Controller
         }
 
         return response()->json($siswa);
+    }
+
+    public function count_siswa(Request $request)
+    {
+
+        $request->validate([
+            'tahun_ajaran' => 'nullable|min:3',
+            'kelas_id' => 'nullable|min:3',
+            'unit_sekolah_id' => 'nullable|min:3',
+        ]);
+
+        $tahun_ajaran = $request->tahun_ajaran ?? TahunAjaran::getActive()->nama;
+        $unit = $request->unit_sekolah_id ?? null;
+
+        $kelas = Kelas::where('tahun_ajaran', $tahun_ajaran)
+            ->when($unit, function ($query) use ($unit) {
+                return $query->where('unit_sekolah_id', $unit);
+            })
+            ->when($request->kelas_id, function ($query) use ($request) {
+                return $query->where('id', $request->kelas_id);
+            })
+            ->withCount('siswaKelas')
+            ->orderBy('nama', 'asc')
+            ->get();
+
+        $total = $kelas->sum('siswa_kelas_count');
+
+        //collection
+        $kelas = collect($kelas)->map(function ($data) {
+            return [
+                'id'            => $data->id,
+                'name'          => $data->nama,
+                'tahun_ajaran'  => $data->tahun_ajaran,
+                'siswa_count'   => $data->siswa_kelas_count
+            ];
+        });
+
+        return response()->json([
+            'data' => $kelas,
+            'total' => $total
+        ]);
     }
 }

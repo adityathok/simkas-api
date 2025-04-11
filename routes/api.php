@@ -82,6 +82,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('options', [OptionsController::class, 'gets']);
     Route::post('siswa/search', [SiswaController::class, 'search']);
     Route::post('siswa/searchbyuserid', [SiswaController::class, 'searchbyuserid']);
+    Route::get('countsiswa', [SiswaController::class, 'count_siswa']);
     Route::post('siswa_import', [SiswaImportController::class, 'import']);
 
     Route::get('pegawai/search/{key}', [PegawaiController::class, 'search']);
