@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transaksis', function (Blueprint $table) {
             $table->char('id', 26)->primary();
             $table->string('nama');
-            $table->decimal('nominal', 10, 2);
+            $table->decimal('nominal', 15, 2);
             $table->enum('arus', ['masuk', 'keluar']);
             $table->char('pendapatan_id', 26)->nullable();
             $table->char('pengeluaran_id', 26)->nullable();

@@ -47,7 +47,42 @@ class TagihanMasterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama'          => 'required|min:3',
+            'nominal'       => 'required|numeric',
+            'type'          => 'required|min:3',
+            'total_tagihan' => 'required|numeric',
+            'total_nominal' => 'required|numeric',
+            'keterangan'    => 'nullable|min:3',
+            'due_date'      => 'nullable|date',
+            'periode_start' => 'nullable|date',
+            'periode_end'   => 'nullable|date',
+            'akun_pendapatan_id' => 'nullable|exists:akun_pendapatans,id',
+            'tahun_ajaran'      => 'nullable',
+            'unit_sekolah_id'   => 'nullable|exists:unit_sekolahs,id',
+            'kelas_id'          => 'nullable|exists:kelas,id',
+            'user_type'         => 'nullable',
+        ]);
+
+        $tagihan = TagihanMaster::create([
+            'nama'          => $request->nama,
+            'nominal'       => $request->nominal,
+            'type'          => $request->type,
+            'total_tagihan' => $request->total_tagihan,
+            'total_nominal' => $request->total_nominal,
+            'keterangan'    => $request->keterangan,
+            'due_date'      => $request->due_date,
+            'periode_start' => $request->periode_start,
+            'periode_end'   => $request->periode_end,
+            'akun_pendapatan_id' => $request->akun_pendapatan_id,
+            'tahun_ajaran'      => $request->tahun_ajaran,
+            'unit_sekolah_id'   => $request->unit_sekolah_id,
+            'kelas_id'          => $request->kelas_id,
+            'user_type'         => $request->user_type,
+            'admin_id'          => auth()->user()->id
+        ]);
+
+        return response()->json($tagihan);
     }
 
     /**
@@ -55,7 +90,9 @@ class TagihanMasterController extends Controller
      */
     public function show(string $id)
     {
-        //
+        //get tagihan
+        $tagihan = TagihanMaster::with('akun_pendapatan')->find($id);
+        return response()->json($tagihan);
     }
 
     /**

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->char('id', 26)->primary();
             $table->string('nama');
             $table->text('keterangan')->nullable();
-            $table->decimal('saldo', 10, 2);
+            $table->decimal('saldo', 18, 2);
             $table->timestamps();
             $table->softDeletes();
         });

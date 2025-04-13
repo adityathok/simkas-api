@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('tagihan_masters', function (Blueprint $table) {
             $table->char('id', 26)->primary();
             $table->string('nama');
-            $table->decimal('nominal', 10, 2);
+            $table->decimal('nominal', 15, 2);
             $table->string('type');
             $table->integer('total_tagihan');
-            $table->decimal('total_nominal', 10, 2);
+            $table->decimal('total_nominal', 18, 2);
             $table->string('keterangan')->nullable();
             $table->date('due_date')->nullable();
             $table->string('periode_start')->nullable();
