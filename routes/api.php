@@ -89,4 +89,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user/searchbyid/{id}', [UsersController::class, 'searchbyid']);
 
     Route::post('siswakelas/naik_kelas', [SiswaKelasController::class, 'naik_kelas']);
+
+    Route::post('generate-tagihan-batch', [TagihanMasterController::class, 'tagihan_batch']);
 });
