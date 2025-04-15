@@ -174,6 +174,7 @@ class TagihanMasterController extends Controller
         $unit_sekolah_id = $master->unit_sekolah_id;
         $kelas_id = $master->kelas_id;
         $user_id = $master->user_id;
+        $total_tagihan = $master->total_tagihan;
 
         //get user by kelas
         $siswa = Siswa::skip($offset)->take($limit)
@@ -206,6 +207,7 @@ class TagihanMasterController extends Controller
 
         //create tagihan insert
         $data = [];
+        $count_tagihan = 0;
         $counter = 1 + $offset;
         foreach ($siswa as $user) {
             $count = str_pad($counter, 4, '0', STR_PAD_LEFT);
@@ -221,6 +223,7 @@ class TagihanMasterController extends Controller
                 'updated_at'        => now(),
             ];
             $counter++;
+            $count_tagihan++;
         }
         Tagihan::insert($data);
 
@@ -229,10 +232,12 @@ class TagihanMasterController extends Controller
         $isDone     = $nextOffset >= $totalUsers;
 
         return response()->json([
-            'next_offset'   => $nextOffset,
-            'done'          => $isDone,
-            'processed'     => count($siswa),
-            'siswa'         => $siswa
+            'next_offset'       => $nextOffset,
+            'done'              => $isDone,
+            'processed'         => count($siswa),
+            'total_processed'   => $count_tagihan + $offset,
+            'total_tagihan'     => $total_tagihan,
+            // 'siswa'         => $siswa
         ]);
     }
 }
