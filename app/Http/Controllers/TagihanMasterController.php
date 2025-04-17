@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Models\TagihanMaster;
 use App\Models\Tagihan;
 use App\Models\Kelas;
@@ -178,6 +179,11 @@ class TagihanMasterController extends Controller
 
         //get user by kelas
         $siswa = Siswa::skip($offset)->take($limit)
+            ->when($tahun_ajaran, function ($query) use ($tahun_ajaran) {
+                return $query->whereHas('kelas', function ($query) use ($tahun_ajaran) {
+                    $query->where('tahun_ajaran', $tahun_ajaran);
+                });
+            })
             ->when($unit_sekolah_id, function ($query) use ($unit_sekolah_id) {
                 return $query->whereHas('kelas', function ($query) use ($unit_sekolah_id) {
                     $query->where('unit_sekolah_id', $unit_sekolah_id);
@@ -192,7 +198,12 @@ class TagihanMasterController extends Controller
             ->get();
 
         //get total siswa
-        $total_siswa = Siswa::with(['user:id,avatar,name', 'kelas'])
+        $total_siswa = Siswa::with(['user:id,name', 'kelas'])
+            ->when($tahun_ajaran, function ($query) use ($tahun_ajaran) {
+                return $query->whereHas('kelas', function ($query) use ($tahun_ajaran) {
+                    $query->where('tahun_ajaran', $tahun_ajaran);
+                });
+            })
             ->when($unit_sekolah_id, function ($query) use ($unit_sekolah_id) {
                 return $query->whereHas('kelas', function ($query) use ($unit_sekolah_id) {
                     $query->where('unit_sekolah_id', $unit_sekolah_id);
@@ -207,12 +218,24 @@ class TagihanMasterController extends Controller
 
         //create tagihan insert
         $data = [];
+        $log = [];
         $count_tagihan = 0;
-        $counter = 1 + $offset;
+        // $counter = 1 + $offset;
         foreach ($siswa as $user) {
+
+            // Mendapatkan key cache berdasarkan tanggal hari ini
+            $cacheKey = date('ymd') . '_tagihancounter';
+
+            // Mendapatkan nilai counter dari cache, default ke 0 jika belum ada
+            $counter = Cache::get($cacheKey, 0) + 1;
+
+            // Simpan kembali counter ke cache
+            Cache::put($cacheKey, $counter, now()->endOfDay());
+
             $count = str_pad($counter, 4, '0', STR_PAD_LEFT);
+            $inv = 'INV' . Carbon::now()->format('ymd') . $count . strtoupper(Str::random(4));
             $data[] = [
-                'id'                => 'INV' . Carbon::now()->format('ymd') . $count . strtoupper(Str::random(4)),
+                'id'                => $inv,
                 'nama'              => $master->nama,
                 'user_id'           => $user->user_id,
                 'tagihan_master_id' => $master->id,
@@ -222,7 +245,13 @@ class TagihanMasterController extends Controller
                 'created_at'        => now(),
                 'updated_at'        => now(),
             ];
-            $counter++;
+            $log[] = [
+                'invoice'           => $inv,
+                'user'              => $user->nama,
+                'tagihan_master_id' => $master->id,
+            ];
+
+            // $counter++;
             $count_tagihan++;
         }
         Tagihan::insert($data);
@@ -237,6 +266,7 @@ class TagihanMasterController extends Controller
             'processed'         => count($siswa),
             'total_processed'   => $count_tagihan + $offset,
             'total_tagihan'     => $total_tagihan,
+            'log'               => $log ?? [],
             // 'siswa'         => $siswa
         ]);
     }
