@@ -176,6 +176,13 @@ class TagihanMasterController extends Controller
         $kelas_id = $master->kelas_id;
         $user_id = $master->user_id;
         $total_tagihan = $master->total_tagihan;
+        $type_tagihan = $master->type;
+
+        //if type = bulanan, buat periode
+        if ($type_tagihan == 'bulanan') {
+            $periode_start = Carbon::createFromFormat('Y-m-d H:i:s', $master->periode_start); // Tanggal mulai
+            $periode_end = Carbon::createFromFormat('Y-m-d H:i:s', $master->periode_end);   // Tanggal selesai  
+        }
 
         //get user by kelas
         $siswa = Siswa::skip($offset)->take($limit)
@@ -220,39 +227,76 @@ class TagihanMasterController extends Controller
         $data = [];
         $log = [];
         $count_tagihan = 0;
-        // $counter = 1 + $offset;
+
         foreach ($siswa as $user) {
 
             // Mendapatkan key cache berdasarkan tanggal hari ini
             $cacheKey = date('ymd') . '_tagihancounter';
 
-            // Mendapatkan nilai counter dari cache, default ke 0 jika belum ada
-            $counter = Cache::get($cacheKey, 0) + 1;
+            //jika type = bulanan
+            if ($type_tagihan == 'bulanan') {
 
-            // Simpan kembali counter ke cache
-            Cache::put($cacheKey, $counter, now()->endOfDay());
+                // loop daftar bulan
+                while ($periode_start <= $periode_end) {
+                    $month = $periode_start->format('m-Y'); // Format bulan
 
-            $count = str_pad($counter, 4, '0', STR_PAD_LEFT);
-            $inv = 'INV' . Carbon::now()->format('ymd') . $count . strtoupper(Str::random(4));
-            $data[] = [
-                'id'                => $inv,
-                'nama'              => $master->nama,
-                'user_id'           => $user->user_id,
-                'tagihan_master_id' => $master->id,
-                'tanggal'           => now(),
-                'keterangan'        => null,
-                'status'            => 'belum',
-                'created_at'        => now(),
-                'updated_at'        => now(),
-            ];
-            $log[] = [
-                'invoice'           => $inv,
-                'user'              => $user->nama,
-                'tagihan_master_id' => $master->id,
-            ];
+                    // Mendapatkan nilai counter dari cache, default ke 0 jika belum ada
+                    $counter = Cache::get($cacheKey, 0) + 1;
+                    // Simpan kembali counter ke cache
+                    Cache::put($cacheKey, $counter, now()->endOfDay());
+                    $count = str_pad($counter, 5, '0', STR_PAD_LEFT);
+                    $inv = 'INV' . Carbon::now()->format('ymd') . $count . strtoupper(Str::random(4));
 
-            // $counter++;
-            $count_tagihan++;
+                    $tgl = $periode_start->format('Y-m');
+
+                    $data[] = [
+                        'id'                => $inv,
+                        'nama'              => $master->nama,
+                        'user_id'           => $user->user_id,
+                        'tagihan_master_id' => $master->id,
+                        'tanggal'           => $tgl . '-01 00:01:00',
+                        'keterangan'        => null,
+                        'status'            => 'belum',
+                        'created_at'        => now(),
+                        'updated_at'        => now(),
+                    ];
+                    $log[] = [
+                        'invoice'           => $inv,
+                        'user'              => $user->nama,
+                        'tagihan_master_id' => $master->id,
+                    ];
+                    $count_tagihan++;
+
+                    $periode_start->addMonth(); // Tambah satu bulan
+                }
+            } else { //jika type = insidental
+
+                // Mendapatkan nilai counter dari cache, default ke 0 jika belum ada
+                $counter = Cache::get($cacheKey, 0) + 1;
+                // Simpan kembali counter ke cache
+                Cache::put($cacheKey, $counter, now()->endOfDay());
+                $count = str_pad($counter, 5, '0', STR_PAD_LEFT);
+                $inv = 'INV' . Carbon::now()->format('ymd') . $count . strtoupper(Str::random(4));
+
+                $data[] = [
+                    'id'                => $inv,
+                    'nama'              => $master->nama,
+                    'user_id'           => $user->user_id,
+                    'tagihan_master_id' => $master->id,
+                    'tanggal'           => now(),
+                    'keterangan'        => null,
+                    'status'            => 'belum',
+                    'created_at'        => now(),
+                    'updated_at'        => now(),
+                ];
+                $log[] = [
+                    'invoice'           => $inv,
+                    'user'              => $user->nama,
+                    'tagihan_master_id' => $master->id,
+                ];
+
+                $count_tagihan++;
+            }
         }
         Tagihan::insert($data);
 
