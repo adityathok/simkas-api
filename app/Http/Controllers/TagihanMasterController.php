@@ -168,6 +168,7 @@ class TagihanMasterController extends Controller
         $tagihan_master_id = $request->tagihan_master_id;
         $offset = $request->offset ?? 0;
         $limit = $request->limit ?? 100;
+        $processed = $request->processed ?? 0;
 
         $master = TagihanMaster::find($tagihan_master_id);
 
@@ -177,12 +178,6 @@ class TagihanMasterController extends Controller
         $user_id = $master->user_id;
         $total_tagihan = $master->total_tagihan;
         $type_tagihan = $master->type;
-
-        //if type = bulanan, buat periode
-        if ($type_tagihan == 'bulanan') {
-            $periode_start = Carbon::createFromFormat('Y-m-d H:i:s', $master->periode_start); // Tanggal mulai
-            $periode_end = Carbon::createFromFormat('Y-m-d H:i:s', $master->periode_end);   // Tanggal selesai  
-        }
 
         //get user by kelas
         $siswa = Siswa::skip($offset)->take($limit)
@@ -235,6 +230,9 @@ class TagihanMasterController extends Controller
 
             //jika type = bulanan
             if ($type_tagihan == 'bulanan') {
+
+                $periode_start = Carbon::createFromFormat('Y-m-d H:i:s', $master->periode_start); // Tanggal mulai
+                $periode_end = Carbon::createFromFormat('Y-m-d H:i:s', $master->periode_end);   // Tanggal selesai  
 
                 // loop daftar bulan
                 while ($periode_start <= $periode_end) {
@@ -307,10 +305,11 @@ class TagihanMasterController extends Controller
         return response()->json([
             'next_offset'       => $nextOffset,
             'done'              => $isDone,
-            'processed'         => count($siswa),
-            'total_processed'   => $count_tagihan + $offset,
+            'user_processed'    => count($siswa),
+            'total_processed'   => $count_tagihan + $processed,
             'total_tagihan'     => $total_tagihan,
             'log'               => $log ?? [],
+            // 'data'              => $data ?? [],
             // 'siswa'         => $siswa
         ]);
     }
