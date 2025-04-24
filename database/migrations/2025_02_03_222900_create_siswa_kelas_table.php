@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('siswa_kelas', function (Blueprint $table) {
             $table->id();
             $table->char('user_id', 26)->nullable();
-            $table->char('kelas_id', 26)->nullable();
+            $table->unsignedBigInteger('kelas_id')->nullable();
             $table->boolean('active')->default(false);
             $table->timestamps();
 
             // Foreign keys
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('cascade');
+            $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('set null');
         });
     }
 

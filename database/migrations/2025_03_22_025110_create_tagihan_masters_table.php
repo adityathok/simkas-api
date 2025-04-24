@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tagihan_masters', function (Blueprint $table) {
-            $table->char('id', 26)->primary();
+            $table->id();
             $table->string('nama');
             $table->decimal('nominal', 15, 2);
             $table->string('type');
@@ -25,7 +25,8 @@ return new class extends Migration
             $table->char('akun_pendapatan_id', 26)->nullable();
             $table->string('tahun_ajaran')->nullable();
             $table->char('unit_sekolah_id', 26)->nullable();
-            $table->char('kelas_id', 26)->nullable();
+            $table->unsignedBigInteger('kelas_id')->nullable();
+            $table->char('user_id', 26)->nullable();
             $table->string('user_type')->nullable();
             $table->char('admin_id', 26)->nullable();
             $table->timestamps();
@@ -34,8 +35,8 @@ return new class extends Migration
             // Foreign keys
             $table->foreign('akun_pendapatan_id')->references('id')->on('akun_pendapatans')->onDelete('set null');
             $table->foreign('unit_sekolah_id')->references('id')->on('unit_sekolahs')->onDelete('set null');
-            $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('set null');
             $table->foreign('admin_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('set null');
         });
     }
 

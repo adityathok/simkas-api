@@ -10,13 +10,9 @@ class Kelas extends Model
 {
     use SoftDeletes;
 
-    // Non-incrementing ID karena ULID
-    public $incrementing = false;
-
     protected $hidden = ['created_at', 'updated_at'];
 
     protected $fillable = [
-        'id',
         'nama',
         'tingkat',
         'tahun_ajaran',
@@ -68,14 +64,14 @@ class Kelas extends Model
      * Boot the model and assign a ULID to the model's ID attribute 
      * when a new instance is being created.
      */
-    public static function boot()
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            // Menetapkan ID menggunakan ULID jika ID kosong
-            if (empty($model->id)) {
-                $model->id = Str::ulid();
-            }
-        });
-    }
+    // public static function boot()
+    // {
+    // parent::boot();
+    // static::creating(function ($model) {
+    // Menetapkan ID menggunakan ULID jika ID kosong
+    //     if (empty($model->id)) {
+    //         $model->id = Str::ulid();
+    //     }
+    // });
+    //}
 }

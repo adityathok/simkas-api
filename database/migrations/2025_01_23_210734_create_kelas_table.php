@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kelas', function (Blueprint $table) {
-            $table->ulid('id')->primary();
+            $table->id();
             $table->string('nama');
             $table->string('tingkat');
             $table->string('tahun_ajaran');

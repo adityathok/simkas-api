@@ -87,11 +87,10 @@ class TagihanSeeder extends Seeder
             $counter = str_pad($counter, 4, '0', STR_PAD_LEFT);
 
             return [
-                'id' => 'INV' . Carbon::now()->format('ymd') . $counter . strtoupper(Str::random(4)),
+                'nomor' => 'INV' . Carbon::now()->format('ymd') . $counter . strtoupper(Str::random(4)),
                 'tanggal' => $tanggal,
                 'user_id' => $siswa->user_id,
                 'tagihan_master_id' => $master->id,
-                'nama' => $name_tagihan,
                 'status' => 'belum',
                 'created_at' => now(),
                 'updated_at' => now(),

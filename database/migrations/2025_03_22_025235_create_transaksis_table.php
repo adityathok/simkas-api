@@ -19,7 +19,7 @@ return new class extends Migration
             $table->char('pendapatan_id', 26)->nullable();
             $table->char('pengeluaran_id', 26)->nullable();
             $table->char('rekening_id', 26)->nullable();
-            $table->char('tagihan_id', 26)->nullable();
+            $table->foreignId('tagihan_id')->constrained()->nullable();
             $table->char('user_id', 26)->nullable();
             $table->char('admin_id', 26)->nullable();
             $table->text('keterangan')->nullable();
@@ -32,7 +32,6 @@ return new class extends Migration
             $table->foreign('rekening_id')->references('id')->on('akun_rekenings')->onDelete('set null');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('admin_id')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('tagihan_id')->references('id')->on('tagihans')->onDelete('set null');
         });
     }
 

@@ -12,7 +12,7 @@ class TagihanMaster extends Model
     use SoftDeletes;
 
     // Non-incrementing ID karena CHAR
-    public $incrementing = false;
+    // public $incrementing = false;
 
     protected $fillable = [
         'nama',
@@ -57,15 +57,15 @@ class TagihanMaster extends Model
         return number_format($this->nominal, 2, ',', '.');
     }
 
-    public static function boot()
-    {
-        parent::boot();
+    // public static function boot()
+    // {
+    //     parent::boot();
 
-        static::creating(function ($model) {
-            //jika id kosong, buat id dari date dan random 4
-            if (empty($model->id)) {
-                $model->id = 'TM' . Carbon::now()->format('ymd') . strtoupper(Str::random(4));
-            }
-        });
-    }
+    //     static::creating(function ($model) {
+    //         //jika id kosong, buat id dari date dan random 4
+    //         if (empty($model->id)) {
+    //             $model->id = 'TM' . Carbon::now()->format('ymd') . strtoupper(Str::random(4));
+    //         }
+    //     });
+    // }
 }

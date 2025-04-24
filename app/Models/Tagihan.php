@@ -13,9 +13,10 @@ class Tagihan extends Model
     use SoftDeletes;
 
     // Non-incrementing ID karena CHAR
-    public $incrementing = false;
+    // public $incrementing = false;
 
     protected $fillable = [
+        'nomor',
         'nama',
         'tanggal',
         'tagihan_master_id',
@@ -47,7 +48,7 @@ class Tagihan extends Model
 
         static::creating(function ($model) {
             //jika id kosong, buat id dari date dan random 4
-            if (empty($model->id)) {
+            if (empty($model->nomor)) {
 
                 // Mendapatkan key cache berdasarkan tanggal hari ini
                 $cacheKey = date('ymd') . '_tagihancounter';

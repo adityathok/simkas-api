@@ -100,11 +100,10 @@ class TagihanBulananSeeder extends Seeder
                 $tgl = $start->format('Y-m');
 
                 return [
-                    'id'                => 'INV' . Carbon::now()->format('ymd') . $counter . strtoupper(Str::random(4)),
+                    'nomor'             => 'INV' . Carbon::now()->format('ymd') . $counter . strtoupper(Str::random(4)),
                     'user_id'           => $siswa->user_id,
                     'tanggal'           => $tgl . '-01 00:01:00',
                     'tagihan_master_id' => $master->id,
-                    'nama'              => $name_tagihan,
                     'status'            => 'belum',
                     'created_at'        => now(),
                     'updated_at'        => now(),

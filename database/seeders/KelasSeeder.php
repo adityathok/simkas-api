@@ -36,7 +36,6 @@ class KelasSeeder extends Seeder
                 if ($rombels) {
                     foreach ($rombels as $rombel) {
                         Kelas::create([
-                            'id'                => fake()->unique()->numerify('01XMPL###'),
                             'unit_sekolah_id'   => $unitSekolah->id,
                             'tingkat'           => $tingkat,
                             'tahun_ajaran'      => $tahunAjaran,
@@ -46,7 +45,6 @@ class KelasSeeder extends Seeder
                     }
                 } else {
                     Kelas::create([
-                        'id'                => fake()->unique()->numerify('01XMPL###'),
                         'unit_sekolah_id'   => $unitSekolah->id,
                         'tingkat'           => $tingkat,
                         'tahun_ajaran'      => $tahunAjaran,

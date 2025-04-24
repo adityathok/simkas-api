@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tagihans', function (Blueprint $table) {
-            $table->char('id', 26)->primary();
-            $table->string('nama');
+            $table->id();
+            $table->string('nomor');
             $table->timestamp('tanggal');
-            $table->char('tagihan_master_id', 26)->nullable();
+            $table->foreignId('tagihan_master_id')->constrained()->onDelete('cascade');
             $table->enum('status', ['belum', 'lunas', 'batal'])->default('belum');
             $table->char('user_id', 26)->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('tagihan_master_id')->references('id')->on('tagihan_masters')->onDelete('cascade');
+            // Foreign keys
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
