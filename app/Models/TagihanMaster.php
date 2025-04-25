@@ -55,6 +55,6 @@ class TagihanMaster extends Model
     // Accessor untuk nominal_label
     public function getNominalLabelAttribute()
     {
-        return number_format($this->nominal, 2, ',', '.');
+        return number_format($this->nominal, 0, ',', '.');
     }
 }

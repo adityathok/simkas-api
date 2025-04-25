@@ -16,16 +16,17 @@ class TagihanController extends Controller
         $count = $request->input('count') ?? 20;
         $date_start = $request->input('date_start') ?? null;
         $date_end = $request->input('date_end') ?? null;
+        $status = $request->input('status') ?? null;
 
         if ($date_start) {
-            $date_s   = trim($date_start, '"');
-            $tgl_s    = Carbon::parse($date_s);
+            // $date_s   = trim($date_start, '"');
+            $tgl_s    = Carbon::parse($date_start);
             $date_start = $tgl_s->format('Y-m-d 00:00:00');
         }
 
         if ($date_end) {
-            $date_s   = trim($date_end, '"');
-            $tgl_s    = Carbon::parse($date_s);
+            // $date_s   = trim($date_end, '"');
+            $tgl_s    = Carbon::parse($date_end);
             $date_end = $tgl_s->format('Y-m-d 23:59:59');
         }
 
@@ -39,9 +40,6 @@ class TagihanController extends Controller
             $date_end = Carbon::now()->format('Y-m-d 23:59:59');
         }
 
-        //filters
-        $status = $request->input('status') ?? null;
-
         $tagihan = Tagihan::with(
             'tagihan_master',
             'tagihan_master.akunpendapatan:id,nama',
@@ -50,13 +48,13 @@ class TagihanController extends Controller
             'user.siswa:id,nama,user_id,nis',
             'user.pegawai:id,nama,user_id',
         )
-            // ->when($date_start && $date_end, function ($query) use ($date_start, $date_end) {
-            //     return $query->whereBetween('tanggal', [$date_start, $date_end]);
-            // })
-            ->when($date_start, function ($query) use ($date_start) {
+            ->when($date_start && $date_end, function ($query) use ($date_start, $date_end) {
+                return $query->whereBetween('tanggal', [$date_start, $date_end]);
+            })
+            ->when($date_start && !$date_end, function ($query) use ($date_start) {
                 return $query->where('tanggal', '>=', $date_start);
             })
-            ->when($date_end, function ($query) use ($date_end) {
+            ->when(!$date_start && $date_end, function ($query) use ($date_end) {
                 return $query->where('tanggal', '<=', $date_end);
             })
             ->when($status, function ($query) use ($status) {
