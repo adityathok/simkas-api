@@ -79,13 +79,7 @@ class Transaksi extends Model
         static::creating(function ($model) {
             //jika id kosong, buat id dari ULID
             if (empty($model->id)) {
-
-                // Hitung jumlah transaksi hari ini
-                $count = Transaksi::whereDate('created_at', today())->count();
-                // Tentukan urutan transaksi hari ini (dimulai dari 0001)
-                $sequence = str_pad($count + 1, 5, '0', STR_PAD_LEFT);
-
-                $model->id = Carbon::now()->format('ymd') . $sequence . Str::upper(Str::random(4));
+                $model->id = Str::ulid();
             }
 
             //jika tanggal kosong, buat tanggal sekarang format Y-m-d H:i:s

@@ -66,6 +66,7 @@ class TagihanMasterController extends Controller
             'tahun_ajaran'      => 'nullable',
             'unit_sekolah_id'   => 'nullable|exists:unit_sekolahs,id',
             'kelas_id'          => 'nullable|exists:kelas,id',
+            'user_id'           => 'nullable',
             'user_type'         => 'nullable',
         ]);
 
@@ -84,6 +85,7 @@ class TagihanMasterController extends Controller
             'unit_sekolah_id'   => $request->unit_sekolah_id,
             'kelas_id'          => $request->kelas_id,
             'user_type'         => $request->user_type,
+            'user_id'           => $request->user_id,
             'admin_id'          => auth()->user()->id
         ]);
 
@@ -120,6 +122,7 @@ class TagihanMasterController extends Controller
             'tahun_ajaran'      => 'nullable',
             'unit_sekolah_id'   => 'nullable|exists:unit_sekolahs,id',
             'kelas_id'          => 'nullable|exists:kelas,id',
+            'user_id'           => 'nullable',
             'user_type'         => 'nullable',
         ]);
 
@@ -248,8 +251,7 @@ class TagihanMasterController extends Controller
                     $tgl = $periode_start->format('Y-m');
 
                     $data[] = [
-                        'id'                => $inv,
-                        'nama'              => $master->nama,
+                        'nomor'             => $inv,
                         'user_id'           => $user->user_id,
                         'tagihan_master_id' => $master->id,
                         'tanggal'           => $tgl . '-01 00:01:00',
@@ -277,8 +279,7 @@ class TagihanMasterController extends Controller
                 $inv = 'INV' . Carbon::now()->format('ymd') . $count . strtoupper(Str::random(4));
 
                 $data[] = [
-                    'id'                => $inv,
-                    'nama'              => $master->nama,
+                    'nomor'             => $inv,
                     'user_id'           => $user->user_id,
                     'tagihan_master_id' => $master->id,
                     'tanggal'           => now(),

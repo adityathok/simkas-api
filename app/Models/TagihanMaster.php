@@ -28,6 +28,7 @@ class TagihanMaster extends Model
         'tahun_ajaran',
         'unit_sekolah_id',
         'kelas_id',
+        'user_id',
         'user_type',
         'admin_id',
     ];
@@ -56,16 +57,4 @@ class TagihanMaster extends Model
     {
         return number_format($this->nominal, 2, ',', '.');
     }
-
-    // public static function boot()
-    // {
-    //     parent::boot();
-
-    //     static::creating(function ($model) {
-    //         //jika id kosong, buat id dari date dan random 4
-    //         if (empty($model->id)) {
-    //             $model->id = 'TM' . Carbon::now()->format('ymd') . strtoupper(Str::random(4));
-    //         }
-    //     });
-    // }
 }
