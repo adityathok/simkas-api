@@ -37,13 +37,14 @@ class TagihanMasterController extends Controller
             $date_end = $tgl_s->format('Y-m-d 23:59:59');
         }
 
-        $tagihan = TagihanMaster::with('akun_pendapatan', 'akun_pengeluaran')
+        $tagihan = TagihanMaster::with('akunpendapatan:id,nama', 'admin', 'unitsekolah:id,nama', 'kelas:id,nama')
             ->when($date_start, function ($query) use ($date_start, $date_end) {
-                return $query->whereBetween('tanggal', [$date_start, $date_end]);
+                return $query->whereBetween('created_at', [$date_start, $date_end]);
             })
             ->orderBy('created_at', 'desc')
             ->paginate($count);
-        $tagihan->withPath('/tagihan');
+        $tagihan->withPath('/tagihanmaster');
+
         return response()->json($tagihan);
     }
 
@@ -154,7 +155,7 @@ class TagihanMasterController extends Controller
         $tagihan = TagihanMaster::find($id);
 
         //hapus tagihan
-        $tagihan->tagihans()->delete();
+        $tagihan->tagihan()->delete();
 
         $tagihan->delete();
     }
