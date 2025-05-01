@@ -37,13 +37,14 @@ class TagihanMasterController extends Controller
             $date_end = $tgl_s->format('Y-m-d 23:59:59');
         }
 
-        $tagihan = TagihanMaster::with('akun_pendapatan', 'akun_pengeluaran')
+        $tagihan = TagihanMaster::with('akunpendapatan:id,nama', 'admin', 'unitsekolah:id,nama', 'kelas:id,nama')
             ->when($date_start, function ($query) use ($date_start, $date_end) {
-                return $query->whereBetween('tanggal', [$date_start, $date_end]);
+                return $query->whereBetween('created_at', [$date_start, $date_end]);
             })
             ->orderBy('created_at', 'desc')
             ->paginate($count);
-        $tagihan->withPath('/tagihan');
+        $tagihan->withPath('/tagihanmaster');
+
         return response()->json($tagihan);
     }
 
@@ -111,31 +112,31 @@ class TagihanMasterController extends Controller
         $request->validate([
             'nama'          => 'required|min:3',
             'nominal'       => 'required|numeric',
-            'type'          => 'required|min:3',
-            'total_tagihan' => 'required|numeric',
+            // 'type'          => 'required|min:3',
+            // 'total_tagihan' => 'required|numeric',
             'total_nominal' => 'required|numeric',
             'keterangan'    => 'nullable|min:3',
             'due_date'      => 'nullable|date',
-            'periode_start' => 'nullable|date',
-            'periode_end'   => 'nullable|date',
+            // 'periode_start' => 'nullable|date',
+            // 'periode_end'   => 'nullable|date',
             'akun_pendapatan_id' => 'nullable|exists:akun_pendapatans,id',
-            'tahun_ajaran'      => 'nullable',
-            'unit_sekolah_id'   => 'nullable|exists:unit_sekolahs,id',
-            'kelas_id'          => 'nullable|exists:kelas,id',
-            'user_id'           => 'nullable',
-            'user_type'         => 'nullable',
+            // 'tahun_ajaran'      => 'nullable',
+            // 'unit_sekolah_id'   => 'nullable|exists:unit_sekolahs,id',
+            // 'kelas_id'          => 'nullable|exists:kelas,id',
+            // 'user_id'           => 'nullable',
+            // 'user_type'         => 'nullable',
         ]);
 
         $tagihan = TagihanMaster::find($id)->update([
             'nama'          => $request->nama,
             'nominal'       => $request->nominal,
-            'type'          => $request->type,
-            'total_tagihan' => $request->total_tagihan,
+            // 'type'          => $request->type,
+            // 'total_tagihan' => $request->total_tagihan,
             'total_nominal' => $request->total_nominal,
             'keterangan'    => $request->keterangan,
             'due_date'      => $request->due_date,
-            'periode_start' => $request->periode_start,
-            'periode_end'   => $request->periode_end,
+            // 'periode_start' => $request->periode_start,
+            // 'periode_end'   => $request->periode_end,
             'akun_pendapatan_id' => $request->akun_pendapatan_id,
             // 'tahun_ajaran'      => $request->tahun_ajaran,
             // 'unit_sekolah_id'   => $request->unit_sekolah_id,
@@ -154,7 +155,7 @@ class TagihanMasterController extends Controller
         $tagihan = TagihanMaster::find($id);
 
         //hapus tagihan
-        $tagihan->tagihans()->delete();
+        $tagihan->tagihan()->delete();
 
         $tagihan->delete();
     }

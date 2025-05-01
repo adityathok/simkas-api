@@ -104,7 +104,21 @@ class TagihanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'status'        => 'required|in:belum,lunas,batal',
+            'keterangan'    => 'nullable|string',
+            'user_id'       => 'required',
+            'tanggal'       => 'required|date',
+        ]);
+        //get tagihan
+        $tagihan = Tagihan::find($id);
+        $tagihan->status = $request->status;
+        $tagihan->keterangan = $request->keterangan;
+        $tagihan->user_id = $request->user_id;
+        $tagihan->tanggal = $request->tanggal;
+        $tagihan->save();
+
+        return response()->json($tagihan);
     }
 
     /**

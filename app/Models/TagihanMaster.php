@@ -51,6 +51,17 @@ class TagihanMaster extends Model
         return $this->belongsTo(AkunPendapatan::class, 'akun_pendapatan_id');
     }
 
+    //relasi ke unit sekolah
+    public function unitsekolah()
+    {
+        return $this->belongsTo(UnitSekolah::class, 'unit_sekolah_id');
+    }
+
+    //relasi ke kelas
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'kelas_id');
+    }
 
     // Accessor untuk nominal_label
     public function getNominalLabelAttribute()
