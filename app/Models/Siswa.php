@@ -60,13 +60,17 @@ class Siswa extends Model
 
     public function getKelasSiswaAttribute()
     {
-        $kelas = $this->kelasAktif()->first();
+        $kelas = $this->kelasAktif()
+            ->select('nama', 'tahun_ajaran', 'unit_sekolah_id')
+            ->with('unitSekolah:id,nama')
+            ->first();
 
         if ($kelas) {
             return [
-                'id'            => $kelas->id,
+                'id'            => $kelas->pivot->kelas_id,
                 'nama'          => $kelas->nama,
-                'tahun_ajaran'  => $kelas->tahun_ajaran
+                'tahun_ajaran'  => $kelas->tahun_ajaran,
+                'unit_sekolah'  => $kelas->unitSekolah ? $kelas->unitSekolah->nama : '',
             ];
         } else {
             return null;

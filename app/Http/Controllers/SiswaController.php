@@ -15,33 +15,52 @@ class SiswaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Siswa::with('kelas:id,nama,tahun_ajaran', 'user:id,name,avatar');
+        $per_page = $request->input('per_page', 50);
 
+        $query = Siswa::with('user:id,name,avatar');
+
+        // Filter cari
         if ($request->filled('cari')) {
             $query->where('nama', 'like', '%' . $request->input('cari') . '%');
         }
+        // Filter status
         if ($request->filled('status')) {
             $query->where('status', $request->input('status'));
         }
 
-        $siswa = $query->paginate(20);
+        //filter kelas.unit_sekolah_id
+        if ($request->filled('unit_sekolah_id') && !$request->filled('tahun_ajaran')) {
+            $query->whereHas('kelas', function ($query) use ($request) {
+                $query->where('unit_sekolah_id', $request->input('unit_sekolah_id'));
+            });
+        }
+
+        //filter kelas.unit_sekolah_id dan kelas.tahun_ajaran
+        if ($request->filled('unit_sekolah_id') && $request->filled('tahun_ajaran')) {
+            $query->whereHas('kelas', function ($query) use ($request) {
+                $query->where('unit_sekolah_id', $request->input('unit_sekolah_id'))
+                    ->where('tahun_ajaran', $request->input('tahun_ajaran'));
+            });
+        }
+
+        $siswa = $query->paginate($per_page);
         $siswa->withPath('/siswa');
 
-        $siswa->getCollection()->transform(function ($s) {
-            $kelasAktif = $s->kelas->where('pivot.active', true)->first();
+        // $siswa->getCollection()->transform(function ($s) {
+        //     $kelasAktif = $s->kelas->where('pivot.active', true)->first();
 
-            return [
-                'id'            => $s->id,
-                'nama'          => $s->nama ?? null,
-                'nis'           => $s->nis,
-                'nisn'          => $s->nisn ?? null,
-                'jenis_kelamin' => $s->jenis_kelamin,
-                'ttl'           => $s->tempat_lahir . ',' . $s->tanggal_lahir,
-                'kelas'         => $kelasAktif ? $kelasAktif->nama : null,
-                'avatar_url'    => $s->avatar_url,
-                'status'        => $s->status,
-            ];
-        });
+        //     return [
+        //         'id'            => $s->id,
+        //         'nama'          => $s->nama ?? null,
+        //         'nis'           => $s->nis,
+        //         'nisn'          => $s->nisn ?? null,
+        //         'jenis_kelamin' => $s->jenis_kelamin,
+        //         'ttl'           => $s->tempat_lahir . ',' . $s->tanggal_lahir,
+        //         'kelas'         => $kelasAktif ? $kelasAktif->nama : null,
+        //         'avatar_url'    => $s->avatar_url,
+        //         'status'        => $s->status,
+        //     ];
+        // });
 
         return response()->json($siswa);
     }
