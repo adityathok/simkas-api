@@ -29,17 +29,14 @@ class SiswaController extends Controller
         }
 
         //filter kelas.unit_sekolah_id
-        if ($request->filled('unit_sekolah_id') && !$request->filled('tahun_ajaran')) {
-            $query->whereHas('kelas', function ($query) use ($request) {
+        // Filter berdasarkan kelas yang berhubungan
+        if ($request->filled('unit_sekolah_id')) {
+            $query->whereHas('user.kelas', function ($query) use ($request) {
                 $query->where('unit_sekolah_id', $request->input('unit_sekolah_id'));
-            });
-        }
 
-        //filter kelas.unit_sekolah_id dan kelas.tahun_ajaran
-        if ($request->filled('unit_sekolah_id') && $request->filled('tahun_ajaran')) {
-            $query->whereHas('kelas', function ($query) use ($request) {
-                $query->where('unit_sekolah_id', $request->input('unit_sekolah_id'))
-                    ->where('tahun_ajaran', $request->input('tahun_ajaran'));
+                if ($request->filled('tahun_ajaran')) {
+                    $query->where('tahun_ajaran', $request->input('tahun_ajaran'));
+                }
             });
         }
 
