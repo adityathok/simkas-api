@@ -18,6 +18,7 @@ class TagihanController extends Controller
         $date_end = $request->input('date_end') ?? null;
         $status = $request->input('status') ?? null;
         $user_id = $request->input('user_id') ?? null;
+        $siswa_id = $request->input('siswa_id') ?? null;
 
         if ($date_start) {
             // $date_s   = trim($date_start, '"');
@@ -64,6 +65,11 @@ class TagihanController extends Controller
             })
             ->when($user_id, function ($query) use ($user_id) {
                 return $query->where('user_id', $user_id);
+            })
+            ->when($siswa_id, function ($query) use ($siswa_id) {
+                return $query->whereHas('user.siswa', function ($query) use ($siswa_id) {
+                    $query->where('id', $siswa_id);
+                });
             })
             ->orderBy('created_at', 'desc')
             ->paginate($count);
