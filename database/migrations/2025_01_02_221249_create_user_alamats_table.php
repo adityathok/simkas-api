@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_alamats', function (Blueprint $table) {
             $table->id();
-            $table->char('user_id', 26)->nullable(); // ULID has 26 characters
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained();
             $table->text('alamat')->nullable();
             $table->string('rt', 5)->nullable();
             $table->string('rw', 5)->nullable();

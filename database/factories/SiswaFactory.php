@@ -34,7 +34,6 @@ class SiswaFactory extends Factory
         }
 
         return [
-            'id'                => fake()->unique()->numerify('1XMPL##########'),
             'nis'               => fake()->unique()->numerify('200#######'),
             'nisn'              => fake()->unique()->numerify('100#######'),
             'nama'              => $name,

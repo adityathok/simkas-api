@@ -59,19 +59,4 @@ class Kelas extends Model
 
         return $siswa;
     }
-
-    /**
-     * Boot the model and assign a ULID to the model's ID attribute 
-     * when a new instance is being created.
-     */
-    // public static function boot()
-    // {
-    // parent::boot();
-    // static::creating(function ($model) {
-    // Menetapkan ID menggunakan ULID jika ID kosong
-    //     if (empty($model->id)) {
-    //         $model->id = Str::ulid();
-    //     }
-    // });
-    //}
 }

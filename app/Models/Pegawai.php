@@ -13,9 +13,6 @@ class Pegawai extends Model
 {
     use HasFactory, SoftDeletes;
 
-    // Non-incrementing ID karena ULID
-    public $incrementing = false;
-
     protected $fillable = [
         'nip',
         'nama',
@@ -59,10 +56,6 @@ class Pegawai extends Model
         parent::boot();
 
         static::creating(function ($pegawai) {
-            // Menetapkan ID menggunakan ULID jika ID kosong
-            if (empty($pegawai->id)) {
-                $pegawai->id = Str::ulid();
-            }
 
             // Menetapkan NIP jika kosong
             if (empty($pegawai->nip)) {

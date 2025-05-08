@@ -17,7 +17,6 @@ class PegawaiFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'            => fake()->unique()->numerify('1XMPL#####'),
             'nip'           => fake()->unique()->numerify('200XMPL#######'),
             'nama'          => fake()->name(),
             'status'        => fake()->randomElement(['Aktif', 'Keluar']),

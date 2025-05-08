@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('path');
             $table->string('extension');
             $table->string('size');
-            $table->char('user_id', 26)->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

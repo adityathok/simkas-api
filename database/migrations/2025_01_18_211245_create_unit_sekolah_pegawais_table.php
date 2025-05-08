@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('unit_sekolah_pegawais', function (Blueprint $table) {
             $table->id();
-            $table->char('unit_sekolah_id', 26)->nullable();
-            $table->foreign('unit_sekolah_id')->references('id')->on('unit_sekolahs')->onDelete('cascade');
-            $table->char('user_id', 26)->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('unit_sekolah_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->string('jabatan');
             $table->timestamps();
         });

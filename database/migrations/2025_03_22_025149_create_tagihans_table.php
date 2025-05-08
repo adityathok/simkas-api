@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -17,14 +18,12 @@ return new class extends Migration
             $table->timestamp('tanggal');
             $table->foreignId('tagihan_master_id')->constrained()->onDelete('cascade');
             $table->enum('status', ['belum', 'lunas', 'batal'])->default('belum');
-            $table->char('user_id', 26)->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            // Foreign keys
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
+        DB::statement('ALTER TABLE tagihans AUTO_INCREMENT = 1000');
     }
 
     /**

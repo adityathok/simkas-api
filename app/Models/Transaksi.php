@@ -77,9 +77,9 @@ class Transaksi extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            //jika id kosong, buat id dari ULID
+            //jika nomor kosong, buat nomor dari ULID
             if (empty($model->id)) {
-                $model->id = Str::ulid();
+                $model->nomor = Str::ulid();
             }
 
             //jika tanggal kosong, buat tanggal sekarang format Y-m-d H:i:s

@@ -18,10 +18,6 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, SoftDeletes, Notifiable, HasRoles;
 
-
-    // Non-incrementing ID karena UUID
-    public $incrementing = false;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -170,10 +166,6 @@ class User extends Authenticatable
     public static function boot()
     {
         parent::boot();
-
-        static::creating(function ($model) {
-            $model->id = Str::ulid();
-        });
 
         // Menambahkan event "deleting" untuk menghapus avatar ketika User dihapus
         static::deleting(function ($model) {
