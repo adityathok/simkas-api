@@ -20,7 +20,6 @@ class Transaksi extends Model
         'pendapatan_id',
         'pengeluaran_id',
         'rekening_id',
-        'tagihan_id',
         'arus',
         'user_id',
         'admin_id',
@@ -49,10 +48,10 @@ class Transaksi extends Model
     }
 
     //relasi ke tagihan
-    public function tagihan()
-    {
-        return $this->belongsTo(Tagihan::class, 'tagihan_id');
-    }
+    // public function tagihan()
+    // {
+    //     return $this->belongsTo(Tagihan::class, 'tagihan_id');
+    // }
 
     //relasi ke admin
     public function admin()

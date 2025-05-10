@@ -46,7 +46,6 @@ class TagihanController extends Controller
             'tagihan_master:id,nama,akun_pendapatan_id,nominal,keterangan,admin_id',
             'tagihan_master.akunpendapatan:id,nama',
             'tagihan_master.admin:id,name',
-            'transaksi',
             'user:id,name,type',
             'user.siswa:id,nama,user_id,nis',
             'user.pegawai:id,nama,user_id'
