@@ -240,14 +240,7 @@ class TagihanMasterController extends Controller
 
                 // loop daftar bulan
                 while ($periode_start <= $periode_end) {
-                    $month = $periode_start->format('m-Y'); // Format bulan
-
-                    // Mendapatkan nilai counter dari cache, default ke 0 jika belum ada
-                    $counter = Cache::get($cacheKey, 0) + 1;
-                    // Simpan kembali counter ke cache
-                    Cache::put($cacheKey, $counter, now()->endOfDay());
-                    $count = str_pad($counter, 5, '0', STR_PAD_LEFT);
-                    $inv = 'INV' . Carbon::now()->format('ymd') . $count . strtoupper(Str::random(4));
+                    $inv = 'INV' . Str::ulid();
 
                     $tgl = $periode_start->format('Y-m');
 
@@ -272,12 +265,7 @@ class TagihanMasterController extends Controller
                 }
             } else { //jika type = insidental
 
-                // Mendapatkan nilai counter dari cache, default ke 0 jika belum ada
-                $counter = Cache::get($cacheKey, 0) + 1;
-                // Simpan kembali counter ke cache
-                Cache::put($cacheKey, $counter, now()->endOfDay());
-                $count = str_pad($counter, 5, '0', STR_PAD_LEFT);
-                $inv = 'INV' . Carbon::now()->format('ymd') . $count . strtoupper(Str::random(4));
+                $inv = 'INV' . Str::ulid();
 
                 $data[] = [
                     'nomor'             => $inv,
