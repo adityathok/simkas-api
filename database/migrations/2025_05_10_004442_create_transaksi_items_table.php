@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('total');
             $table->foreignId('tagihan_id')->nullable()->constrained('tagihans')->onDelete('set null');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
