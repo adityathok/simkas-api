@@ -5,9 +5,10 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Siswa;
-use App\Models\User;
+use App\Models\Pegawai;
 use App\Models\Transaksi;
 use App\Models\TransaksiItem;
+use App\Models\AkunPengeluaran;
 use Carbon\Carbon;
 
 class TransaksiSeeder extends Seeder
@@ -72,7 +73,63 @@ class TransaksiSeeder extends Seeder
             ]);
 
             // Log progress to terminal
-            echo "Seeding random transaksi for " . $siswa->nama . " nominal: Rp " . number_format($randomNominal, 0, ',', '.') . "\n";
+            echo "Seeding transaksi pemasukan for " . $siswa->nama . " nominal: Rp " . number_format($randomNominal, 0, ',', '.') . "\n";
+        });
+
+        //get all pegawai
+        $pegawais = Pegawai::all();
+
+        //jika tidak ada data pegawai
+        if ($pegawais->isEmpty()) {
+            $this->command->warn('Tidak ada data pegawai.');
+            return;
+        }
+        //total pegawai
+        $totalPegawai = $pegawais->count();
+        $this->command->info('Membuat transaksi untuk ' . $totalPegawai . ' pegawai.');
+
+        //buat transaksi untuk setiap pegawai
+        $pegawais->each(function ($pegawai) {
+
+            //random nominal
+            $min = 50000;
+            $max = 1000000;
+            $step = 50000;
+            // Generate a random multiple of 50,000
+            $randomNominal = $min + ($step * rand(0, ($max - $min) / $step));
+
+            //ambil acak dari AkunPengeluaran
+            $pengeluaran = AkunPengeluaran::inRandomOrder()->first();
+
+            //tanggal, carbon 3 bulan kebelakang
+            $startDate = Carbon::now()->subMonths(3); // 3 months ago
+            $endDate = Carbon::now(); // Today
+            $randomTimestamp = rand($startDate->timestamp, $endDate->timestamp);
+            $randomDate = Carbon::createFromTimestamp($randomTimestamp)->format('Y-m-d H:i:s');
+
+            //buat transaksi
+            $transaksi = Transaksi::create([
+                'nominal'               => $randomNominal,
+                'arus'                  => 'keluar',
+                'user_id'               => $pegawai->user_id,
+                'akun_rekening_id'      => 'BNI',
+                'catatan'               => 'Pembayaran ' . $pengeluaran->nama,
+                'tanggal'               => $randomDate,
+                'status'                => 'sukses',
+                'admin_id'              => 10000,
+            ]);
+            //buat transaksi item
+            TransaksiItem::create([
+                'transaksi_id'          => $transaksi->id,
+                'nama'                  => $pengeluaran->nama,
+                'qty'                   => 1,
+                'nominal_item'          => $randomNominal,
+                'nominal'               => $randomNominal,
+                'akun_pengeluaran_id'   => $pengeluaran->id,
+            ]);
+
+            // Log progress to terminal
+            echo "Seeding transaksi pengeluaran for " . $pegawai->nama . " nominal: Rp " . number_format($randomNominal, 0, ',', '.') . "\n";
         });
     }
 }

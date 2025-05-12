@@ -17,23 +17,21 @@ return new class extends Migration
             $table->decimal('nominal', 15, 2);
             $table->enum('arus', ['masuk', 'keluar']);
             $table->timestamp('tanggal');
+            $table->char('akun_rekening_id', 26)->nullable();
             $table->foreignId('user_id')->nullable();
             $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('ref_id')->nullable()->constrained('transaksis')->onDelete('set null');
             $table->string('metode_pembayaran')->nullable();
             $table->enum('status', ['pending', 'sukses', 'gagal', 'batal']);
             $table->text('catatan')->nullable();
-            $table->char('akun_rekening_id', 26)->nullable();
-            $table->char('sumber_rekening_id', 26)->nullable();
             $table->string('nomor');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('sumber_rekening_id')->references('id')->on('akun_rekenings')->onDelete('set null');
             $table->foreign('akun_rekening_id')->references('id')->on('akun_rekenings')->onDelete('set null');
         });
 
-        DB::statement('ALTER TABLE tagihan_masters AUTO_INCREMENT = 700000');
+        DB::statement('ALTER TABLE tagihan_masters AUTO_INCREMENT = 7000');
     }
 
     /**

@@ -15,7 +15,6 @@ class Transaksi extends Model
         'nominal',
         'arus',
         'akun_rekening_id',
-        'sumber_rekening_id',
         'user_id',
         'admin_id',
         'tanggal',
@@ -74,7 +73,7 @@ class Transaksi extends Model
                 $count  =  $count + 1;
                 $number = str_pad($count, 4, '0', STR_PAD_LEFT);
 
-                $model->nomor = 'TRX' . Carbon::now()->format('ymd') . $number . Str::random(4);
+                $model->nomor = Carbon::now()->format('ymd') . $number . Str::upper(Str::random(3)) . Carbon::now()->format('s');
             }
 
             //jika metode_pembayaran kosong, buat metode_pembayaran dari akun_rekening_id
