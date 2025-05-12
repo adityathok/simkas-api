@@ -16,11 +16,16 @@ return new class extends Migration
             $table->foreignId('transaksi_id')->constrained()->onDelete('cascade');
             $table->string('nama');
             $table->integer('qty');
-            $table->integer('nominal');
-            $table->integer('total');
+            $table->decimal('nominal_item', 15, 2);
+            $table->decimal('nominal', 15, 2);
             $table->foreignId('tagihan_id')->nullable()->constrained('tagihans')->onDelete('set null');
+            $table->char('akun_pendapatan_id', 26)->nullable();
+            $table->char('akun_pengeluaran_id', 26)->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('akun_pendapatan_id')->references('id')->on('akun_pendapatans')->onDelete('set null');
+            $table->foreign('akun_pengeluaran_id')->references('id')->on('akun_pengeluarans')->onDelete('set null');
         });
     }
 

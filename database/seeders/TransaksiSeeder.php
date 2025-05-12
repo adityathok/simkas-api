@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Siswa;
+use App\Models\User;
 use App\Models\Transaksi;
+use App\Models\TransaksiItem;
 use Carbon\Carbon;
 
 class TransaksiSeeder extends Seeder
@@ -49,15 +51,24 @@ class TransaksiSeeder extends Seeder
             $randomDate = Carbon::createFromTimestamp($randomTimestamp)->format('Y-m-d H:i:s');
 
             //buat transaksi tabungan
-            Transaksi::create([
-                'nama'          => $pendapatan_id == 'INTABUNGAN' ? 'Tabungan' : 'Infaq',
-                'nominal'       => $randomNominal,
-                'arus'          => 'masuk',
-                'user_id'       => $siswa->user_id,
-                'pendapatan_id' => $pendapatan_id,
-                'rekening_id'   => 'CASH',
-                'keterangan'    => 'Pembayaran ' . $pendapatan_id == 'INTABUNGAN' ? 'Tabungan' : 'Infaq',
-                'tanggal'       => $randomDate
+            $transaksi = Transaksi::create([
+                'nominal'               => $randomNominal,
+                'arus'                  => 'masuk',
+                'user_id'               => $siswa->user_id,
+                'akun_rekening_id'      => 'CASH',
+                'catatan'               => 'Pembayaran ' . $pendapatan_id == 'INTABUNGAN' ? 'Tabungan' : 'Infaq',
+                'tanggal'               => $randomDate,
+                'status'                => 'sukses',
+                'admin_id'              => 10000,
+            ]);
+            //buat transaksi item
+            TransaksiItem::create([
+                'transaksi_id'          => $transaksi->id,
+                'nama'                  => $pendapatan_id == 'INTABUNGAN' ? 'Tabungan' : 'Infaq',
+                'qty'                   => 1,
+                'nominal_item'          => $randomNominal,
+                'nominal'               => $randomNominal,
+                'akun_pendapatan_id'    => $pendapatan_id,
             ]);
 
             // Log progress to terminal

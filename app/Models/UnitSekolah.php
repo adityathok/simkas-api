@@ -10,9 +10,6 @@ class UnitSekolah extends Model
 {
     use SoftDeletes;
 
-    // Non-incrementing ID karena ULID
-    public $incrementing = false;
-
     protected $casts = [
         'tingkat' => 'array',
         'rombel' => 'array',

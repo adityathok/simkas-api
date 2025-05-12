@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Tagihan;
 use App\Models\Transaksi;
+use App\Models\TransaksiItem;
 use Carbon\Carbon;
 
 class TransaksiController extends Controller
@@ -41,6 +43,7 @@ class TransaksiController extends Controller
         $user_id = $request->input('user_id') ?? null;
 
         $transaksi = Transaksi::with(
+            'items',
             'akunpendapatan:id,nama',
             'akunpengeluaran:id,nama',
             'akunrekening:id,nama',
@@ -80,29 +83,53 @@ class TransaksiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama'          => 'required|min:3',
-            'nominal'       => 'required|numeric',
-            'arus'          => 'required|in:masuk,keluar',
-            'pendapan_id'   => 'nullable|exists:akun_pendapatans,id',
-            'pengeluaran_id' => 'nullable|exists:akun_pengeluarans,id',
-            'rekening_id'   => 'nullable|exists:akun_rekenings,id',
-            'keterangan'    => 'nullable',
-            'user_id'       => 'nullable|exists:users,id',
-            'tanggal'       => 'nullable|date',
+            'nominal'               => 'required|numeric',
+            'arus'                  => 'required|in:masuk,keluar',
+            'user_id'               => 'required|min:3',
+            'akun_pendapatan_id'    => 'nullable|exists:akun_pendapatans,id',
+            'akun_pengeluaran_id'   => 'nullable|exists:akun_pengeluarans,id',
+            'akun_rekening_id'      => 'required|exists:akun_rekenings,id',
+            'keterangan'            => 'nullable',
+            'tanggal'               => 'nullable|date',
+            'status'                => 'required',
+            'items'                 => 'required|array',
         ]);
 
         $transaksi = Transaksi::create([
-            'nama'          => $request->nama,
-            'nominal'       => $request->nominal,
-            'arus'          => $request->arus,
-            'pendapatan_id' => $request->arus == 'masuk' ? $request->pendapatan_id : null,
-            'pengeluaran_id' => $request->arus == 'keluar' ? $request->pengeluaran_id : null,
-            'rekening_id'   => $request->rekening_id ?? 'CASH',
-            'user_id'       => $request->user_id,
-            'admin_id'      => auth()->user()->id,
-            'keterangan'    => $request->keterangan,
-            'tanggal'       => $request->tanggal ?? null,
+            'nominal'                   => $request->nominal,
+            'arus'                      => $request->arus,
+            'akun_pendapatan_id'        => $request->arus == 'masuk' ? $request->akun_pendapatan_id : null,
+            'akun_pengeluaran_id'       => $request->arus == 'keluar' ? $request->akun_pengeluaran_id : null,
+            'akun_rekening_id'          => $request->akun_rekening_id ?? 'CASH',
+            'user_id'                   => $request->user_id,
+            'admin_id'                  => auth()->user()->id,
+            'keterangan'                => $request->keterangan,
+            'tanggal'                   => $request->tanggal ?? null,
+            'status'                    => $request->status ?? 'sukses',
         ]);
+
+        //simpan TransaksiItem
+        $items = $request->items;
+        foreach ($items as $item) {
+            $tagihan_id = $item['tagihan_id'] ?? null;
+            TransaksiItem::create([
+                'transaksi_id'  => $transaksi->id,
+                'nama'          => $item['nama'],
+                'qty'           => $item['qty'] ?? 1,
+                'nominal'       => $item['nominal'],
+                'nominal_item'  => $item['nominal_item'] ?? $item['nominal'],
+                'tagihan_id'    => $tagihan_id,
+            ]);
+
+            //jika ada tagihan_id , ubah status tagihan
+            //get tagihan by id
+            $tagihan = Tagihan::find($tagihan_id);
+            if ($tagihan) {
+                $tagihan->update([
+                    'status' => 'lunas',
+                ]);
+            }
+        }
 
         return response()->json($transaksi);
     }
