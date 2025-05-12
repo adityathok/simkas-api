@@ -12,9 +12,6 @@ class Siswa extends Model
 {
     use HasFactory, SoftDeletes;
 
-    // Non-incrementing ID karena ULID
-    public $incrementing = false;
-
     protected $hidden = ['created_at', 'updated_at'];
 
     protected $appends = ['avatar_url', 'kelas_siswa'];
@@ -60,13 +57,17 @@ class Siswa extends Model
 
     public function getKelasSiswaAttribute()
     {
-        $kelas = $this->kelasAktif()->first();
+        $kelas = $this->kelasAktif()
+            ->select('nama', 'tahun_ajaran', 'unit_sekolah_id')
+            ->with('unitSekolah:id,nama')
+            ->first();
 
         if ($kelas) {
             return [
-                'id'            => $kelas->id,
+                'id'            => $kelas->pivot->kelas_id,
                 'nama'          => $kelas->nama,
-                'tahun_ajaran'  => $kelas->tahun_ajaran
+                'tahun_ajaran'  => $kelas->tahun_ajaran,
+                'unit_sekolah'  => $kelas->unitSekolah ? $kelas->unitSekolah->nama : '',
             ];
         } else {
             return null;
@@ -77,11 +78,6 @@ class Siswa extends Model
     {
         //ambil avatar url dari user
         return $this->user ? $this->user->avatar_url : null;
-
-        // if ($this->avatarFile && $this->avatarFile->url) {
-        //     return $this->avatarFile->stream;
-        // }
-        // return asset('assets/images/default-avatar.jpg');
     }
 
     // Relasi ke siswa_wali 
@@ -96,11 +92,6 @@ class Siswa extends Model
         parent::boot();
 
         static::creating(function ($model) {
-
-            // Menetapkan ID menggunakan ULID jika ID kosong
-            if (empty($model->id)) {
-                $model->id = Str::ulid();
-            }
 
             // Menetapkan NIS jika kosong
             if (empty($model->nis)) {

@@ -12,6 +12,7 @@ use App\Models\UserMeta;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\User;
+use App\Models\TahunAjaran;
 
 class SiswaSeeder extends Seeder
 {
@@ -20,8 +21,12 @@ class SiswaSeeder extends Seeder
      */
     public function run(): void
     {
-        //dapatkan daftar kelas
-        $getkelas = Kelas::all();
+        //get tahun ajaran aktif
+        $tahunAjaran = TahunAjaran::getActive();
+        $tahunAjaran = $tahunAjaran?->nama;
+
+        //dapatkan daftar kelas, dengan tahun ajaran aktif
+        $getkelas = Kelas::where('tahun_ajaran', $tahunAjaran)->get();
 
         $n = 0;
         foreach ($getkelas as $kelas) {
@@ -145,9 +150,9 @@ class SiswaSeeder extends Seeder
                         },
                     ]);
                 }
+                $n++;
             }
 
-            $n++;
             $this->command->info($n . ' Siswa berhasil dibuat.');
         }
     }

@@ -16,12 +16,11 @@ return new class extends Migration
             $table->string('nama');
             $table->string('sumber');
             $table->char('pendapatan_id', 26)->nullable();
-            $table->char('admin_id', 26)->nullable();
+            $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('pendapatan_id')->references('id')->on('akun_pendapatans')->onDelete('set null');
-            $table->foreign('admin_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

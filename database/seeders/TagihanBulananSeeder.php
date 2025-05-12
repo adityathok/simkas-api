@@ -82,25 +82,10 @@ class TagihanBulananSeeder extends Seeder
             // Persiapkan tagihan untuk semua siswa
             $tagihans = $siswas->map(function ($siswa) use ($master, $start, $name_tagihan) {
 
-                $month = $start->format('m-Y'); // Format bulan
-
-                $name_tagihan = $name_tagihan . ' ' . $month;
-
-                // Mendapatkan key cache berdasarkan tanggal hari ini
-                $cacheKey = date('ymd') . '_tagihancounter';
-
-                // Mendapatkan nilai counter dari cache, default ke 0 jika belum ada
-                $counter = Cache::get($cacheKey, 0) + 1;
-
-                // Simpan kembali counter ke cache
-                Cache::put($cacheKey, $counter, now()->endOfDay());
-
-                $counter = str_pad($counter, 4, '0', STR_PAD_LEFT);
-
                 $tgl = $start->format('Y-m');
 
                 return [
-                    'nomor'             => 'INV' . Carbon::now()->format('ymd') . $counter . strtoupper(Str::random(4)),
+                    'nomor'             => 'INV' . Str::ulid(),
                     'user_id'           => $siswa->user_id,
                     'tanggal'           => $tgl . '-01 00:01:00',
                     'tagihan_master_id' => $master->id,

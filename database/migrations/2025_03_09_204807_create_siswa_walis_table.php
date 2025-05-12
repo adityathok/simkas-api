@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('siswa_walis', function (Blueprint $table) {
             $table->id();
-            $table->char('siswa_id', 26);
+            $table->foreignId('siswa_id')->constrained();
             $table->string('nama');
             $table->string('hubungan');
             $table->string('tahun_lahir')->nullable();
@@ -25,9 +25,6 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->text('alamat')->nullable();
             $table->timestamps();
-
-            // Foreign keys
-            $table->foreign('siswa_id')->references('id')->on('siswas')->onDelete('cascade');
         });
     }
 

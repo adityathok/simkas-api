@@ -17,12 +17,11 @@ return new class extends Migration
             $table->boolean('neraca')->default(false);
             $table->boolean('jurnal_khusus')->default(false);
             $table->char('jurnalkas_id', 26)->nullable();
-            $table->char('admin_id', 26)->nullable();
+            $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('jurnalkas_id')->references('id')->on('jurnal_kas')->onDelete('set null');
-            $table->foreign('admin_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

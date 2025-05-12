@@ -19,7 +19,7 @@ class UnitSekolahSeeder extends Seeder
         //get setting jenjang
         $jenjangs = Setting::get('jenjang');
 
-        // Jika tidak ada pegawai, hentikan proses
+        // Jika tidak ada jenjang, hentikan proses
         if (empty($jenjangs)) {
             $this->command->warn('Tidak ada data jenjang. Seeder UnitSekolah dihentikan.');
             return;
@@ -57,9 +57,9 @@ class UnitSekolahSeeder extends Seeder
 
             //buat unit
             $city = fake()->city();
+            $name = $jenjang . ' ' . $city . ' ' . fake()->numberBetween(1, 99);
             $unitsekolah = UnitSekolah::create([
-                'id'        => fake()->regexify('[A-Z]{3}[1-9]{5}'),
-                'nama'      => $jenjang . ' ' . $city . ' ' . fake()->numberBetween(1, 99),
+                'nama'      => $name,
                 'jenjang'   => $jenjang,
                 'alamat'    => fake()->address(),
                 'desa'      => fake()->streetName(),
@@ -70,7 +70,7 @@ class UnitSekolahSeeder extends Seeder
                 'status'    => 'aktif',
                 'whatsapp'  => fake()->phoneNumber(),
                 'telepon'   => fake()->phoneNumber(),
-                'email'     => fake()->unique()->safeEmail(),
+                'email'     => str::slug($name) . '@exampleschool.net',
                 'tanggal_berdiri' => fake()->date('Y-m-d', '2000-01-01'),
                 'tingkat'  => $tingkat,
                 'rombel'   => $rombel,

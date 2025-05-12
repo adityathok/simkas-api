@@ -75,19 +75,8 @@ class TagihanSeeder extends Seeder
 
             $tanggal = Carbon::createFromFormat('Y-m-d H:i:s', $randomDate);
 
-            // Mendapatkan key cache berdasarkan tanggal hari ini
-            $cacheKey = date('ymd') . '_tagihancounter';
-
-            // Mendapatkan nilai counter dari cache, default ke 0 jika belum ada
-            $counter = Cache::get($cacheKey, 0) + 1;
-
-            // Simpan kembali counter ke cache
-            Cache::put($cacheKey, $counter, now()->endOfDay());
-
-            $counter = str_pad($counter, 4, '0', STR_PAD_LEFT);
-
             return [
-                'nomor' => 'INV' . Carbon::now()->format('ymd') . $counter . strtoupper(Str::random(4)),
+                'nomor' => 'INV' . Str::ulid(),
                 'tanggal' => $tanggal,
                 'user_id' => $siswa->user_id,
                 'tagihan_master_id' => $master->id,

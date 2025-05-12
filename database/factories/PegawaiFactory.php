@@ -17,13 +17,12 @@ class PegawaiFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'            => fake()->unique()->numerify('1XMPL#####'),
             'nip'           => fake()->unique()->numerify('200XMPL#######'),
             'nama'          => fake()->name(),
-            'status'        => fake()->randomElement(['Aktif', 'Keluar']),
+            'status'        => fake()->randomElement(['aktif', 'keluar']),
             'tempat_lahir'  => fake()->city(),
-            'tanggal_lahir' => fake()->date('Y-m-d', '2000-01-01'),
-            'tanggal_masuk' => fake()->date('Y-m-d', '2023-01-01'),
+            'tanggal_lahir' => fake()->dateTimeBetween('-30 years', '-20 years'),
+            'tanggal_masuk' => fake()->dateTimeBetween('-10 years', '-1 years'),
             'jenis_kelamin' => fake()->randomElement(['Laki-laki', 'Perempuan']),
             'email'         => fake()->unique()->safeEmail(),
         ];

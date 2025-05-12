@@ -26,7 +26,6 @@ class TahunAjaranSeeder extends Seeder
             $tahunAktifMulai = $tahunSekarang;
         }
 
-        $data = [];
         for ($i = -5; $i <= 5; $i++) {
             $tahunMulai = $tahunSekarang + $i;
             $tglMulai = $tahunMulai . '-07-01';

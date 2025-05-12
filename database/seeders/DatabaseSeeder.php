@@ -24,11 +24,11 @@ class DatabaseSeeder extends Seeder
             PegawaiSeeder::class,
             UnitSekolahPegawaiSeeder::class,
             KelasSeeder::class,
-            // SiswaSeeder::class,
             JurnalKasSeeder::class,
             AkunPendapatanSeeder::class,
             AkunPengeluaranSeeder::class,
-            AkunRekeningSeeder::class
+            AkunRekeningSeeder::class,
+            SiswaSeeder::class,
         ]);
     }
 }

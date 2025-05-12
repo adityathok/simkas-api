@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -16,13 +17,12 @@ return new class extends Migration
             $table->string('nama');
             $table->string('tingkat');
             $table->string('tahun_ajaran');
-            $table->char('unit_sekolah_id', 26)->nullable();
-            $table->foreign('unit_sekolah_id')->references('id')->on('unit_sekolahs')->onDelete('set null');
-            $table->char('wali_id', 26)->nullable();
-            $table->foreign('wali_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreignId('unit_sekolah_id')->constrained();
+            $table->foreignId('wali_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
         });
+        DB::statement('ALTER TABLE kelas AUTO_INCREMENT = 30000');
     }
 
     /**

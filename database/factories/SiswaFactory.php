@@ -34,12 +34,11 @@ class SiswaFactory extends Factory
         }
 
         return [
-            'id'                => fake()->unique()->numerify('1XMPL##########'),
             'nis'               => fake()->unique()->numerify('200#######'),
             'nisn'              => fake()->unique()->numerify('100#######'),
             'nama'              => $name,
             'nama_panggilan'    => Str::lower($first_name),
-            'status'            => fake()->randomElement(['aktif', 'keluar', 'pindah', 'lulus']),
+            'status'            => fake()->randomElement(['aktif', 'keluar', 'pindah']),
             'tempat_lahir'      => fake()->city(),
             'tanggal_lahir'     => fake()->date('Y-m-d', '2010-01-01'),
             'tanggal_masuk'     => fake()->date('Y-m-d', '2023-01-01'),

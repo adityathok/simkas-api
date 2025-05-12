@@ -12,9 +12,6 @@ class Tagihan extends Model
 {
     use SoftDeletes;
 
-    // Non-incrementing ID karena CHAR
-    // public $incrementing = false;
-
     protected $fillable = [
         'nomor',
         'nama',
@@ -47,21 +44,11 @@ class Tagihan extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            //jika id kosong, buat id dari date dan random 4
+
+            //jika nomor kosong, buat id dari date dan random 4
             if (empty($model->nomor)) {
-
                 // Mendapatkan key cache berdasarkan tanggal hari ini
-                $cacheKey = date('ymd') . '_tagihancounter';
-
-                // Mendapatkan nilai counter dari cache, default ke 0 jika belum ada
-                $counter = Cache::get($cacheKey, 0) + 1;
-
-                // Simpan kembali counter ke cache
-                Cache::put($cacheKey, $counter, now()->endOfDay());
-
-                $counter = str_pad($counter, 4, '0', STR_PAD_LEFT);
-
-                $model->id = 'INV' . Carbon::now()->format('ymd') . $counter . strtoupper(Str::random(4));
+                $model->nomor = 'INV' . Str::ulid();
             }
             if (empty($model->status)) {
                 $model->status = 'belum';

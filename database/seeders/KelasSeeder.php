@@ -21,6 +21,9 @@ class KelasSeeder extends Seeder
         $tahunAjaran = TahunAjaran::getActive();
         $tahunAjaran = $tahunAjaran?->nama;
 
+        //semua tahun ajaran
+        $tahunAjaranList = TahunAjaran::all();
+
         //Ambil semua Unit
         $unitSekolahList = UnitSekolah::all();
 
@@ -29,28 +32,38 @@ class KelasSeeder extends Seeder
             $tingkats = $unitSekolah->tingkat ? $unitSekolah->tingkat : [1];
             $rombels = $unitSekolah->rombel ? $unitSekolah->rombel : [];
 
-            // Contoh sederhana mendapatkan id guru
-            $pegawai = Pegawai::inRandomOrder()->first();
-
             foreach ($tingkats as $tingkat) {
                 if ($rombels) {
                     foreach ($rombels as $rombel) {
+
+                        //loop tahun ajaran
+                        foreach ($tahunAjaranList as $tahunAjaranItem) {
+                            // Contoh sederhana mendapatkan id guru
+                            $pegawai = Pegawai::inRandomOrder()->first();
+
+                            Kelas::create([
+                                'unit_sekolah_id'   => $unitSekolah->id,
+                                'tingkat'           => $tingkat,
+                                'tahun_ajaran'      => $tahunAjaranItem->nama,
+                                'nama'              => $tingkat . ' ' . $rombel,
+                                'wali_id'           => $pegawai->user_id
+                            ]);
+                        }
+                    }
+                } else {
+                    //loop tahun ajaran
+                    foreach ($tahunAjaranList as $tahunAjaranItem) {
+
+                        // Contoh sederhana mendapatkan id guru
+                        $pegawai = Pegawai::inRandomOrder()->first();
                         Kelas::create([
                             'unit_sekolah_id'   => $unitSekolah->id,
                             'tingkat'           => $tingkat,
-                            'tahun_ajaran'      => $tahunAjaran,
-                            'nama'              => $tingkat . ' ' . $rombel,
+                            'tahun_ajaran'      => $tahunAjaranItem->nama,
+                            'nama'              => $tingkat,
                             'wali_id'           => $pegawai->user_id
                         ]);
                     }
-                } else {
-                    Kelas::create([
-                        'unit_sekolah_id'   => $unitSekolah->id,
-                        'tingkat'           => $tingkat,
-                        'tahun_ajaran'      => $tahunAjaran,
-                        'nama'              => $tingkat,
-                        'wali_id'           => $pegawai->user_id
-                    ]);
                 }
             }
         }

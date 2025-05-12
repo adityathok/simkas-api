@@ -11,47 +11,33 @@ class Transaksi extends Model
 {
     use SoftDeletes;
 
-    // Non-incrementing ID karena CHAR
-    public $incrementing = false;
-
     protected $fillable = [
-        'nama',
         'nominal',
-        'pendapatan_id',
-        'pengeluaran_id',
-        'rekening_id',
-        'tagihan_id',
         'arus',
+        'akun_rekening_id',
+        'sumber_rekening_id',
         'user_id',
         'admin_id',
         'tanggal',
         'keterangan',
+        'ref_id',
+        'metode_pembayaran',
+        'status',
+        'nomor'
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     protected $appends = ['nominal_label'];
 
-    //relasi ke akun pendapatan
-    public function akunpendapatan()
-    {
-        return $this->belongsTo(AkunPendapatan::class, 'pendapatan_id');
-    }
-
-    //relasi ke akun pengeluaran
-    public function akunpengeluaran()
-    {
-        return $this->belongsTo(AkunPengeluaran::class, 'pengeluaran_id');
-    }
-
     //relasi ke akun rekening
-    public function akunrekening()
+    public function akun_rekening()
     {
-        return $this->belongsTo(AkunRekening::class, 'rekening_id');
+        return $this->belongsTo(AkunRekening::class, 'akun_rekening_id');
     }
 
-    //relasi ke tagihan
-    public function tagihan()
+    //relasi many ke Transaksi Item    
+    public function items()
     {
-        return $this->belongsTo(Tagihan::class, 'tagihan_id');
+        return $this->hasMany(TransaksiItem::class);
     }
 
     //relasi ke admin
@@ -77,9 +63,29 @@ class Transaksi extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            //jika id kosong, buat id dari ULID
-            if (empty($model->id)) {
-                $model->id = Str::ulid();
+
+            //jika nomor kosong, buat nomor
+            if (empty($model->nomor)) {
+
+                $today = now()->toDateString();
+
+                // Hitung jumlah invoice hari ini
+                $count  = self::whereDate('created_at', $today)->count();
+                $count  =  $count + 1;
+                $number = str_pad($count, 4, '0', STR_PAD_LEFT);
+
+                $model->nomor = 'TRX' . Carbon::now()->format('ymd') . $number . Str::random(4);
+            }
+
+            //jika metode_pembayaran kosong, buat metode_pembayaran dari akun_rekening_id
+            if (empty($model->metode_pembayaran)) {
+                $rek = $model->akun_rekening_id;
+                //jika akun_pendapatan_id kosong atau = CASH atau mengandung kata 'cash'
+                if (empty($rek) || $rek == 'CASH' || strpos($rek, 'cash') !== false) {
+                    $model->metode_pembayaran = 'cash';
+                } else {
+                    $model->metode_pembayaran = 'transfer';
+                }
             }
 
             //jika tanggal kosong, buat tanggal sekarang format Y-m-d H:i:s
