@@ -183,12 +183,9 @@ class SiswaController extends Controller
     }
 
     //cari siswa berdasarkan user_id    
-    public function searchbyuserid(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|min:3',
-        ]);
-        $user_id = $request->user_id;
+    public function searchbyuserid(string $id)
+    {;
+        $user_id = $id;
 
         $siswa = Siswa::select('id', 'nama', 'user_id', 'nis', 'status')
             ->where('user_id', $user_id)
@@ -199,7 +196,7 @@ class SiswaController extends Controller
             return response()->json(['message' => 'Siswa not found'], 404);
         }
 
-        return response()->json($siswa);
+        return response()->json($siswa[0]);
     }
 
     public function count_siswa(Request $request)
