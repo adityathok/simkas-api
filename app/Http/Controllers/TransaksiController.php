@@ -106,7 +106,7 @@ class TransaksiController extends Controller
             'akun_pendapatan_id'    => 'nullable|exists:akun_pendapatans,id',
             'akun_pengeluaran_id'   => 'nullable|exists:akun_pengeluarans,id',
             'akun_rekening_id'      => 'required|exists:akun_rekenings,id',
-            'keterangan'            => 'nullable',
+            'catatan'               => 'nullable',
             'tanggal'               => 'nullable|date',
             'status'                => 'required',
             'items'                 => 'required|array',
@@ -115,12 +115,10 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::create([
             'nominal'                   => $request->nominal,
             'arus'                      => $request->arus,
-            'akun_pendapatan_id'        => $request->arus == 'masuk' ? $request->akun_pendapatan_id : null,
-            'akun_pengeluaran_id'       => $request->arus == 'keluar' ? $request->akun_pengeluaran_id : null,
             'akun_rekening_id'          => $request->akun_rekening_id ?? 'CASH',
             'user_id'                   => $request->user_id,
             'admin_id'                  => auth()->user()->id,
-            'keterangan'                => $request->keterangan,
+            'catatan'                   => $request->catatan,
             'tanggal'                   => $request->tanggal ?? null,
             'status'                    => $request->status ?? 'sukses',
         ]);
@@ -136,6 +134,8 @@ class TransaksiController extends Controller
                 'nominal'       => $item['nominal'],
                 'nominal_item'  => $item['nominal_item'] ?? $item['nominal'],
                 'tagihan_id'    => $tagihan_id,
+                'akun_pendapatan_id'    => $request->arus == 'masuk' ? $request->akun_pendapatan_id : null,
+                'akun_pengeluaran_id'   => $request->arus == 'keluar' ? $request->akun_pengeluaran_id : null,
             ]);
 
             //jika ada tagihan_id , ubah status tagihan
