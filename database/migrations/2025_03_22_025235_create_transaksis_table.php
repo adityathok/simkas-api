@@ -14,24 +14,23 @@ return new class extends Migration
     {
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
+            $table->string('nomor');
             $table->decimal('nominal', 15, 2);
-            $table->enum('arus', ['masuk', 'keluar']);
+            $table->enum('jenis', ['pendapatan', 'pengeluaran', 'transfer']);
             $table->timestamp('tanggal');
-            $table->char('akun_rekening_id', 26)->nullable();
+            $table->foreignId('akun_rekening_id');
+            $table->foreignId('akun_rekening_tujuan_id')->nullable()->constrained('akun_rekenings');
             $table->foreignId('user_id')->nullable();
-            $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('ref_id')->nullable()->constrained('transaksis')->onDelete('set null');
             $table->string('metode_pembayaran')->nullable();
             $table->enum('status', ['pending', 'sukses', 'gagal', 'batal']);
             $table->text('catatan')->nullable();
-            $table->string('nomor');
+            $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('ref_id')->nullable()->constrained('transaksis')->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('akun_rekening_id')->references('id')->on('akun_rekenings')->onDelete('set null');
         });
 
-        DB::statement('ALTER TABLE tagihan_masters AUTO_INCREMENT = 7000');
+        DB::statement('ALTER TABLE tagihan_masters AUTO_INCREMENT = 1000');
     }
 
     /**
