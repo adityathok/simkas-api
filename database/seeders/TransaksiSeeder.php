@@ -54,9 +54,9 @@ class TransaksiSeeder extends Seeder
             //buat transaksi tabungan
             $transaksi = Transaksi::create([
                 'nominal'               => $randomNominal,
-                'arus'                  => 'masuk',
+                'jenis'                 => 'pendapatan',
                 'user_id'               => $siswa->user_id,
-                'akun_rekening_id'      => 'CASH',
+                'akun_rekening_id'      => 1,
                 'catatan'               => 'Pembayaran ' . $pendapatan_id == 'INTABUNGAN' ? 'Tabungan' : 'Infaq',
                 'tanggal'               => $randomDate,
                 'status'                => 'sukses',
@@ -110,9 +110,9 @@ class TransaksiSeeder extends Seeder
             //buat transaksi
             $transaksi = Transaksi::create([
                 'nominal'               => $randomNominal,
-                'arus'                  => 'keluar',
+                'jenis'                 => 'pengeluaran',
                 'user_id'               => $pegawai->user_id,
-                'akun_rekening_id'      => 'BNI',
+                'akun_rekening_id'      => 2,
                 'catatan'               => 'Pembayaran ' . $pengeluaran->nama,
                 'tanggal'               => $randomDate,
                 'status'                => 'sukses',

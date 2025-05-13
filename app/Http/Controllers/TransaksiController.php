@@ -59,10 +59,10 @@ class TransaksiController extends Controller
             $query->where('user_id', $user_id);
         }
 
-        //filter by arus
-        $arus = $request->input('arus') ?? null;
-        if ($arus) {
-            $query->where('arus', $arus);
+        //filter by jenis
+        $jenis = $request->input('jenis') ?? null;
+        if ($jenis) {
+            $query->where('jenis', $jenis);
         }
 
         //filter by rekening_id
