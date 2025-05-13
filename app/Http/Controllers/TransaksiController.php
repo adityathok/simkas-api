@@ -100,52 +100,68 @@ class TransaksiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nominal'               => 'required|numeric',
-            'arus'                  => 'required|in:masuk,keluar',
-            'user_id'               => 'required|min:3',
-            'akun_pendapatan_id'    => 'nullable|exists:akun_pendapatans,id',
-            'akun_pengeluaran_id'   => 'nullable|exists:akun_pengeluarans,id',
-            'akun_rekening_id'      => 'required|exists:akun_rekenings,id',
-            'catatan'               => 'nullable',
-            'tanggal'               => 'nullable|date',
-            'status'                => 'required',
-            'items'                 => 'required|array',
+            'nominal'                   => 'required|numeric',
+            'jenis'                     => 'required|in:pendapatan,pengeluaran,transfer',
+            'tanggal'                   => 'nullable|date',
+            'user_id'                   => 'required|min:3',
+            'akun_rekening_id'          => 'required|exists:akun_rekenings,id',
+            'akun_rekening_tujuan_id'   => 'nullable|exists:akun_rekenings,id',
+            'metode_pembayaran'         => 'nullable|in:tunai,transfer',
+            'status'                    => 'required',
+            'catatan'                   => 'nullable',
+            'items'                     => 'nullable|array',
+            'nama'                      => 'nullable',
         ]);
 
         $transaksi = Transaksi::create([
             'nominal'                   => $request->nominal,
-            'arus'                      => $request->arus,
-            'akun_rekening_id'          => $request->akun_rekening_id ?? 'CASH',
+            'jenis'                     => $request->jenis,
+            'tanggal'                   => $request->tanggal ?? Carbon::now(),
             'user_id'                   => $request->user_id,
+            'akun_rekening_id'          => $request->akun_rekening_id ?? 1,
+            'akun_rekening_tujuan_id'   => $request->akun_rekening_tujuan_id,
+            'metode_pembayaran'         => $request->metode_pembayaran ?? 'tunai',
+            'status'                    => $request->status ?? 'sukses',
             'admin_id'                  => auth()->user()->id,
             'catatan'                   => $request->catatan,
-            'tanggal'                   => $request->tanggal ?? null,
-            'status'                    => $request->status ?? 'sukses',
         ]);
 
         //simpan TransaksiItem
         $items = $request->items;
-        foreach ($items as $item) {
-            $tagihan_id = $item['tagihan_id'] ?? null;
-            TransaksiItem::create([
-                'transaksi_id'  => $transaksi->id,
-                'nama'          => $item['nama'],
-                'qty'           => $item['qty'] ?? 1,
-                'nominal'       => $item['nominal'],
-                'nominal_item'  => $item['nominal_item'] ?? $item['nominal'],
-                'tagihan_id'    => $tagihan_id,
-                'akun_pendapatan_id'    => $request->arus == 'masuk' ? $request->akun_pendapatan_id : null,
-                'akun_pengeluaran_id'   => $request->arus == 'keluar' ? $request->akun_pengeluaran_id : null,
-            ]);
-
-            //jika ada tagihan_id , ubah status tagihan
-            //get tagihan by id
-            $tagihan = Tagihan::find($tagihan_id);
-            if ($tagihan) {
-                $tagihan->update([
-                    'status' => 'lunas',
+        if ($items) {
+            foreach ($items as $item) {
+                $tagihan_id = $item['tagihan_id'] ?? null;
+                TransaksiItem::create([
+                    'transaksi_id'          => $transaksi->id,
+                    'nama'                  => $item['nama'],
+                    'qty'                   => $item['qty'] ?? 1,
+                    'nominal'               => $item['nominal'],
+                    'nominal_item'          => $item['nominal_item'] ?? $item['nominal'],
+                    'tagihan_id'            => $tagihan_id,
+                    'akun_pendapatan_id'    => $request->jenis == 'pendapatan' ? $request->akun_pendapatan_id : null,
+                    'akun_pengeluaran_id'   => $request->jenis == 'pengeluaran' ? $request->akun_pengeluaran_id : null,
                 ]);
+
+                //jika ada tagihan_id , ubah status tagihan
+                //get tagihan by id
+                $tagihan = Tagihan::find($tagihan_id);
+                if ($tagihan) {
+                    $tagihan->update([
+                        'status' => 'lunas',
+                    ]);
+                }
             }
+        } else if (!$items && $request->nama) {
+            TransaksiItem::create([
+                'transaksi_id'          => $transaksi->id,
+                'nama'                  => $request->nama,
+                'qty'                   => 1,
+                'nominal'               => $request->nominal,
+                'nominal_item'          => $request->nominal,
+                'tagihan_id'            => null,
+                'akun_pendapatan_id'    => $request->jenis == 'pendapatan' ? $request->akun_pendapatan_id : null,
+                'akun_pengeluaran_id'   => $request->jenis == 'pengeluaran' ? $request->akun_pengeluaran_id : null,
+            ]);
         }
 
         return response()->json($transaksi);

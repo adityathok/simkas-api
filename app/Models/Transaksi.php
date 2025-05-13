@@ -12,17 +12,18 @@ class Transaksi extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'nomor',
         'nominal',
-        'arus',
-        'akun_rekening_id',
-        'user_id',
-        'admin_id',
+        'jenis',
         'tanggal',
-        'keterangan',
-        'ref_id',
+        'akun_rekening_id',
+        'akun_rekening_tujuan_id',
+        'user_id',
         'metode_pembayaran',
         'status',
-        'nomor'
+        'catatan',
+        'admin_id',
+        'ref_id',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     protected $appends = ['nominal_label'];
