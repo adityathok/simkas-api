@@ -47,8 +47,14 @@ class Tagihan extends Model
 
             //jika nomor kosong, buat id dari date dan random 4
             if (empty($model->nomor)) {
-                // Mendapatkan key cache berdasarkan tanggal hari ini
-                $model->nomor = 'INV' . Str::ulid();
+                $today = now()->toDateString();
+
+                // Hitung jumlah invoice hari ini
+                $count  = self::whereDate('created_at', $today)->count();
+                $count  = $count + 1;
+                $number = str_pad($count, 4, '0', STR_PAD_LEFT);
+
+                $model->nomor = 'INV' . Carbon::now()->format('ymd') . $number . Str::upper(Str::random(3));
             }
             if (empty($model->status)) {
                 $model->status = 'belum';

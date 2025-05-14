@@ -143,6 +143,18 @@ class TransaksiController extends Controller
         if ($items) {
             foreach ($items as $item) {
                 $tagihan_id = $item['tagihan_id'] ?? null;
+                $akun_pendapatan_id = $item['akun_pendapatan_id'] ?? null;
+                $akun_pengeluaran_id = $item['akun_pengeluaran_id'] ?? null;
+
+                //jika $akun_pendapatan_id = null dan $request->jenis == 'pendapatan'
+                if (!$akun_pendapatan_id && $request->jenis == 'pendapatan' && $request->akun_pendapatan_id) {
+                    $akun_pendapatan_id = $request->akun_pendapatan_id;
+                }
+                //jika $akun_pengeluaran_id = null dan $request->jenis == 'pengeluaran'
+                if (!$akun_pengeluaran_id && $request->jenis == 'pengeluaran' && $request->akun_pengeluaran_id) {
+                    $akun_pengeluaran_id = $request->akun_pengeluaran_id;
+                }
+
                 TransaksiItem::create([
                     'transaksi_id'          => $transaksi->id,
                     'nama'                  => $item['nama'],
@@ -150,8 +162,8 @@ class TransaksiController extends Controller
                     'nominal'               => $item['nominal'],
                     'nominal_item'          => $item['nominal_item'] ?? $item['nominal'],
                     'tagihan_id'            => $tagihan_id,
-                    'akun_pendapatan_id'    => $request->jenis == 'pendapatan' ? $request->akun_pendapatan_id : null,
-                    'akun_pengeluaran_id'   => $request->jenis == 'pengeluaran' ? $request->akun_pengeluaran_id : null,
+                    'akun_pendapatan_id'    => $akun_pendapatan_id,
+                    'akun_pengeluaran_id'   => $akun_pengeluaran_id,
                 ]);
 
                 //jika ada tagihan_id , ubah status tagihan
