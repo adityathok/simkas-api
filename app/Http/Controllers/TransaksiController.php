@@ -188,6 +188,18 @@ class TransaksiController extends Controller
             ]);
         }
 
+        //get transaksi
+        $transaksi = Transaksi::with(
+            'items',
+            'items.akun_pendapatan:id,nama',
+            'items.akun_pengeluaran:id,nama',
+            'akun_rekening:id,nama',
+            'user:id,name,type',
+            'user.siswa:id,nama,user_id,nis',
+            'user.pegawai:id,nama,user_id',
+            'admin.pegawai:id,nama,user_id'
+        )->find($transaksi->id);
+
         return response()->json($transaksi);
     }
 
@@ -196,7 +208,19 @@ class TransaksiController extends Controller
      */
     public function show(string $id)
     {
-        //
+        //get transaksi
+        $transaksi = Transaksi::with(
+            'items',
+            'items.akun_pendapatan:id,nama',
+            'items.akun_pengeluaran:id,nama',
+            'akun_rekening:id,nama',
+            'user:id,name,type',
+            'user.siswa:id,nama,user_id,nis',
+            'user.pegawai:id,nama,user_id',
+            'admin.pegawai:id,nama,user_id'
+        )
+            ->find($id);
+        return response()->json($transaksi);
     }
 
     /**
