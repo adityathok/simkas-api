@@ -26,7 +26,7 @@ class Transaksi extends Model
         'ref_id',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-    protected $appends = ['nominal_label'];
+    protected $appends = ['nominal_label', 'ref_nomor'];
 
     //relasi ke akun rekening
     public function akun_rekening()
@@ -50,6 +50,18 @@ class Transaksi extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    //relasi ke referensi
+    public function ref()
+    {
+        return $this->belongsTo(Transaksi::class, 'ref_id');
+    }
+
+    // Accessor untuk ref_nomor
+    public function getRefNomorAttribute()
+    {
+        return $this->ref ? $this->ref->nomor : null;
     }
 
     // Accessor untuk nominal_label

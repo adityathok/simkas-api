@@ -111,6 +111,7 @@ class TransaksiController extends Controller
             'catatan'                   => 'nullable',
             'items'                     => 'nullable|array',
             'nama'                      => 'nullable',
+            'ref_nomor'                 => 'nullable'
         ]);
 
         $transaksi = Transaksi::create([
@@ -125,6 +126,17 @@ class TransaksiController extends Controller
             'admin_id'                  => auth()->user()->id,
             'catatan'                   => $request->catatan,
         ]);
+
+        //update ref_nomor
+        if ($request->ref_nomor) {
+            //get transaksi by ref_nomor
+            $ref_transaksi = Transaksi::where('nomor', $request->ref_nomor)->first();
+            if ($ref_transaksi) {
+                $transaksi->update([
+                    'ref_id' => $ref_transaksi->id,
+                ]);
+            }
+        }
 
         //simpan TransaksiItem
         $items = $request->items;
@@ -192,6 +204,7 @@ class TransaksiController extends Controller
             'catatan'                   => 'nullable',
             // 'items'                     => 'nullable|array',
             // 'nama'                      => 'nullable',
+            'ref_nomor'                 => 'nullable'
         ]);
 
         //temukan transaksi
@@ -210,6 +223,17 @@ class TransaksiController extends Controller
             'admin_id'                  => auth()->user()->id,
             'catatan'                   => $request->catatan,
         ]);
+        //update ref_nomor
+        if ($request->ref_nomor) {
+            //get transaksi by ref_nomor
+            $ref_transaksi = Transaksi::where('nomor', $request->ref_nomor)->first();
+            if ($ref_transaksi) {
+                $transaksi->update([
+                    'ref_id' => $ref_transaksi->id,
+                ]);
+            }
+        }
+
         return response()->json($transaksi);
     }
 
