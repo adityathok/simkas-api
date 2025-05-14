@@ -181,15 +181,17 @@ class TransaksiController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'nama'          => 'required|min:3',
-            'nominal'       => 'required|numeric',
-            'arus'          => 'required|in:masuk,keluar',
-            'pendapan_id'   => 'nullable|exists:akun_pendapatans,id',
-            'pengeluaran_id' => 'nullable|exists:akun_pengeluarans,id',
-            'rekening_id'   => 'nullable|exists:akun_rekenings,id',
-            'keterangan'    => 'nullable',
-            'user_id'       => 'nullable|exists:users,id',
-            'tanggal'       => 'nullable|date',
+            // 'nominal'                   => 'required|numeric',
+            // 'jenis'                     => 'required|in:pendapatan,pengeluaran,transfer',
+            // 'tanggal'                   => 'nullable|date',
+            // 'user_id'                   => 'required|min:3',
+            // 'akun_rekening_id'          => 'required|exists:akun_rekenings,id',
+            // 'akun_rekening_tujuan_id'   => 'nullable|exists:akun_rekenings,id',
+            // 'metode_pembayaran'         => 'nullable|in:tunai,transfer',
+            'status'                    => 'required',
+            'catatan'                   => 'nullable',
+            // 'items'                     => 'nullable|array',
+            // 'nama'                      => 'nullable',
         ]);
 
         //temukan transaksi
@@ -197,15 +199,16 @@ class TransaksiController extends Controller
 
         //update
         $transaksi->update([
-            'nama'          => $request->nama,
-            'nominal'       => $request->nominal,
-            'arus'          => $request->arus,
-            'pendapatan_id' => $request->arus == 'masuk' ? $request->pendapatan_id : null,
-            'pengeluaran_id' => $request->arus == 'keluar' ? $request->pengeluaran_id : null,
-            'rekening_id'   => $request->rekening_id ?? 'CASH',
-            'user_id'       => $request->user_id,
-            'keterangan'    => $request->keterangan,
-            'tanggal'       => $request->tanggal ?? null,
+            // 'nominal'                   => $request->nominal,
+            // 'jenis'                     => $request->jenis,
+            // 'tanggal'                   => $request->tanggal ?? Carbon::now(),
+            // 'user_id'                   => $request->user_id,
+            // 'akun_rekening_id'          => $request->akun_rekening_id ?? 1,
+            // 'akun_rekening_tujuan_id'   => $request->akun_rekening_tujuan_id,
+            // 'metode_pembayaran'         => $request->metode_pembayaran ?? 'tunai',
+            'status'                    => $request->status ?? 'sukses',
+            'admin_id'                  => auth()->user()->id,
+            'catatan'                   => $request->catatan,
         ]);
         return response()->json($transaksi);
     }
