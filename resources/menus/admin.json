@@ -1,0 +1,185 @@
+[
+  {
+    "key": "dashboard",
+    "label": "Dashboard",
+    "icon": "lucide:layout-grid",
+    "route": "/"
+  },
+  {
+    "key": "kasir",
+    "label": "Kasir",
+    "icon": "lucide:monitor-dot",
+    "route": "/kasir"
+  },
+  {
+    "key": "transaksi",
+    "label": "Transaksi",
+    "icon": "lucide:coins",
+    "items": [
+      {
+        "key": "riwayat_transaksi",
+        "label": "Riwayat Transaksi",
+        "route": "/transaksi"
+      },
+      {
+        "key": "create_transaksi",
+        "label": "Tambah Transaksi",
+        "route": "/transaksi/create"
+      }
+    ]
+  },
+  {
+    "key": "tagihan",
+    "label": "Tagihan",
+    "icon": "lucide:receipt-text",
+    "items": [
+      {
+        "key": "riwayat_tagihannaster",
+        "label": "Master Tagihan",
+        "route": "/tagihanmaster"
+      },
+      {
+        "key": "riwayat_tagihan",
+        "label": "Semua Tagihan",
+        "route": "/tagihan"
+      },
+      {
+        "key": "create_tagihan",
+        "label": "Buat Tagihan",
+        "route": "/tagihan/create"
+      }
+    ]
+  },
+  {
+    "key": "akuntansi",
+    "label": "Akuntansi",
+    "icon": "lucide:calculator",
+    "items": [
+      {
+        "key": "akun_pendapatan",
+        "label": "Akun Pendapatan",
+        "route": "/akunpendapatan"
+      },
+      {
+        "key": "akun_pengeluaran",
+        "label": "Akun Biaya",
+        "route": "/akunpengeluaran"
+      },
+      {
+        "key": "jurnlkas",
+        "label": "Jurnal",
+        "route": "/jurnalkas"
+      },
+      {
+        "key": "akun_rekening",
+        "label": "Akun Rekening",
+        "route": "/akunrekening"
+      }
+    ]
+  },
+  {
+    "key": "siswa",
+    "label": "Siswa",
+    "icon": "lucide:users",
+    "items": [
+      {
+        "key": "siswa_data",
+        "label": "Data Siswa",
+        "route": "/siswa"
+      },
+      {
+        "key": "siswa_tambah",
+        "label": "Tambah Siswa",
+        "route": "/siswa/create"
+      },
+      {
+        "key": "siswa_naik",
+        "label": "Naik Kelas",
+        "route": "/siswa/naikkelas"
+      },
+      {
+        "key": "siswa_import",
+        "label": "Import Siswa",
+        "route": "/siswa/import"
+      }
+    ]
+  },
+  {
+    "key": "unit",
+    "label": "Unit Sekolah",
+    "icon": "lucide:school",
+    "items": [
+      {
+        "key": "unit_create",
+        "label": "Semua Unit",
+        "route": "/unitsekolah"
+      },
+      {
+        "key": "unit_kelas",
+        "label": "Kelas",
+        "route": "/kelas"
+      }
+    ]
+  },
+  {
+    "key": "pegawai",
+    "label": "Pegawai",
+    "icon": "lucide:circle-user",
+    "items": [
+      {
+        "key": "pegawai_all",
+        "label": "Semua Pegawai",
+        "route": "/pegawai"
+      },
+      {
+        "key": "pegawai_add",
+        "label": "Tambah Pegawai",
+        "route": "/pegawai/add"
+      }
+    ]
+  },
+  {
+    "key": "pengaturan",
+    "label": "Pengaturan",
+    "icon": "lucide:settings",
+    "items": [
+      {
+        "key": "pengaturan_lembaga",
+        "label": "Lembaga",
+        "route": "/pengaturan"
+      },
+      {
+        "key": "pengaturan_tahunajaran",
+        "label": "Tahun Ajaran",
+        "route": "/pengaturan/tahunajaran"
+      },
+      {
+        "key": "pengaturan_jenjang",
+        "label": "Jenjang",
+        "route": "/pengaturan/jenjang"
+      },
+      {
+        "key": "pengaturan_jabatan",
+        "label": "Jabatan",
+        "route": "/pengaturan/jabatan"
+      }
+    ]
+  },
+  {
+    "key": "users",
+    "label": "Users",
+    "icon": "lucide:square-user",
+    "items": [
+      {
+        "key": "users_all",
+        "label": "Semua User",
+        "route": "/users"
+      },
+      {
+        "key": "3_1",
+        "label": "Tambah User",
+        "route": "/users/create"
+      }
+    ]
+  }
+]
