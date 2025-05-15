@@ -27,15 +27,19 @@ class ConfigAppController extends Controller
             'role'              => '',
         ];
 
-        $user = $request->user();
+        $user = $request->user()->makeHidden(['roles']);
         if ($user) {
-            $response['user'] = $request->user();
+            $response['user'] = $user;
 
             // Dapatkan semua permissions
             $permissons = $request->user()->getPermissionsViaRoles();
 
             //collection permissions
             $response['permissions'] = collect($permissons)->pluck('name');
+
+            //dapatkan semua roles
+            $roles = $request->user()->roles;
+            $response['roles'] = collect($roles)->pluck('name');
 
             //get user role
             $role = $request->user()->roles()->first();
