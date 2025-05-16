@@ -12,6 +12,39 @@
     "route": "/kasir"
   },
   {
+    "key": "laporan",
+    "label": "Laporan",
+    "icon": "lucide:chart-line",
+    "items": [
+      {
+        "key": "laporan_neraca",
+        "label": "Neraca",
+        "route": "/laporan/neraca"
+      },
+      {
+        "key": "laporan_labarugi",
+        "label": "Laba Rugi",
+        "route": "/laporan/laba-rugi"
+      },
+      {
+        "key": "laporan_aruskas",
+        "label": "Arus Kas",
+        "route": "/laporan/arus-kas"
+      },
+      {
+        "key": "laporan_perubahanmodal",
+        "label": "Perubahan Modal",
+        "route": "/laporan/perubahan-modal"
+      }
+    ]
+  },
+  {
+    "key": "jurnal",
+    "label": "Jurnal",
+    "icon": "lucide:table-properties",
+    "items": []
+  },
+  {
     "key": "transaksi",
     "label": "Transaksi",
     "icon": "lucide:coins",

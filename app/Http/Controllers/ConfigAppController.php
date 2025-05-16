@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Setting;
 use App\Models\TahunAjaran;
+use App\Models\JurnalKas;
+use App\Models\AkunRekening;
 
 class ConfigAppController extends Controller
 {
@@ -54,7 +56,31 @@ class ConfigAppController extends Controller
                 $path = resource_path("menus/user.json");
                 $response['app_menus'] = json_decode(file_get_contents($path));
             }
+
+            //jika role admin
+            if ($role == 'admin') {
+                //get all jurnal kas
+                $jurnal_kas = JurnalKas::all();
+                foreach ($jurnal_kas as $key => $value) {
+                    $response['app_menus'][3]->items[] = [
+                        'key'       => 'laporan_jurnal_' . $value->id,
+                        'label'     => $value->nama,
+                        'route'     => '/laporan/jurnal/?id=' . $value->id,
+                    ];
+                };
+                //get all akun rekening
+                $akun_rekening = AkunRekening::all();
+                foreach ($akun_rekening as $key => $value) {
+                    $response['app_menus'][2]->items[] = [
+                        'key'       => 'laporan_likuiditas_' . $value->id,
+                        'label'     => 'Likuiditas ' . $value->nama,
+                        'route'     => '/laporan/likuiditas/?id=' . $value->id,
+                    ];
+                };
+            }
         }
+
+
 
         return response()->json($response);
     }
