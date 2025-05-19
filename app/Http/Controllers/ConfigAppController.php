@@ -74,7 +74,7 @@ class ConfigAppController extends Controller
                     $response['app_menus'][2]->items[] = [
                         'key'       => 'laporan_likuiditas_' . $value->id,
                         'label'     => 'Likuiditas ' . $value->nama,
-                        'route'     => '/laporan/likuiditas/?id=' . $value->id,
+                        'route'     => '/laporan/likuiditas/?rekening_id=' . $value->id,
                     ];
                 };
             }

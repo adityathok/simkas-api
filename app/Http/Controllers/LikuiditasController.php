@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AkunRekening;
 use App\Models\Transaksi;
+use Carbon\Carbon;
 
 class LikuiditasController extends Controller
 {
@@ -29,8 +30,10 @@ class LikuiditasController extends Controller
         //filter by bulan
         $bulan = $request->input('bulan') ?? null;
         if ($bulan) {
-            // $query->whereMonth('tanggal', $bulan);
-            // $query->where('tanggal', 'LIKE', '%' . $bulan . '%');
+            $date = Carbon::createFromFormat('Y-m', $bulan);
+
+            $query->whereYear('tanggal', $date->year)
+                ->whereMonth('tanggal', $date->month);
         }
 
         //filter by rekening_id
@@ -39,27 +42,71 @@ class LikuiditasController extends Controller
             $query->where('akun_rekening_id', $rekening_id);
         }
 
-        $query->orderBy('tanggal', 'desc');
-
         $per_page = $request->input('per_page') ?? 20;
-        $transaksi = $query->paginate($per_page);
 
+        // Hitung offset
+        $page = $request->input('page') ?? 1;
+        $offset = ($page - 1) * $per_page;
+
+        //hitung saldo
+        $saldo_awal = 0;
+        $count = $query->count();
+        $sumPendapatan = 0;
+        $sumPengeluaran = 0;
+        $transaksi_akhir = [];
+
+        if ($offset < ($count - $per_page)) {
+
+            //ambil data transaksi awal sampai offset
+            $transaksi_akhir = (clone $query)->orderBy('tanggal', 'asc')->take($count - ($per_page * $page))->get();
+
+            $sumPendapatan = $transaksi_akhir
+                ->where('jenis', 'pendapatan')
+                ->sum('nominal');
+
+            $sumPengeluaran = $transaksi_akhir
+                ->where('jenis', 'pengeluaran')
+                ->sum('nominal');
+
+            $saldo_awal = $sumPendapatan - $sumPengeluaran;
+        }
+
+        $query->orderBy('tanggal', 'desc');
+        $transaksi = $query->paginate($per_page);
         $transaksi->withPath('/likuiditas');
 
+        // Balik urutan jadi ASC hanya untuk proses hitung saldo
+        $transaksi_asc = $query->get()->sortBy('tanggal')->values();
+        //hitung saldo tiap transaksi
+        $saldo = $saldo_awal ?? 0;
+        $saldo_items = [];
+        foreach ($transaksi_asc as $key => $value) {
+            if ($value->jenis == 'pendapatan') {
+                $saldo += $value->nominal;
+            } else {
+                $saldo -= $value->nominal;
+            }
+            $saldo_items[$value->nomor] = $saldo;
+        }
+
         //tambahkan saldo ke setiap transaksi, saldo hasil dari penjumlahan nominal transaksi
-        $saldo = 0;
         $transaksi->setCollection(
-            $transaksi->getCollection()->transform(function ($item) use (&$saldo) {
-                if ($item->jenis == 'pendapatan') {
-                    $saldo += $item->nominal;
-                } else {
-                    $saldo -= $item->nominal;
-                }
-                $item->saldo = $saldo;
+            $transaksi->getCollection()->transform(function ($item) use (&$saldo, $saldo_items) {
+                $item->saldo = $saldo_items[$item->nomor];
                 return $item;
             })
         );
 
-        return response()->json($transaksi);
+        // Ubah ke array + tambahkan key ringkasan
+        $response = $transaksi->toArray();
+        $response['saldo_akhir'] = $saldo;
+        $response['saldo_awal'] = $saldo_awal;
+        $response['offset'] = $offset;
+        $response['sum_pendapatan'] = $sumPendapatan;
+        $response['sum_pengeluaran'] = $sumPengeluaran;
+        // $response['transaksi_akhir'] = $transaksi_akhir;
+        // $response['transaksi_asc'] = $transaksi_asc;
+
+        return response()->json($response);
     }
 }

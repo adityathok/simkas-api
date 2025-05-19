@@ -16,8 +16,6 @@ class TransaksiController extends Controller
     public function index(Request $request)
     {
 
-        $per_page = $request->input('per_page') ?? 20;
-
         //get transaksi
         $query = Transaksi::with(
             'items',
@@ -87,7 +85,11 @@ class TransaksiController extends Controller
             });
         }
 
-        $query->orderBy('tanggal', 'desc');
+        $per_page = $request->input('per_page') ?? 20;
+        $order_by = $request->input('order_by') ?? 'tanggal';
+        $order = $request->input('order') ?? 'desc';
+
+        $query->orderBy($order_by, $order);
         $transaksi = $query->paginate($per_page);
         $transaksi->withPath('/transaksi');
 
