@@ -71,6 +71,17 @@ class LikuiditasController extends Controller
             $saldo_awal = $sumPendapatan - $sumPengeluaran;
         }
 
+        //hitung total saldo rekening
+        $saldo_rekening = 0;
+        $transaksi_all = (clone $query)->orderBy('tanggal', 'asc')->get();
+        $sumPendapatanAll = $transaksi_all
+            ->where('jenis', 'pendapatan')
+            ->sum('nominal');
+        $sumPengeluaranAll = $transaksi_all
+            ->where('jenis', 'pengeluaran')
+            ->sum('nominal');
+        $saldo_rekening = $sumPendapatanAll - $sumPengeluaranAll;
+
         $query->orderBy('tanggal', 'desc');
         $transaksi = $query->paginate($per_page);
         $transaksi->withPath('/likuiditas');
@@ -104,8 +115,18 @@ class LikuiditasController extends Controller
         $response['offset'] = $offset;
         $response['sum_pendapatan'] = $sumPendapatan;
         $response['sum_pengeluaran'] = $sumPengeluaran;
+        $response['rekening'] = null;
+        $response['saldo_rekening'] = $saldo_rekening;
         // $response['transaksi_akhir'] = $transaksi_akhir;
         // $response['transaksi_asc'] = $transaksi_asc;
+
+        //filter by rekening_id
+        $rekening_id = $request->input('rekening_id') ?? null;
+        if ($rekening_id) {
+            //get data rekening
+            $rekening = AkunRekening::find($rekening_id);
+            $response['rekening'] = $rekening;
+        }
 
         return response()->json($response);
     }
