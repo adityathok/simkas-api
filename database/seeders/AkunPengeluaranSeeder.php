@@ -143,7 +143,7 @@ class AkunPengeluaranSeeder extends Seeder
             ],
             [
                 'id'            => 'OUTBHEXAAIR',
-                'nama'          => 'Bisnis Koperasi',
+                'nama'          => 'Bisnis Hexa Air',
                 'sumber'        => 'jurnalkas',
                 'pendapatan_id' => 'INBHEXAAIR',
                 'admin_id'      => null,
