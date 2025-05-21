@@ -20,6 +20,12 @@ class TransaksiItem extends Model
         'tagihan_id',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
     //relasi ke transaksi
     public function transaksi()
     {

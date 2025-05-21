@@ -67,7 +67,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //LikuiditasController
     Route::get('likuiditas', [LikuiditasController::class, 'index']);
-    Route::get('neraca/akun', [NeracaController::class, 'akun']);
+    Route::get('neraca/{bulan}', [NeracaController::class, 'index']);
+    Route::get('neraca_akun', [NeracaController::class, 'akun']);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');
 
