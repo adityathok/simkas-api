@@ -29,6 +29,8 @@ use App\Http\Controllers\TagihanController;
 use App\Http\Controllers\TagihanMasterController;
 use App\Http\Controllers\LikuiditasController;
 use App\Http\Controllers\NeracaController;
+use App\Http\Controllers\LabaRugiController;
+
 
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 //     return $request->user();
@@ -69,6 +71,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('likuiditas', [LikuiditasController::class, 'index']);
     Route::get('neraca/{bulan}', [NeracaController::class, 'index']);
     Route::get('neraca_akun', [NeracaController::class, 'akun']);
+    Route::get('laba_rugi/{tanggal}', [LabaRugiController::class, 'index']);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');
 

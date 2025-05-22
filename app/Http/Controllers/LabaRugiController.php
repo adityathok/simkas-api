@@ -7,15 +7,15 @@ use App\Models\AkunPendapatan;
 use App\Models\AkunPengeluaran;
 use App\Models\Transaksi;
 
-class NeracaController extends Controller
+class LabaRugiController extends Controller
 {
-    public function index(string $bulan)
+    public function index(string $tanggal)
     {
 
         $result = [];
 
-        //get akun pendapatan dengan neraca = true
-        $akun_pendapatan = AkunPendapatan::where('neraca', true)->get();
+        //get akun pendapatan
+        $akun_pendapatan = AkunPendapatan::all();
         foreach ($akun_pendapatan as $item) {
             $result['pendapatan'][$item->id] = [
                 'nama' => $item->nama,
@@ -42,11 +42,11 @@ class NeracaController extends Controller
         );
         $query->select('id', 'nominal');
 
-        //get transaksi berdasarkan bulan
-        if ($bulan) {
-            $bln = explode('-', $bulan);
-            $query->whereYear('tanggal',  $bln[0])
-                ->whereMonth('tanggal',  $bln[1]);
+        //get transaksi berdasarkan tanggal
+        if ($tanggal) {
+            //get tanggal pertama dan terakhir dari tanggal            
+            $date_start = date('Y-m', strtotime($tanggal)) . '-01';
+            $query->whereBetween('tanggal', [$date_start, $tanggal]);
         }
 
         $transaksi = $query->get();
@@ -58,10 +58,6 @@ class NeracaController extends Controller
             foreach ($item->items as $i) {
                 //cek apakah akun pendapatan ada
                 if ($i->akun_pendapatan_id) {
-                    //jika neraca = false, skip
-                    if (!$i->akun_pendapatan->neraca) {
-                        continue;
-                    }
                     $result['pendapatan'][$i->akun_pendapatan->id]['nama'] = $i->akun_pendapatan->nama;
                     $result['pendapatan'][$i->akun_pendapatan->id]['nominals'][] = $i->nominal;
                     $result['pendapatan'][$i->akun_pendapatan->id]['total_nominal'] = array_sum($result['pendapatan'][$i->akun_pendapatan->id]['nominals']);
@@ -80,18 +76,7 @@ class NeracaController extends Controller
             'data' => $result,
             'total_pendapatan' => $masuk,
             'total_pengeluaran' => $keluar,
-        ]);
-    }
-
-    public function akun(Request $request)
-    {
-        //get akun pendapatan dengan neraca = true
-        $akun_pendapatan = AkunPendapatan::where('neraca', true)->get();
-        $akun_pengeluaran = AkunPengeluaran::all();
-
-        return response()->json([
-            'akun_pendapatan' => $akun_pendapatan,
-            'akun_pengeluaran' => $akun_pengeluaran,
+            'total_laba_rugi' => $masuk - $keluar,
         ]);
     }
 }
