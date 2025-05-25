@@ -22,7 +22,7 @@ class AkunPengeluaran extends Model
     protected $hidden = ['created_at', 'updated_at'];
 
     //relasi ke akun pendapatan
-    public function akunpendapatan()
+    public function akun_pendapatan()
     {
         return $this->belongsTo(AkunPendapatan::class, 'pendapatan_id');
     }
