@@ -1,9 +1,7 @@
 name: Deploy Laravel to Hosting
 
-on:
-  push:
-    branches:
-      - main  # ganti sesuai branch yang kamu gunakan
+on:  
+  workflow_dispatch:
 
 jobs:
   deploy:
