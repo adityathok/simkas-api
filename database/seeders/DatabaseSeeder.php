@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             AkunPengeluaranSeeder::class,
             AkunRekeningSeeder::class,
             SiswaSeeder::class,
+            TagihanSeeder::class,
         ]);
     }
 }

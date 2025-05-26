@@ -12,21 +12,21 @@ class Transaksi extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'nomor',
         'nominal',
-        'arus',
-        'akun_rekening_id',
-        'sumber_rekening_id',
-        'user_id',
-        'admin_id',
+        'jenis',
         'tanggal',
-        'keterangan',
-        'ref_id',
+        'akun_rekening_id',
+        'akun_rekening_tujuan_id',
+        'user_id',
         'metode_pembayaran',
         'status',
-        'nomor'
+        'catatan',
+        'admin_id',
+        'ref_id',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-    protected $appends = ['nominal_label'];
+    protected $appends = ['nominal_label', 'ref_nomor'];
 
     //relasi ke akun rekening
     public function akun_rekening()
@@ -52,6 +52,18 @@ class Transaksi extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    //relasi ke referensi
+    public function ref()
+    {
+        return $this->belongsTo(Transaksi::class, 'ref_id');
+    }
+
+    // Accessor untuk ref_nomor
+    public function getRefNomorAttribute()
+    {
+        return $this->ref ? $this->ref->nomor : null;
+    }
+
     // Accessor untuk nominal_label
     public function getNominalLabelAttribute()
     {
@@ -74,7 +86,7 @@ class Transaksi extends Model
                 $count  =  $count + 1;
                 $number = str_pad($count, 4, '0', STR_PAD_LEFT);
 
-                $model->nomor = 'TRX' . Carbon::now()->format('ymd') . $number . Str::random(4);
+                $model->nomor = Carbon::now()->format('ymd') . $number . Str::upper(Str::random(3)) . Carbon::now()->format('s');
             }
 
             //jika metode_pembayaran kosong, buat metode_pembayaran dari akun_rekening_id

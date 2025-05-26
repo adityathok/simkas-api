@@ -16,7 +16,18 @@ class TransaksiController extends Controller
     public function index(Request $request)
     {
 
-        $count = $request->input('count') ?? 20;
+        //get transaksi
+        $query = Transaksi::with(
+            'items',
+            'items.akun_pendapatan:id,nama',
+            'items.akun_pengeluaran:id,nama',
+            'akun_rekening:id,nama',
+            'user:id,name,type',
+            'user.siswa:id,nama,user_id,nis',
+            'user.pegawai:id,nama,user_id',
+            'admin.pegawai:id,nama,user_id'
+        );
+
         $date_start = $request->input('date_start') ?? null;
         $date_end = $request->input('date_end') ?? null;
 
@@ -35,43 +46,51 @@ class TransaksiController extends Controller
             $date_end = $tgl_s->format('Y-m-d 23:59:59');
         }
 
-        //filters
-        $arus = $request->input('arus') ?? null;
-        $pendapatan_id = $request->input('pendapatan_id') ?? null;
-        $pengeluaran_id = $request->input('pengeluaran_id') ?? null;
-        $rekening_id = $request->input('rekening_id') ?? null;
-        $user_id = $request->input('user_id') ?? null;
+        //filter tanggal
+        if ($date_start && $date_end) {
+            $query->whereBetween('tanggal', [$date_start, $date_end]);
+        }
 
-        $transaksi = Transaksi::with(
-            'items',
-            'akunpendapatan:id,nama',
-            'akunpengeluaran:id,nama',
-            'akunrekening:id,nama',
-            'user:id,name,type',
-            'user.siswa:id,nama,user_id,nis',
-            'user.pegawai:id,nama,user_id',
-            'admin.pegawai:id,nama,user_id'
-        )
-            ->when($date_start, function ($query) use ($date_start, $date_end) {
-                return $query->whereBetween('tanggal', [$date_start, $date_end]);
-            })
-            ->when($arus, function ($query) use ($arus) {
-                return $query->where('arus', $arus);
-            })
-            ->when($pendapatan_id, function ($query) use ($pendapatan_id) {
-                return $query->where('pendapatan_id', $pendapatan_id);
-            })
-            ->when($pengeluaran_id, function ($query) use ($pengeluaran_id) {
-                return $query->where('pengeluaran_id', $pengeluaran_id);
-            })
-            ->when($rekening_id, function ($query) use ($rekening_id) {
-                return $query->where('rekening_id', $rekening_id);
-            })
-            ->when($user_id, function ($query) use ($user_id) {
-                return $query->where('user_id', $user_id);
-            })
-            ->orderBy('tanggal', 'desc')
-            ->paginate($count);
+        //filter by user_id
+        $user_id = $request->input('user_id') ?? null;
+        if ($user_id) {
+            $query->where('user_id', $user_id);
+        }
+
+        //filter by jenis
+        $jenis = $request->input('jenis') ?? null;
+        if ($jenis) {
+            $query->where('jenis', $jenis);
+        }
+
+        //filter by rekening_id
+        $rekening_id = $request->input('rekening_id') ?? null;
+        if ($rekening_id) {
+            $query->where('akun_rekening_id', $rekening_id);
+        }
+
+        //filter by items.akun_pendapatan_id
+        $pendapatan_id = $request->input('pendapatan_id') ?? null;
+        if ($pendapatan_id) {
+            $query->whereHas('items', function ($query) use ($pendapatan_id) {
+                $query->where('akun_pendapatan_id', $pendapatan_id);
+            });
+        }
+
+        //filter by items.akun_pengeluaran_id
+        $pengeluaran_id = $request->input('pengeluaran_id') ?? null;
+        if ($pengeluaran_id) {
+            $query->whereHas('items', function ($query) use ($pengeluaran_id) {
+                $query->where('akun_pengeluaran_id', $pengeluaran_id);
+            });
+        }
+
+        $per_page = $request->input('per_page') ?? 20;
+        $order_by = $request->input('order_by') ?? 'tanggal';
+        $order = $request->input('order') ?? 'desc';
+
+        $query->orderBy($order_by, $order);
+        $transaksi = $query->paginate($per_page);
         $transaksi->withPath('/transaksi');
 
         return response()->json($transaksi);
@@ -83,53 +102,105 @@ class TransaksiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nominal'               => 'required|numeric',
-            'arus'                  => 'required|in:masuk,keluar',
-            'user_id'               => 'required|min:3',
-            'akun_pendapatan_id'    => 'nullable|exists:akun_pendapatans,id',
-            'akun_pengeluaran_id'   => 'nullable|exists:akun_pengeluarans,id',
-            'akun_rekening_id'      => 'required|exists:akun_rekenings,id',
-            'keterangan'            => 'nullable',
-            'tanggal'               => 'nullable|date',
-            'status'                => 'required',
-            'items'                 => 'required|array',
+            'nominal'                   => 'required|numeric',
+            'jenis'                     => 'required|in:pendapatan,pengeluaran,transfer',
+            'tanggal'                   => 'nullable|date',
+            'user_id'                   => 'required|min:3',
+            'akun_rekening_id'          => 'required|exists:akun_rekenings,id',
+            'akun_rekening_tujuan_id'   => 'nullable|exists:akun_rekenings,id',
+            'metode_pembayaran'         => 'nullable|in:tunai,transfer',
+            'status'                    => 'required',
+            'catatan'                   => 'nullable',
+            'items'                     => 'nullable|array',
+            'nama'                      => 'nullable',
+            'ref_nomor'                 => 'nullable'
         ]);
 
         $transaksi = Transaksi::create([
             'nominal'                   => $request->nominal,
-            'arus'                      => $request->arus,
-            'akun_pendapatan_id'        => $request->arus == 'masuk' ? $request->akun_pendapatan_id : null,
-            'akun_pengeluaran_id'       => $request->arus == 'keluar' ? $request->akun_pengeluaran_id : null,
-            'akun_rekening_id'          => $request->akun_rekening_id ?? 'CASH',
+            'jenis'                     => $request->jenis,
+            'tanggal'                   => $request->tanggal ?? Carbon::now(),
             'user_id'                   => $request->user_id,
-            'admin_id'                  => auth()->user()->id,
-            'keterangan'                => $request->keterangan,
-            'tanggal'                   => $request->tanggal ?? null,
+            'akun_rekening_id'          => $request->akun_rekening_id ?? 1,
+            'akun_rekening_tujuan_id'   => $request->akun_rekening_tujuan_id,
+            'metode_pembayaran'         => $request->metode_pembayaran ?? 'tunai',
             'status'                    => $request->status ?? 'sukses',
+            'admin_id'                  => auth()->user()->id,
+            'catatan'                   => $request->catatan,
         ]);
 
-        //simpan TransaksiItem
-        $items = $request->items;
-        foreach ($items as $item) {
-            $tagihan_id = $item['tagihan_id'] ?? null;
-            TransaksiItem::create([
-                'transaksi_id'  => $transaksi->id,
-                'nama'          => $item['nama'],
-                'qty'           => $item['qty'] ?? 1,
-                'nominal'       => $item['nominal'],
-                'nominal_item'  => $item['nominal_item'] ?? $item['nominal'],
-                'tagihan_id'    => $tagihan_id,
-            ]);
-
-            //jika ada tagihan_id , ubah status tagihan
-            //get tagihan by id
-            $tagihan = Tagihan::find($tagihan_id);
-            if ($tagihan) {
-                $tagihan->update([
-                    'status' => 'lunas',
+        //update ref_nomor
+        if ($request->ref_nomor) {
+            //get transaksi by ref_nomor
+            $ref_transaksi = Transaksi::where('nomor', $request->ref_nomor)->first();
+            if ($ref_transaksi) {
+                $transaksi->update([
+                    'ref_id' => $ref_transaksi->id,
                 ]);
             }
         }
+
+        //simpan TransaksiItem
+        $items = $request->items;
+        if ($items) {
+            foreach ($items as $item) {
+                $tagihan_id = $item['tagihan_id'] ?? null;
+                $akun_pendapatan_id = $item['akun_pendapatan_id'] ?? null;
+                $akun_pengeluaran_id = $item['akun_pengeluaran_id'] ?? null;
+
+                //jika $akun_pendapatan_id = null dan $request->jenis == 'pendapatan'
+                if (!$akun_pendapatan_id && $request->jenis == 'pendapatan' && $request->akun_pendapatan_id) {
+                    $akun_pendapatan_id = $request->akun_pendapatan_id;
+                }
+                //jika $akun_pengeluaran_id = null dan $request->jenis == 'pengeluaran'
+                if (!$akun_pengeluaran_id && $request->jenis == 'pengeluaran' && $request->akun_pengeluaran_id) {
+                    $akun_pengeluaran_id = $request->akun_pengeluaran_id;
+                }
+
+                TransaksiItem::create([
+                    'transaksi_id'          => $transaksi->id,
+                    'nama'                  => $item['nama'],
+                    'qty'                   => $item['qty'] ?? 1,
+                    'nominal'               => $item['nominal'],
+                    'nominal_item'          => $item['nominal_item'] ?? $item['nominal'],
+                    'tagihan_id'            => $tagihan_id,
+                    'akun_pendapatan_id'    => $akun_pendapatan_id,
+                    'akun_pengeluaran_id'   => $akun_pengeluaran_id,
+                ]);
+
+                //jika ada tagihan_id , ubah status tagihan
+                //get tagihan by id
+                $tagihan = Tagihan::find($tagihan_id);
+                if ($tagihan) {
+                    $tagihan->update([
+                        'status' => 'lunas',
+                    ]);
+                }
+            }
+        } else if (!$items && $request->nama) {
+            TransaksiItem::create([
+                'transaksi_id'          => $transaksi->id,
+                'nama'                  => $request->nama,
+                'qty'                   => 1,
+                'nominal'               => $request->nominal,
+                'nominal_item'          => $request->nominal,
+                'tagihan_id'            => null,
+                'akun_pendapatan_id'    => $request->jenis == 'pendapatan' ? $request->akun_pendapatan_id : null,
+                'akun_pengeluaran_id'   => $request->jenis == 'pengeluaran' ? $request->akun_pengeluaran_id : null,
+            ]);
+        }
+
+        //get transaksi
+        $transaksi = Transaksi::with(
+            'items',
+            'items.akun_pendapatan:id,nama',
+            'items.akun_pengeluaran:id,nama',
+            'akun_rekening:id,nama',
+            'user:id,name,type',
+            'user.siswa:id,nama,user_id,nis',
+            'user.pegawai:id,nama,user_id',
+            'admin.pegawai:id,nama,user_id'
+        )->find($transaksi->id);
 
         return response()->json($transaksi);
     }
@@ -139,7 +210,19 @@ class TransaksiController extends Controller
      */
     public function show(string $id)
     {
-        //
+        //get transaksi
+        $transaksi = Transaksi::with(
+            'items',
+            'items.akun_pendapatan:id,nama',
+            'items.akun_pengeluaran:id,nama',
+            'akun_rekening:id,nama',
+            'user:id,name,type',
+            'user.siswa:id,nama,user_id,nis',
+            'user.pegawai:id,nama,user_id',
+            'admin.pegawai:id,nama,user_id'
+        )
+            ->find($id);
+        return response()->json($transaksi);
     }
 
     /**
@@ -148,15 +231,18 @@ class TransaksiController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'nama'          => 'required|min:3',
-            'nominal'       => 'required|numeric',
-            'arus'          => 'required|in:masuk,keluar',
-            'pendapan_id'   => 'nullable|exists:akun_pendapatans,id',
-            'pengeluaran_id' => 'nullable|exists:akun_pengeluarans,id',
-            'rekening_id'   => 'nullable|exists:akun_rekenings,id',
-            'keterangan'    => 'nullable',
-            'user_id'       => 'nullable|exists:users,id',
-            'tanggal'       => 'nullable|date',
+            // 'nominal'                   => 'required|numeric',
+            // 'jenis'                     => 'required|in:pendapatan,pengeluaran,transfer',
+            // 'tanggal'                   => 'nullable|date',
+            // 'user_id'                   => 'required|min:3',
+            // 'akun_rekening_id'          => 'required|exists:akun_rekenings,id',
+            // 'akun_rekening_tujuan_id'   => 'nullable|exists:akun_rekenings,id',
+            // 'metode_pembayaran'         => 'nullable|in:tunai,transfer',
+            'status'                    => 'required',
+            'catatan'                   => 'nullable',
+            // 'items'                     => 'nullable|array',
+            // 'nama'                      => 'nullable',
+            'ref_nomor'                 => 'nullable'
         ]);
 
         //temukan transaksi
@@ -164,16 +250,28 @@ class TransaksiController extends Controller
 
         //update
         $transaksi->update([
-            'nama'          => $request->nama,
-            'nominal'       => $request->nominal,
-            'arus'          => $request->arus,
-            'pendapatan_id' => $request->arus == 'masuk' ? $request->pendapatan_id : null,
-            'pengeluaran_id' => $request->arus == 'keluar' ? $request->pengeluaran_id : null,
-            'rekening_id'   => $request->rekening_id ?? 'CASH',
-            'user_id'       => $request->user_id,
-            'keterangan'    => $request->keterangan,
-            'tanggal'       => $request->tanggal ?? null,
+            // 'nominal'                   => $request->nominal,
+            // 'jenis'                     => $request->jenis,
+            // 'tanggal'                   => $request->tanggal ?? Carbon::now(),
+            // 'user_id'                   => $request->user_id,
+            // 'akun_rekening_id'          => $request->akun_rekening_id ?? 1,
+            // 'akun_rekening_tujuan_id'   => $request->akun_rekening_tujuan_id,
+            // 'metode_pembayaran'         => $request->metode_pembayaran ?? 'tunai',
+            'status'                    => $request->status ?? 'sukses',
+            'admin_id'                  => auth()->user()->id,
+            'catatan'                   => $request->catatan,
         ]);
+        //update ref_nomor
+        if ($request->ref_nomor) {
+            //get transaksi by ref_nomor
+            $ref_transaksi = Transaksi::where('nomor', $request->ref_nomor)->first();
+            if ($ref_transaksi) {
+                $transaksi->update([
+                    'ref_id' => $ref_transaksi->id,
+                ]);
+            }
+        }
+
         return response()->json($transaksi);
     }
 
@@ -182,6 +280,27 @@ class TransaksiController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        //get transaksi
+        $transaksi = Transaksi::find($id);
+
+        //get items
+        $items = $transaksi->items;
+        //loop items
+        foreach ($items as $item) {
+            //jika ada tagihan_id, ubah status tagihan
+            //get tagihan by id
+            $tagihan = Tagihan::find($item->tagihan_id);
+            if ($tagihan) {
+                $tagihan->update([
+                    'status' => 'belum',
+                ]);
+            };
+
+            //hapus item
+            $item->delete();
+        }
+
+        //hapus transaksi
+        $transaksi->delete();
     }
 }

@@ -16,18 +16,18 @@ class AkunRekeningSeeder extends Seeder
         //array akun rekening
         $akuns = [
             [
-                'id'            => 'CASH',
                 'nama'          => 'Cash',
+                'tipe'          => 'tunai',
                 'keterangan'    => 'Uang cash yang dibawa',
             ],
             [
-                'id'            => 'BMT',
                 'nama'          => 'BMT Ahmad Dahlan',
+                'tipe'          => 'bank',
                 'keterangan'    => 'Uang cash di Rekening BMT Ahmad Dahlan',
             ],
             [
-                'id'            => 'BNI',
                 'nama'          => 'BNI',
+                'tipe'          => 'bank',
                 'keterangan'    => 'Uang di Rekening BNI',
             ],
         ];

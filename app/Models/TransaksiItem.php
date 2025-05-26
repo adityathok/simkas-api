@@ -17,6 +17,13 @@ class TransaksiItem extends Model
         'nominal',
         'akun_pendapatan_id',
         'akun_pengeluaran_id',
+        'tagihan_id',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     //relasi ke transaksi
@@ -35,5 +42,11 @@ class TransaksiItem extends Model
     public function akun_pengeluaran()
     {
         return $this->belongsTo(AkunPengeluaran::class, 'akun_pengeluaran_id');
+    }
+
+    //relasi ke tagihan
+    public function tagihan()
+    {
+        return $this->belongsTo(Tagihan::class, 'tagihan_id');
     }
 }

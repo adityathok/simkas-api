@@ -27,11 +27,13 @@ class AkunRekeningController extends Controller
         $request->validate([
             'nama' => 'required|min:3',
             'keterangan' => 'nullable',
+            'tipe' => 'required'
         ]);
 
         $akun = AkunRekening::create([
             'nama' => $request->nama,
             'keterangan' => $request->keterangan,
+            'tipe' => $request->tipe
         ]);
 
         return response()->json($akun);
@@ -64,6 +66,7 @@ class AkunRekeningController extends Controller
         $request->validate([
             'nama' => 'required|min:3',
             'keterangan' => 'nullable',
+            'tipe' => 'required'
         ]);
 
         //temukan akun rekening
@@ -73,6 +76,7 @@ class AkunRekeningController extends Controller
         $akun->update([
             'nama' => $request->nama,
             'keterangan' => $request->keterangan,
+            'tipe' => $request->tipe
         ]);
 
         return response()->json($akun);

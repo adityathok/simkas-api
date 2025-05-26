@@ -10,14 +10,11 @@ class AkunRekening extends Model
 {
     use SoftDeletes;
 
-    // Non-incrementing ID karena CHAR
-    public $incrementing = false;
-
     protected $fillable = [
         'nama',
         'keterangan',
         'saldo',
-        'admin_id',
+        'tipe',
     ];
 
     protected $hidden = [
@@ -38,10 +35,6 @@ class AkunRekening extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            //jika id kosong, buat id dari random 4
-            if (empty($model->id)) {
-                $model->id = 'REK' . strtoupper(Str::random(4));
-            }
             //jika saldo kosong, buat saldo 0
             if (empty($model->saldo)) {
                 $model->saldo = 0;

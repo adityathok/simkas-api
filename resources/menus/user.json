@@ -1,0 +1,8 @@
+[
+    {
+        "key": "dashboard",
+        "label": "Dashboard",
+        "icon": "lucide:layout-grid",
+        "route": "/"
+    }
+]

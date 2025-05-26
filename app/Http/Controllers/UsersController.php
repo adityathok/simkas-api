@@ -16,7 +16,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::select('id', 'name', 'email', 'type', 'created_at')
+        $users = User::select('id', 'name', 'email', 'type', 'created_at', 'avatar')
             ->where('can_login', 1)
             ->paginate(20);
         $users->withPath('/users');

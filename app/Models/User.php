@@ -45,6 +45,8 @@ class User extends Authenticatable
         'deleted_at',
     ];
 
+    protected $appends = ['avatar_url'];
+
     /**
      * Get the attributes that should be cast.
      *
