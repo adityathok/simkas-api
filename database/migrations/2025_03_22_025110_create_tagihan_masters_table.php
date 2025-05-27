@@ -39,7 +39,7 @@ return new class extends Migration
             $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('set null');
         });
 
-        DB::statement('ALTER TABLE tagihan_masters AUTO_INCREMENT = 50000');
+        DB::statement('ALTER TABLE tagihan_masters AUTO_INCREMENT = 10');
     }
 
     /**

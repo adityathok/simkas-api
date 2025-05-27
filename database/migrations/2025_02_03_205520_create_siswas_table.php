@@ -28,7 +28,6 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-        DB::statement('ALTER TABLE siswas AUTO_INCREMENT = 40000');
     }
 
     /**
