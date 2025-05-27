@@ -70,6 +70,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //LikuiditasController
     Route::get('likuiditas', [LikuiditasController::class, 'index']);
+    Route::post('saldo_awal', [LikuiditasController::class, 'store_saldo_awal']);
     Route::get('neraca/{bulan}', [NeracaController::class, 'index']);
     Route::get('neraca_akun', [NeracaController::class, 'akun']);
     Route::get('laba_rugi/{tanggal}', [LabaRugiController::class, 'index']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AkunRekening;
 use App\Models\Transaksi;
+use App\Models\SaldoAwal;
 use Carbon\Carbon;
 
 class LikuiditasController extends Controller
@@ -29,8 +30,8 @@ class LikuiditasController extends Controller
 
         //filter by bulan
         $bulan = $request->input('bulan') ?? null;
+        $date = Carbon::createFromFormat('Y-m', $bulan);
         if ($bulan) {
-            $date = Carbon::createFromFormat('Y-m', $bulan);
 
             $query->whereYear('tanggal', $date->year)
                 ->whereMonth('tanggal', $date->month);
@@ -48,8 +49,14 @@ class LikuiditasController extends Controller
         $page = $request->input('page') ?? 1;
         $offset = ($page - 1) * $per_page;
 
+        //get saldo awal
+        $saldoAwal = SaldoAwal::where('akun_rekening_id', $rekening_id)
+            ->where('bulan', $date->month)
+            ->where('tahun', $date->year)
+            ->first();
+
         //hitung saldo
-        $saldo_awal = 0;
+        $saldo_awal = $saldoAwal ? $saldoAwal->nominal : 0;
         $count = $query->count();
         $sumPendapatan = 0;
         $sumPengeluaran = 0;
@@ -68,11 +75,11 @@ class LikuiditasController extends Controller
                 ->where('jenis', 'pengeluaran')
                 ->sum('nominal');
 
-            $saldo_awal = $sumPendapatan - $sumPengeluaran;
+            $saldo_awal += $sumPendapatan - $sumPengeluaran;
         }
 
         //hitung total saldo rekening
-        $saldo_rekening = 0;
+        $saldo_rekening = $saldoAwal ? $saldoAwal->nominal : 0;
         $transaksi_all = (clone $query)->orderBy('tanggal', 'asc')->get();
         $sumPendapatanAll = $transaksi_all
             ->where('jenis', 'pendapatan')
@@ -80,7 +87,7 @@ class LikuiditasController extends Controller
         $sumPengeluaranAll = $transaksi_all
             ->where('jenis', 'pengeluaran')
             ->sum('nominal');
-        $saldo_rekening = $sumPendapatanAll - $sumPengeluaranAll;
+        $saldo_rekening += $sumPendapatanAll - $sumPengeluaranAll;
 
         $query->orderBy('tanggal', 'desc');
         $transaksi = $query->paginate($per_page);
@@ -112,13 +119,12 @@ class LikuiditasController extends Controller
         $response = $transaksi->toArray();
         $response['saldo_akhir'] = $saldo;
         $response['saldo_awal'] = $saldo_awal;
+        $response['data_saldoawal'] = $saldoAwal ? $saldoAwal->nominal : 0;
         $response['offset'] = $offset;
         $response['sum_pendapatan'] = $sumPendapatan;
         $response['sum_pengeluaran'] = $sumPengeluaran;
         $response['rekening'] = null;
         $response['saldo_rekening'] = $saldo_rekening;
-        // $response['transaksi_akhir'] = $transaksi_akhir;
-        // $response['transaksi_asc'] = $transaksi_asc;
 
         //filter by rekening_id
         $rekening_id = $request->input('rekening_id') ?? null;
@@ -129,5 +135,28 @@ class LikuiditasController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    //save saldo awal
+    public function store_saldo_awal(Request $request)
+    {
+        $request->validate([
+            'bulan' => 'required|string',
+            'nominal' => 'required|numeric',
+            'akun_rekening_id' => 'required|integer'
+        ]);
+        $bulan = explode('-', $request->bulan);
+
+        //create or replace
+        $saldo_awal = SaldoAwal::updateOrCreate(
+            [
+                'bulan' => $bulan[1],
+                'tahun' => $bulan[0],
+                'akun_rekening_id' => $request->akun_rekening_id
+            ],
+            ['nominal' => $request->nominal]
+        );
+
+        return response()->json($saldo_awal);
     }
 }
