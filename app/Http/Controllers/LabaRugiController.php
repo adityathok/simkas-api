@@ -11,8 +11,7 @@ class LabaRugiController extends Controller
 {
     public function index(string $tanggal)
     {
-
-        $result = [];
+        $result = ['pendapatan' => [], 'pengeluaran' => []];
 
         //get akun pendapatan
         $akun_pendapatan = AkunPendapatan::all();
@@ -56,19 +55,41 @@ class LabaRugiController extends Controller
         foreach ($transaksi as $item) {
             //loop items
             foreach ($item->items as $i) {
-                //cek apakah akun pendapatan ada
+                $akunType = $i->akun_pendapatan_id ? 'pendapatan' : 'pengeluaran';
+                $akunId = $i->akun_pendapatan_id ?? $i->akun_pengeluaran->id;
+                $akunNama = $i->akun_pendapatan_id ? $i->akun_pendapatan->nama : $i->akun_pengeluaran->nama;
+                $nominal = $i->nominal;
+
+                // Inisialisasi jika belum ada
+                if (!isset($result[$akunType][$akunId])) {
+                    $result[$akunType][$akunId] = ['nama' => $akunNama, 'nominals' => [], 'total_nominal' => 0];
+                }
+
+                $result[$akunType][$akunId]['nominals'][] = $nominal;
+                $result[$akunType][$akunId]['total_nominal'] += $nominal;
+
                 if ($i->akun_pendapatan_id) {
-                    $result['pendapatan'][$i->akun_pendapatan->id]['nama'] = $i->akun_pendapatan->nama;
-                    $result['pendapatan'][$i->akun_pendapatan->id]['nominals'][] = $i->nominal;
-                    $result['pendapatan'][$i->akun_pendapatan->id]['total_nominal'] = array_sum($result['pendapatan'][$i->akun_pendapatan->id]['nominals']);
-                    $masuk += $i->nominal;
+                    $masuk += $nominal;
                 } else {
-                    $result['pengeluaran'][$i->akun_pengeluaran->id]['nama'] = $i->akun_pengeluaran->nama;
-                    $result['pengeluaran'][$i->akun_pengeluaran->id]['nominals'][] = $i->nominal;
-                    $result['pengeluaran'][$i->akun_pengeluaran->id]['total_nominal'] = array_sum($result['pengeluaran'][$i->akun_pengeluaran->id]['nominals']);
-                    $keluar += $i->nominal;
+                    $keluar += $nominal;
                 }
             }
+        }
+
+        // Reset indeks array menjadi urutan integer
+        $result['pendapatan'] = array_values($result['pendapatan']);
+        $result['pengeluaran'] = array_values($result['pengeluaran']);
+
+        // Menyamakan jumlah array pendapatan dan pengeluaran
+        $jumlahPendapatan = count($result['pendapatan']);
+        $jumlahPengeluaran = count($result['pengeluaran']);
+
+        if ($jumlahPendapatan < $jumlahPengeluaran) {
+            $selisih = $jumlahPengeluaran - $jumlahPendapatan;
+            $result['pendapatan'] = array_merge($result['pendapatan'], array_fill(0, $selisih, ['nama' => 0, 'nominals' => [], 'total_nominal' => 0]));
+        } elseif ($jumlahPengeluaran < $jumlahPendapatan) {
+            $selisih = $jumlahPendapatan - $jumlahPengeluaran;
+            $result['pengeluaran'] = array_merge($result['pengeluaran'], array_fill(0, $selisih, ['nama' => 0, 'nominals' => [], 'total_nominal' => 0]));
         }
 
         return response()->json([
@@ -77,6 +98,9 @@ class LabaRugiController extends Controller
             'total_pendapatan' => $masuk,
             'total_pengeluaran' => $keluar,
             'total_laba_rugi' => $masuk - $keluar,
+            'count_pendapatan' => $jumlahPendapatan,
+            'count_pengeluaran' => $jumlahPengeluaran,
+            'count_diff' => $selisih,
         ]);
     }
 }
