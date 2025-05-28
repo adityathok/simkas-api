@@ -28,7 +28,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        DB::statement('ALTER TABLE users AUTO_INCREMENT = 10000');
+        DB::statement('ALTER TABLE users AUTO_INCREMENT = 100');
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email', 191)->primary();

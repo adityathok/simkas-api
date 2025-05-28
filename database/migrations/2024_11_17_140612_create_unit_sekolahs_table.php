@@ -33,7 +33,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-        DB::statement('ALTER TABLE unit_sekolahs AUTO_INCREMENT = 1000');
+        DB::statement('ALTER TABLE unit_sekolahs AUTO_INCREMENT = 200');
     }
 
     /**

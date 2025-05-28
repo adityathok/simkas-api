@@ -30,7 +30,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        DB::statement('ALTER TABLE tagihan_masters AUTO_INCREMENT = 1000');
+        DB::statement('ALTER TABLE tagihan_masters AUTO_INCREMENT = 10');
     }
 
     /**

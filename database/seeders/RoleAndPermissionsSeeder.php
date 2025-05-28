@@ -18,34 +18,50 @@ class RoleAndPermissionsSeeder extends Seeder
 
         //buat permission jika belum ada
         $permissions = [
-            'page-dashboard',
-            'page-users',
-            'page-settings',
-            'page-pengaturan',
-            'page-pegawai',
-            'page-siswa',
-            'page-akunrekening',
-            'page-jurnalkas',
-            'page-akunpengeluaran',
-            'page-akunpendapatan',
-            'page-tagihan',
-            'page-tagihanmaster',
-            'page-transaksi',
-            'page-kasir',
-            'page-jurnalkas',
-            'page-neraca',
-            'view-other-user',
-            'edit-other-user',
-            'create-other-user',
-            'edit-user',
-            'delete-user',
-            'edit-settings',
+            'akunpendapatan',
+            'akunpengeluaran',
+            'akunrekening',
+            'jurnalkas',
+            'kelas',
+            'pegawai',
+            'setting',
+            'siswa',
+            'tagihan',
+            'tagihanmaster',
+            'transaksi',
+            'unitsekolah',
+            'users',
+            'jurnalkas',
+            'kasir',
+        ];
+        $actions = ['create', 'read', 'update', 'delete'];
+
+        foreach ($permissions as $permission) {
+            foreach ($actions as $action) {
+                $permission_name = $permission . '.' . $action;
+                //check permission
+                if (!Permission::where('name', $permission_name)->exists()) {
+                    Permission::create(['name' => $permission_name]);
+                    $this->command->info('Permission created: ' . $permission_name);
+                }
+            }
+        }
+
+        //buat permission view
+        $permissions = [
+            'neraca',
+            'labarugi',
+            'likuiditas',
+            'aruskas',
+            'perubahanmodal',
+            'jurnal'
         ];
         foreach ($permissions as $permission) {
+            $permission_name = $permission . '.view';
             //check permission
-            if (!Permission::where('name', $permission)->exists()) {
-                Permission::create(['name' => $permission]);
-                $this->command->info('Permission created: ' . $permission);
+            if (!Permission::where('name', $permission_name)->exists()) {
+                Permission::create(['name' => $permission_name]);
+                $this->command->info('Permission created: ' . $permission_name);
             }
         }
 
@@ -73,43 +89,45 @@ class RoleAndPermissionsSeeder extends Seeder
             } elseif ($role == 'pemilik') {
                 $role_owner = Role::where('name', $role)->first();
                 $role_owner->givePermissionTo([
-                    'page-dashboard',
-                    'page-users',
-                    'page-settings',
-                    'page-pengaturan',
-                    'page-pegawai',
-                    'page-siswa',
-                    'page-akunrekening',
-                    'page-jurnalkas',
-                    'page-akunpengeluaran',
-                    'page-akunpendapatan',
-                    'page-tagihan',
-                    'page-tagihanmaster',
-                    'page-transaksi',
-                    'page-kasir',
-                    'edit-user',
-                    'delete-user',
-                    'page-jurnalkas',
-                    'page-neraca',
+                    'neraca.view',
+                    'labarugi.view',
+                    'likuiditas.view',
+                    'aruskas.view',
+                    'perubahanmodal.view',
+                    'jurnal.view'
                 ]);
             } elseif ($role == 'kasir') {
                 $role_kasir = Role::where('name', $role)->first();
                 $role_kasir->givePermissionTo([
-                    'page-dashboard',
-                    'page-kasir',
-                    'page-transaksi',
-                    'page-jurnalkas',
-                    'page-neraca',
-                    'edit-user',
-                    'delete-user',
+                    'neraca.view',
+                    'labarugi.view',
+                    'likuiditas.view',
+                    'aruskas.view',
+                    'perubahanmodal.view',
+                    'jurnal.view'
                 ]);
+
+                $permissions = [
+                    'kelas',
+                    'pegawai',
+                    'siswa',
+                    'tagihan',
+                    'tagihanmaster',
+                    'transaksi',
+                    'users',
+                    'kasir',
+                ];
+                $actions = ['create', 'read', 'update', 'delete'];
+
+                $perms = [];
+                foreach ($permissions as $permission) {
+                    foreach ($actions as $action) {
+                        $perms[] = $permission . '.' . $action;
+                    }
+                }
+                $role_kasir->givePermissionTo($perms);
             } else {
                 $role_user = Role::where('name', $role)->first();
-                $role_user->givePermissionTo([
-                    'page-dashboard',
-                    'edit-user',
-                    'delete-user',
-                ]);
             }
         }
     }
