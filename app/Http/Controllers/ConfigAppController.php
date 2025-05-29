@@ -29,9 +29,9 @@ class ConfigAppController extends Controller
             'role'              => '',
         ];
 
-        // $user = $request->user()->makeHidden(['roles']);
         $user = $request->user();
         if ($user) {
+            $user = $request->user()->makeHidden(['roles']);
             $response['user'] = $user;
 
             // Dapatkan semua permissions
