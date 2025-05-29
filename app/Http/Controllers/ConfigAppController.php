@@ -29,7 +29,8 @@ class ConfigAppController extends Controller
             'role'              => '',
         ];
 
-        $user = $request->user()->makeHidden(['roles']);
+        // $user = $request->user()->makeHidden(['roles']);
+        $user = $request->user();
         if ($user) {
             $response['user'] = $user;
 
