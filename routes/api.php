@@ -31,6 +31,7 @@ use App\Http\Controllers\LikuiditasController;
 use App\Http\Controllers\NeracaController;
 use App\Http\Controllers\LabaRugiController;
 use App\Http\Controllers\LaporanJurnalController;
+use App\Http\Controllers\DashboardController;
 
 
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
@@ -67,6 +68,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'tagihan'               => TagihanController::class,
         'tagihanmaster'         => TagihanMasterController::class,
     ]);
+
+    //dashboard
+    Route::get('dashboard', [DashboardController::class, 'index']);
 
     //LikuiditasController
     Route::get('likuiditas', [LikuiditasController::class, 'index']);
