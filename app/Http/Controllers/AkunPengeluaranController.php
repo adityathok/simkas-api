@@ -12,7 +12,7 @@ class AkunPengeluaranController extends Controller
      */
     public function index()
     {
-        $akun = AkunPengeluaran::with('akunpendapatan')
+        $akun = AkunPengeluaran::with('akun_pendapatan')
             ->orderBy('nama', 'asc')
             ->paginate(20);
         $akun->withPath('/akunpengeluaran');
@@ -57,7 +57,7 @@ class AkunPengeluaranController extends Controller
     public function show(string $id)
     {
         //temukan akun pengeluaran
-        $akunpengeluaran = AkunPengeluaran::with('akunpendapatan')
+        $akunpengeluaran = AkunPengeluaran::with('akun_pendapatan')
             ->find($id);
 
         return response()->json($akunpengeluaran);
