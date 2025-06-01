@@ -56,9 +56,16 @@ class LabaRugiController extends Controller
             //loop items
             foreach ($item->items as $i) {
                 $akunType = $i->akun_pendapatan_id ? 'pendapatan' : 'pengeluaran';
-                $akunId = $i->akun_pendapatan_id ?? $i->akun_pengeluaran->id;
-                $akunNama = $i->akun_pendapatan_id ? $i->akun_pendapatan->nama : $i->akun_pengeluaran->nama;
+                $akunId = $i->akun_pendapatan_id ?? $i->akun_pengeluaran_id;
+                $akunNama = '';
                 $nominal = $i->nominal;
+
+                if ($i->akun_pendapatan_id) {
+                    $akunNama = $i->akun_pendapatan->nama;
+                }
+                if ($i->akun_pengeluaran_id) {
+                    $akunNama = $i->akun_pengeluaran->nama;
+                }
 
                 // Inisialisasi jika belum ada
                 if (!isset($result[$akunType][$akunId])) {

@@ -62,14 +62,14 @@ class NeracaController extends Controller
                     if (!$i->akun_pendapatan->neraca) {
                         continue;
                     }
-                    $result['pendapatan'][$i->akun_pendapatan->id]['nama'] = $i->akun_pendapatan->nama;
-                    $result['pendapatan'][$i->akun_pendapatan->id]['nominals'][] = $i->nominal;
-                    $result['pendapatan'][$i->akun_pendapatan->id]['total_nominal'] = array_sum($result['pendapatan'][$i->akun_pendapatan->id]['nominals']);
+                    $result['pendapatan'][$i->akun_pendapatan_id]['nama'] = $i->akun_pendapatan->nama;
+                    $result['pendapatan'][$i->akun_pendapatan_id]['nominals'][] = $i->nominal;
+                    $result['pendapatan'][$i->akun_pendapatan_id]['total_nominal'] = array_sum($result['pendapatan'][$i->akun_pendapatan_id]['nominals']);
                     $masuk += $i->nominal;
                 } else {
-                    $result['pengeluaran'][$i->akun_pengeluaran->id]['nama'] = $i->akun_pengeluaran->nama;
-                    $result['pengeluaran'][$i->akun_pengeluaran->id]['nominals'][] = $i->nominal;
-                    $result['pengeluaran'][$i->akun_pengeluaran->id]['total_nominal'] = array_sum($result['pengeluaran'][$i->akun_pengeluaran->id]['nominals']);
+                    $result['pengeluaran'][$i->akun_pengeluaran_id]['nama'] = $i->akun_pengeluaran->nama ?? '';
+                    $result['pengeluaran'][$i->akun_pengeluaran_id]['nominals'][] = $i->nominal;
+                    $result['pengeluaran'][$i->akun_pengeluaran_id]['total_nominal'] = array_sum($result['pengeluaran'][$i->akun_pengeluaran_id]['nominals']);
                     $keluar += $i->nominal;
                 }
             }
