@@ -151,6 +151,12 @@ class TransaksiController extends Controller
                 //jika $akun_pendapatan_id = null dan $request->jenis == 'pendapatan'
                 if (!$akun_pendapatan_id && $request->jenis == 'pendapatan' && $request->akun_pendapatan_id) {
                     $akun_pendapatan_id = $request->akun_pendapatan_id;
+
+                    //jika ada tagihan_id, ambil akun_pendapatan_id
+                    if ($tagihan_id) {
+                        $tagihan = Tagihan::with('tagihan_master')->find($tagihan_id);
+                        $akun_pendapatan_id = $tagihan?->tagihan_master?->akun_pendapatan_id;
+                    }
                 }
                 //jika $akun_pengeluaran_id = null dan $request->jenis == 'pengeluaran'
                 if (!$akun_pengeluaran_id && $request->jenis == 'pengeluaran' && $request->akun_pengeluaran_id) {
