@@ -246,6 +246,7 @@ class TagihanMasterController extends Controller
 
                     $data[] = [
                         'nomor'             => $inv,
+                        'nama'              => $master->nama . ' ' . $tgl,
                         'user_id'           => $user->user_id,
                         'tagihan_master_id' => $master->id,
                         'tanggal'           => $tgl . '-01 00:01:00',
@@ -269,6 +270,7 @@ class TagihanMasterController extends Controller
 
                 $data[] = [
                     'nomor'             => $inv,
+                    'nama'              => $master->nama,
                     'user_id'           => $user->user_id,
                     'tagihan_master_id' => $master->id,
                     'tanggal'           => now(),

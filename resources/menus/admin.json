@@ -48,18 +48,7 @@
     "key": "transaksi",
     "label": "Transaksi",
     "icon": "lucide:coins",
-    "items": [
-      {
-        "key": "riwayat_transaksi",
-        "label": "Riwayat Transaksi",
-        "route": "/transaksi"
-      },
-      {
-        "key": "create_transaksi",
-        "label": "Tambah Transaksi",
-        "route": "/transaksi/create"
-      }
-    ]
+    "route": "/transaksi"
   },
   {
     "key": "tagihan",
