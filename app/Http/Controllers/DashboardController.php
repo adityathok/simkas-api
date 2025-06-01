@@ -125,15 +125,12 @@ class DashboardController extends Controller
         foreach ($data as $row) {
             $labels[] = $row->label;
             $totals[] = $row->total;
-            $colors[] = sprintf('#%06X', mt_rand(0, 0xFFFFFF)); // random color hex
         }
 
         $chartData = [
             'labels' => $labels,
             'datasets' => [[
                 'data' => $totals,
-                'backgroundColor' => $colors,
-                'hoverOffset' => 10
             ]]
         ];
 
