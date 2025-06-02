@@ -33,6 +33,7 @@ use App\Http\Controllers\LabaRugiController;
 use App\Http\Controllers\LaporanJurnalController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Laporan\ArusKasController as LaporanArusKasController;
+use App\Http\Controllers\Laporan\PerubahanModalController as LaporanPerubahanModalController;
 
 
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
@@ -81,6 +82,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('laba_rugi/{tanggal}', [LabaRugiController::class, 'index']);
     Route::get('laporan_jurnal', [LaporanJurnalController::class, 'index']);
     Route::get('laporan_aruskas/{tanggal}', [LaporanArusKasController::class, 'index']);
+    Route::get('laporan_perubahan_modal/{tanggal}', [LaporanPerubahanModalController::class, 'index']);
 
     Route::match(['get', 'post'], 'pegawai/akun/{id}', [PegawaiController::class, 'akun'])->name('pegawai.akun');
 
