@@ -24,7 +24,14 @@ class NeracaController extends Controller
             ];
         }
 
-        $akun_pengeluaran = AkunPengeluaran::all();
+        //get akun pengeluaran dengan sumber akun_pendapatan => neraca = true
+        $akun_pengeluaran = AkunPengeluaran::with(['akun_pendapatan' => function ($query) {
+            $query->where('neraca', true);
+        }])
+            ->whereHas('akun_pendapatan', function ($query) {
+                $query->where('neraca', true);
+            })
+            ->get();
         foreach ($akun_pengeluaran as $item) {
             $result['pengeluaran'][$item->id] = [
                 'nama' => $item->nama,
@@ -56,17 +63,28 @@ class NeracaController extends Controller
         foreach ($transaksi as $item) {
             //loop items
             foreach ($item->items as $i) {
+
+                $akunId = $i->akun_pendapatan_id ?? $i->akun_pengeluaran_id;
+
                 //cek apakah akun pendapatan ada
                 if ($i->akun_pendapatan_id) {
-                    //jika neraca = false, skip
-                    if (!$i->akun_pendapatan->neraca) {
+
+                    //jika akunId tidak ada
+                    if (!isset($result['pendapatan'][$i->akun_pendapatan_id])) {
                         continue;
                     }
+
                     $result['pendapatan'][$i->akun_pendapatan_id]['nama'] = $i->akun_pendapatan->nama;
                     $result['pendapatan'][$i->akun_pendapatan_id]['nominals'][] = $i->nominal;
                     $result['pendapatan'][$i->akun_pendapatan_id]['total_nominal'] = array_sum($result['pendapatan'][$i->akun_pendapatan_id]['nominals']);
                     $masuk += $i->nominal;
-                } else {
+                } else if ($i->akun_pengeluaran_id) {
+
+                    //jika akunId tidak ada
+                    if (!isset($result['pengeluaran'][$i->akun_pengeluaran_id])) {
+                        continue;
+                    }
+
                     $result['pengeluaran'][$i->akun_pengeluaran_id]['nama'] = $i->akun_pengeluaran->nama ?? '';
                     $result['pengeluaran'][$i->akun_pengeluaran_id]['nominals'][] = $i->nominal;
                     $result['pengeluaran'][$i->akun_pengeluaran_id]['total_nominal'] = array_sum($result['pengeluaran'][$i->akun_pengeluaran_id]['nominals']);
@@ -75,23 +93,27 @@ class NeracaController extends Controller
             }
         }
 
+        // Reset indeks array menjadi urutan integer
+        $result['pendapatan'] = array_values($result['pendapatan']);
+        $result['pengeluaran'] = array_values($result['pengeluaran']);
+
+        // Menyamakan jumlah array pendapatan dan pengeluaran
+        $jumlahPendapatan = count($result['pendapatan']);
+        $jumlahPengeluaran = count($result['pengeluaran']);
+
+        if ($jumlahPendapatan < $jumlahPengeluaran) {
+            $selisih = $jumlahPengeluaran - $jumlahPendapatan;
+            $result['pendapatan'] = array_merge($result['pendapatan'], array_fill(0, $selisih, ['nama' => 0, 'nominals' => [], 'total_nominal' => 0]));
+        } elseif ($jumlahPengeluaran < $jumlahPendapatan) {
+            $selisih = $jumlahPendapatan - $jumlahPengeluaran;
+            $result['pengeluaran'] = array_merge($result['pengeluaran'], array_fill(0, $selisih, ['nama' => 0, 'nominals' => [], 'total_nominal' => 0]));
+        }
+
         return response()->json([
             'raw' => $transaksi,
             'data' => $result,
             'total_pendapatan' => $masuk,
             'total_pengeluaran' => $keluar,
-        ]);
-    }
-
-    public function akun(Request $request)
-    {
-        //get akun pendapatan dengan neraca = true
-        $akun_pendapatan = AkunPendapatan::where('neraca', true)->get();
-        $akun_pengeluaran = AkunPengeluaran::all();
-
-        return response()->json([
-            'akun_pendapatan' => $akun_pendapatan,
-            'akun_pengeluaran' => $akun_pengeluaran,
         ]);
     }
 }

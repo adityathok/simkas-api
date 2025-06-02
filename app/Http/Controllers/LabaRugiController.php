@@ -100,7 +100,7 @@ class LabaRugiController extends Controller
         }
 
         return response()->json([
-            'raw' => $transaksi,
+            // 'raw' => $transaksi,
             'data' => $result,
             'total_pendapatan' => $masuk,
             'total_pengeluaran' => $keluar,
