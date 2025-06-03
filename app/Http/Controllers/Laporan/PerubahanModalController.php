@@ -8,6 +8,7 @@ use App\Models\AkunPendapatan;
 use App\Models\AkunPengeluaran;
 use App\Models\AkunRekening;
 use App\Models\Transaksi;
+use App\Models\TransaksiItem;
 use App\Models\SaldoAwal;
 
 class PerubahanModalController extends Controller
@@ -15,26 +16,6 @@ class PerubahanModalController extends Controller
 
     public function index(string $tanggal)
     {
-        $result = ['pendapatan' => [], 'pengeluaran' => []];
-
-        //get akun pendapatan
-        $akun_pendapatan = AkunPendapatan::all();
-        foreach ($akun_pendapatan as $item) {
-            $result['pendapatan'][$item->id] = [
-                'nama' => $item->nama,
-                'nominals' => [],
-                'total_nominal' => 0,
-            ];
-        }
-
-        $akun_pengeluaran = AkunPengeluaran::all();
-        foreach ($akun_pengeluaran as $item) {
-            $result['pengeluaran'][$item->id] = [
-                'nama' => $item->nama,
-                'nominals' => [],
-                'total_nominal' => 0,
-            ];
-        }
 
         //get transaksi
         $query = Transaksi::with(
@@ -59,25 +40,7 @@ class PerubahanModalController extends Controller
         foreach ($transaksi as $item) {
             //loop items
             foreach ($item->items as $i) {
-                $akunType = $i->akun_pendapatan_id ? 'pendapatan' : 'pengeluaran';
-                $akunId = $i->akun_pendapatan_id ?? $i->akun_pengeluaran_id;
-                $akunNama = '';
                 $nominal = $i->nominal;
-
-                if ($i->akun_pendapatan_id) {
-                    $akunNama = $i->akun_pendapatan->nama;
-                }
-                if ($i->akun_pengeluaran_id) {
-                    $akunNama = $i->akun_pengeluaran->nama;
-                }
-
-                // Inisialisasi jika belum ada
-                if (!isset($result[$akunType][$akunId])) {
-                    $result[$akunType][$akunId] = ['nama' => $akunNama, 'nominals' => [], 'total_nominal' => 0];
-                }
-
-                $result[$akunType][$akunId]['nominals'][] = $nominal;
-                $result[$akunType][$akunId]['total_nominal'] += $nominal;
 
                 if ($i->akun_pendapatan_id) {
                     $masuk += $nominal;
@@ -85,22 +48,6 @@ class PerubahanModalController extends Controller
                     $keluar += $nominal;
                 }
             }
-        }
-
-        // Reset indeks array menjadi urutan integer
-        $result['pendapatan'] = array_values($result['pendapatan']);
-        $result['pengeluaran'] = array_values($result['pengeluaran']);
-
-        // Menyamakan jumlah array pendapatan dan pengeluaran
-        $jumlahPendapatan = count($result['pendapatan']);
-        $jumlahPengeluaran = count($result['pengeluaran']);
-
-        if ($jumlahPendapatan < $jumlahPengeluaran) {
-            $selisih = $jumlahPengeluaran - $jumlahPendapatan;
-            $result['pendapatan'] = array_merge($result['pendapatan'], array_fill(0, $selisih, ['nama' => 0, 'nominals' => [], 'total_nominal' => 0]));
-        } elseif ($jumlahPengeluaran < $jumlahPendapatan) {
-            $selisih = $jumlahPendapatan - $jumlahPengeluaran;
-            $result['pengeluaran'] = array_merge($result['pengeluaran'], array_fill(0, $selisih, ['nama' => 0, 'nominals' => [], 'total_nominal' => 0]));
         }
 
         //modal awal, diambil dari saldo awal rekening di bulan yang sama
@@ -111,13 +58,91 @@ class PerubahanModalController extends Controller
             ->sum('nominal');
 
         return response()->json([
-            // 'raw' => $transaksi,
-            'data' => $result,
             'total_pendapatan' => $masuk,
             'total_pengeluaran' => $keluar,
             'total_bersih' => $masuk - $keluar,
-            'modal_awal' => $modal_awal,
+            'modal_awal' => (int) $modal_awal,
+            'penambahan_modal' => $masuk - $keluar,
             'saldo_akhir' => $modal_awal + ($masuk - $keluar),
+            'likuiditas_pendapatan' => $this->likuiditas_pendapatan($tanggal),
+            'likuiditas_rekening' => $this->likuiditas_rekening($tanggal),
         ]);
+    }
+
+    private function likuiditas_pendapatan($tanggal)
+    {
+        $date_start = date('Y-m', strtotime($tanggal)) . '-01';
+
+        $result = [];
+
+        //get akun pendapatan dengan jurnal_kas => likuiditas = true
+        $akun_pendapatan = AkunPendapatan::with(['jurnalkas' => function ($query) {
+            $query->where('likuiditas', true);
+        }], 'akunpengeluaran')
+            ->whereHas('jurnalkas', function ($query) {
+                $query->where('likuiditas', true);
+            })
+            ->get();
+
+        foreach ($akun_pendapatan as $item) {
+
+            $pemasukan = TransaksiItem::where('akun_pendapatan_id', $item->id)
+                ->whereHas('transaksi', function ($q) use ($date_start, $tanggal) {
+                    $q->whereBetween('tanggal', [$date_start, $tanggal]);
+                })
+                ->sum('nominal');
+
+            $akunPengeluaranIds = $item->akunpengeluaran->pluck('id');
+            $pengeluaran = TransaksiItem::whereIn('akun_pengeluaran_id', $akunPengeluaranIds)
+                ->whereHas('transaksi', function ($q) use ($date_start, $tanggal) {
+                    $q->whereBetween('tanggal', [$date_start, $tanggal]);
+                })
+                ->sum('nominal');
+
+            $saldo = $pemasukan - $pengeluaran;
+
+            $result[$item->id] = [
+                'nama' => $item->nama,
+                'total_nominal' => $saldo,
+            ];
+        }
+
+        return $result;
+    }
+
+    private function likuiditas_rekening($tanggal)
+    {
+        $date_start = date('Y-m', strtotime($tanggal)) . '-01';
+        $result = [];
+
+        //get akun rekening dengan jurnal_kas => likuiditas = true
+        $akun_rekening = AkunRekening::all();
+        foreach ($akun_rekening as $item) {
+
+            $pemasukan = Transaksi::where('akun_rekening_id', $item->id)
+                ->whereBetween('tanggal', [$date_start, $tanggal])
+                ->where('jenis', 'pendapatan')
+                ->sum('nominal');
+
+            $pengeluaran = Transaksi::where('akun_rekening_id', $item->id)
+                ->whereBetween('tanggal', [$date_start, $tanggal])
+                ->where('jenis', 'pengeluaran')
+                ->sum('nominal');
+
+            $saldo = $pemasukan - $pengeluaran;
+
+            $result[$item->id] = [
+                'nama' => $item->nama,
+                'total_nominal' => $saldo,
+            ];
+        }
+
+        //get transaksi
+        $query = Transaksi::with(
+            'akun_rekening:id,nama',
+        );
+        $query->select('id', 'nominal', 'akun_rekening_id');
+
+        return $result;
     }
 }

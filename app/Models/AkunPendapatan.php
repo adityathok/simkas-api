@@ -37,7 +37,7 @@ class AkunPendapatan extends Model
     //relasi ke akun pengeluaran
     public function akunpengeluaran()
     {
-        return $this->hasMany(AkunPengeluaran::class);
+        return $this->hasMany(AkunPengeluaran::class, 'pendapatan_id');
     }
 
     //relasi ke transaksi
