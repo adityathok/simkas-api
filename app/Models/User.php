@@ -26,6 +26,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'username',
         'password',
         'type',
         'can_login',
@@ -174,6 +175,10 @@ class User extends Authenticatable
             //jika tidak ada uid
             if (!$model->uid) {
                 $model->uid = Str::uuid();
+            }
+            //jika tidak ada username            
+            if (!$model->username) {
+                $model->username = date('ymdHis') . Str::random(3);
             }
         });
 

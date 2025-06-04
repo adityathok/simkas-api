@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
         $user = User::create([
             'name'              => 'admin',
             'email'             => 'admin@example.com',
+            'username'          => 'admin',
             'email_verified_at' => now(),
             'password'          => Hash::make('12345678'),
             'type'              => 'pegawai',
