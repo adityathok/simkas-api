@@ -60,7 +60,8 @@ class TransaksiSeeder extends Seeder
                 'catatan'               => 'Pembayaran ' . $pendapatan_id == 'INTABUNGAN' ? 'Tabungan' : 'Infaq',
                 'tanggal'               => $randomDate,
                 'status'                => 'sukses',
-                'admin_id'              => 10000,
+                'admin_id'              => 100,
+                'metode_pembayaran'     => 'tunai'
             ]);
             //buat transaksi item
             TransaksiItem::create([
@@ -116,7 +117,7 @@ class TransaksiSeeder extends Seeder
                 'catatan'               => 'Pembayaran ' . $pengeluaran->nama,
                 'tanggal'               => $randomDate,
                 'status'                => 'sukses',
-                'admin_id'              => 10000,
+                'admin_id'              => 100,
             ]);
             //buat transaksi item
             TransaksiItem::create([
