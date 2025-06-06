@@ -25,6 +25,11 @@ class UnitSekolahSeeder extends Seeder
             return;
         }
 
+        $city = fake()->city();
+        $address = fake()->address();
+        $post_code = fake()->postcode();
+        $state = fake()->state();
+
         foreach ($jenjangs as $jenjang) {
 
             //ambil jenjang
@@ -56,17 +61,16 @@ class UnitSekolahSeeder extends Seeder
             }
 
             //buat unit
-            $city = fake()->city();
             $name = $jenjang . ' ' . $city . ' ' . fake()->numberBetween(1, 99);
             $unitsekolah = UnitSekolah::create([
                 'nama'      => $name,
                 'jenjang'   => $jenjang,
-                'alamat'    => fake()->address(),
+                'alamat'    => $address,
                 'desa'      => fake()->streetName(),
                 'kecamatan' => $city,
                 'kota'      => $city,
-                'provinsi'  => fake()->state(),
-                'kode_pos'  => fake()->postcode(),
+                'provinsi'  => $state,
+                'kode_pos'  => $post_code,
                 'status'    => 'aktif',
                 'whatsapp'  => fake()->phoneNumber(),
                 'telepon'   => fake()->phoneNumber(),

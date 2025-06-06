@@ -108,6 +108,7 @@ class Siswa extends Model
             if (empty($model->user_id)) {
                 $user = User::create([
                     'name'      => $model->nama,
+                    'username'  => $model->nis ?? Str::slug($model->nama),
                     'email'     => $model->email,
                     'type'      => 'siswa',
                     'can_login' => false,

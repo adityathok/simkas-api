@@ -86,6 +86,7 @@ class TagihanBulananSeeder extends Seeder
 
                 return [
                     'nomor'             => 'INV' . Str::ulid(),
+                    'nama'              => $name_tagihan . ' ' . $tgl,
                     'user_id'           => $siswa->user_id,
                     'tanggal'           => $tgl . '-01 00:01:00',
                     'tagihan_master_id' => $master->id,

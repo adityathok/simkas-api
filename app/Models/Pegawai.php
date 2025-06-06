@@ -67,6 +67,7 @@ class Pegawai extends Model
             if (empty($pegawai->user_id)) {
                 $user = User::create([
                     'name'      => $pegawai->nama,
+                    'username'  => $pegawai->nip ?? Str::slug($pegawai->nama),
                     'email'     => $pegawai->email,
                     'type'      => 'pegawai',
                     'can_login' => false,

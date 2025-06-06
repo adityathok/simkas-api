@@ -77,6 +77,7 @@ class TagihanSeeder extends Seeder
 
             return [
                 'nomor' => 'INV' . Str::ulid(),
+                'nama' => $name_tagihan,
                 'tanggal' => $tanggal,
                 'user_id' => $siswa->user_id,
                 'tagihan_master_id' => $master->id,
